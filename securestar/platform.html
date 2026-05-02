@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platform — SecureStar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --slate:   #1e2d4a;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--navy); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2044 100%); color: white; padding: 80px 24px 70px; }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 18px; }
+    .breadcrumb a { color: var(--cyan); }
+    .page-hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 18px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.65); max-width: 580px; line-height: 1.75; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 600px; }
+
+    .feature-bg { background: var(--light-bg); }
+
+    /* TWO-COL FEATURE ROWS */
+    .feat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-bottom: 80px; }
+    .feat-row:last-child { margin-bottom: 0; }
+    .feat-row.reverse { direction: rtl; }
+    .feat-row.reverse > * { direction: ltr; }
+    .feat-visual {
+      background: var(--navy); border-radius: 16px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .feat-visual-bar {
+      background: rgba(255,255,255,0.05); padding: 12px 16px;
+      display: flex; gap: 7px; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dr { background: #ff5f56; } .dy { background: #ffbd2e; } .dg { background: #27c93f; }
+    .feat-visual-body { padding: 24px; font-family: 'Courier New', monospace; font-size: 0.8rem; line-height: 1.85; color: rgba(255,255,255,0.7); }
+    .hl { color: var(--cyan); }
+    .hg { color: #86efac; }
+    .hy { color: #fbbf24; }
+    .hp { color: #c084fc; }
+
+    .feat-list { list-style: none; margin-top: 20px; }
+    .feat-list li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; font-size: 0.95rem; color: var(--text); line-height: 1.6; }
+    .feat-list li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* PERF TABLE */
+    .perf-table { width: 100%; border-collapse: collapse; margin-top: 32px; }
+    .perf-table th { background: var(--navy); color: rgba(255,255,255,0.7); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 14px 18px; text-align: left; }
+    .perf-table td { padding: 14px 18px; font-size: 0.92rem; border-bottom: 1px solid var(--border); }
+    .perf-table tr:last-child td { border-bottom: none; }
+    .perf-table tr:nth-child(even) td { background: var(--light-bg); }
+    .perf-val { font-weight: 700; color: var(--blue); }
+    .badge { display: inline-block; border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 700; }
+    .badge-green { background: #ecfdf5; color: #059669; }
+    .badge-blue { background: #eff6ff; color: #2563eb; }
+
+    /* SCORE PANEL */
+    .score-panel {
+      background: var(--navy); border-radius: 14px; padding: 28px;
+      color: white; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.9;
+    }
+
+    /* TABS */
+    .tab-row { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 28px; }
+    .tab { padding: 12px 22px; font-size: 0.9rem; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
+    .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* CTA BAND */
+    .cta-band { background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%); color: white; padding: 72px 24px; text-align: center; }
+    .cta-band h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-band p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; }
+    .btn-white:hover { background: #e0e7ff; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+    .footer-inner a { color: rgba(255,255,255,0.4); transition: color .2s; }
+    .footer-inner a:hover { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .feat-row { grid-template-columns: 1fr; }
+      .feat-row.reverse { direction: ltr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">SS</div><span>SecureStar</span></a>
+    <div class="nav-links">
+      <a href="platform.html" class="active">Platform</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="developers.html">Developers</a>
+      <a href="company.html">Company</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">Docs</a>
+      <a href="index.html#contact" class="btn btn-primary">Request Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Platform</div>
+    <h1>The SecureStar Platform</h1>
+    <p>A deep-dive into the five pillars that make SecureStar the fraud detection infrastructure of choice for modern financial systems.</p>
+  </div>
+</div>
+
+<!-- PILLAR 1: LATENCY -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">Pillar 1</div>
+        <h2 class="section-title">Ultra-Low Latency Inference</h2>
+        <p class="section-sub">Fraud doesn't pause. Neither should your detection layer. SecureStar's inference pipeline is architected around one constraint: stay under 80ms at the 99th percentile, even during traffic spikes.</p>
+        <ul class="feat-list">
+          <li>Optimized ONNX inference runtime — models served with zero serialization overhead</li>
+          <li>Edge deployment option brings scoring logic closer to your data source</li>
+          <li>Streaming-first design with Kafka consumer groups for sub-10ms event pickup</li>
+          <li>Horizontal auto-scaling maintains SLA across 10x traffic surges</li>
+          <li>Dedicated infrastructure per enterprise tenant — no noisy-neighbor effects</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// Latency distribution (last 1h)</div>
+            <br>
+            <div>p50 &nbsp;&nbsp;&nbsp; <span class="hg">21ms</span> &nbsp;██████████░░░░░░░░░░</div>
+            <div>p75 &nbsp;&nbsp;&nbsp; <span class="hg">34ms</span> &nbsp;████████████████░░░░</div>
+            <div>p90 &nbsp;&nbsp;&nbsp; <span class="hg">51ms</span> &nbsp;██████████████████░░</div>
+            <div>p95 &nbsp;&nbsp;&nbsp; <span class="hy">62ms</span> &nbsp;███████████████████░</div>
+            <div>p99 &nbsp;&nbsp;&nbsp; <span class="hy">74ms</span> &nbsp;████████████████████</div>
+            <div>p999 &nbsp;&nbsp; <span class="hy">79ms</span> &nbsp;████████████████████</div>
+            <br>
+            <div class="hl">// SLA target: &lt;80ms p99 ✓</div>
+            <div>throughput: <span class="hg">14,830 req/s</span></div>
+            <div>error_rate: <span class="hg">0.003%</span></div>
+          </div>
+        </div>
+        <table class="perf-table" style="margin-top:16px;">
+          <thead><tr><th>Scenario</th><th>Latency</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Standard REST call</td><td class="perf-val">&lt;50ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>Kafka stream consumer</td><td class="perf-val">&lt;30ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>Edge deployment</td><td class="perf-val">&lt;15ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>p99 guarantee</td><td class="perf-val">&lt;80ms</td><td><span class="badge badge-blue">Contractual</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 2: EXPLAINABLE AI -->
+<section class="feature-bg">
+  <div class="section-inner">
+    <div class="feat-row reverse">
+      <div>
+        <div class="section-label">Pillar 2</div>
+        <h2 class="section-title">Explainable AI — Every Decision, Every Time</h2>
+        <p class="section-sub">Most ML fraud vendors hand you a score. SecureStar hands you a reason. Every risk assessment includes feature attribution, rule attribution, and a human-readable explanation your compliance team can actually use.</p>
+        <ul class="feat-list">
+          <li>SHAP-based feature attribution identifies the top factors driving each score</li>
+          <li>Rule engine decisions shown in plain language, not code</li>
+          <li>Full model explainability satisfies AML Directive 6 and FinCEN audit requirements</li>
+          <li>Explanation payload included in every API response at no latency premium</li>
+          <li>Searchable explanation history for post-incident forensic analysis</li>
+        </ul>
+      </div>
+      <div>
+        <div class="score-panel">
+          <div class="hl">// Explanation object (txn_4h1k9b)</div>
+          <br>
+          <div><span class="hp">"explanation"</span>: {</div>
+          <div>&nbsp;&nbsp;<span class="hl">"decision"</span>: <span class="hg">"flag"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="hl">"risk_score"</span>: <span class="hy">0.71</span>,</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"feature_attribution"</span>: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"feature"</span>: <span class="hg">"velocity_1h"</span>, <span class="hl">"weight"</span>: <span class="hy">+0.38</span> },</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"feature"</span>: <span class="hg">"new_device"</span>, <span class="hl">"weight"</span>: <span class="hy">+0.21</span> },</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"feature"</span>: <span class="hg">"merchant_risk"</span>, <span class="hl">"weight"</span>: <span class="hy">+0.12</span> }</div>
+          <div>&nbsp;&nbsp;],</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"rule_hits"</span>: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"vel_1h_exceeded: 4 txns in 38 min"</span>,</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"new_device_high_amount: $1,200+"</span></div>
+          <div>&nbsp;&nbsp;],</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"human_summary"</span>: <span class="hg">"High transaction</span></div>
+          <div>&nbsp;&nbsp;&nbsp;<span class="hg">velocity from new device in 1h window"</span>,</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"audit_id"</span>: <span class="hg">"aud_7gk2p1"</span></div>
+          <div>}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 3: HYBRID ENGINE -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">Pillar 3</div>
+        <h2 class="section-title">Hybrid Decision Engine</h2>
+        <p class="section-sub">Pure ML is too opaque for compliance. Pure rules are too brittle for fraud. SecureStar runs both in parallel and reconciles them into a single decision — giving you control and intelligence at the same time.</p>
+        <ul class="feat-list">
+          <li>Rule engine layer: compliance teams define hard rules in a no-code interface</li>
+          <li>ML model layer: gradient-boosted ensemble catches emerging patterns rules miss</li>
+          <li>Decision reconciliation: configurable weighting between rule result and model score</li>
+          <li>Rule overrides: compliance can force approve/decline regardless of ML score</li>
+          <li>Full transparency: both layers' outputs are included in every API response</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// Decision pipeline</div>
+            <br>
+            <div>Transaction Event</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>┌─────────────────────────────┐</div>
+            <div>│ &nbsp;<span class="hp">Rule Engine</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">ML Model</span> &nbsp;&nbsp;│</div>
+            <div>│ &nbsp;AML rules &nbsp;&nbsp;&nbsp;&nbsp; XGBoost v3 │</div>
+            <div>│ &nbsp;Velocity caps &nbsp;SHAP explainer│</div>
+            <div>│ &nbsp;KYC checks &nbsp;&nbsp;&nbsp; Drift monitor│</div>
+            <div>└──────────┬──────────┬──────────┘</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">Decision Reconciler</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>&nbsp;&nbsp;score + decision + explanation</div>
+            <br>
+            <div class="hg">Rule override: HARD_DECLINE → final</div>
+            <div class="hy">Otherwise: weighted(rule, ml)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 4: CUSTOM TUNING -->
+<section class="feature-bg">
+  <div class="section-inner">
+    <div class="feat-row reverse">
+      <div>
+        <div class="section-label">Pillar 4</div>
+        <h2 class="section-title">Custom Model Tuning</h2>
+        <p class="section-sub">One-size-fits-all fraud models don't work. SecureStar lets you train on your own transaction data, tune precision/recall thresholds to your risk appetite, and push dynamic rule updates — without waiting on our engineering team.</p>
+        <ul class="feat-list">
+          <li>Fine-tune on your own labeled historical transaction data via API or UI</li>
+          <li>Adjustable decision thresholds: trade off false positives vs. false negatives</li>
+          <li>Dynamic rule updates pushed to production in under 60 seconds</li>
+          <li>A/B shadow mode: test model changes on live traffic before switching</li>
+          <li>Model performance dashboard shows drift, precision, recall, and F1 in real time</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl"># python SDK — threshold tuning</div>
+            <br>
+            <div><span class="hp">from</span> securestar <span class="hp">import</span> ModelConfig</div>
+            <br>
+            <div>config = ModelConfig(</div>
+            <div>&nbsp;&nbsp;base_model=<span class="hg">"ss-fintech-v3"</span>,</div>
+            <div>&nbsp;&nbsp;training_data=<span class="hg">"s3://your-bucket/txns/"</span>,</div>
+            <div>&nbsp;&nbsp;label_column=<span class="hg">"is_fraud"</span>,</div>
+            <div>&nbsp;&nbsp;thresholds={</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"approve"</span>: <span class="hy">0.30</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"flag"</span>: &nbsp;&nbsp;<span class="hy">0.65</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"decline"</span>: <span class="hy">0.88</span>,</div>
+            <div>&nbsp;&nbsp;}</div>
+            <div>)</div>
+            <br>
+            <div>job = config.train() &nbsp;<span class="hl"># async</span></div>
+            <div>job.wait()</div>
+            <div><span class="hg">print</span>(job.metrics)</div>
+            <div><span class="hl"># precision: 0.943 &nbsp;recall: 0.917</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 5: COMPLIANCE -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">Pillar 5</div>
+        <h2 class="section-title">Compliance-First Architecture</h2>
+        <p class="section-sub">SecureStar was designed in close collaboration with compliance and legal teams at regulated financial institutions. Compliance isn't an add-on — it's wired into the data model.</p>
+        <ul class="feat-list">
+          <li>Immutable, cryptographically signed audit logs stored for 7 years by default</li>
+          <li>SOC 2 Type II certified; PCI-DSS Level 1 compliant infrastructure</li>
+          <li>One-click regulatory export in FinCEN SAR, FATF, EBA formats</li>
+          <li>AML rules library: pre-built rules for structuring, smurfing, layering patterns</li>
+          <li>KYC integration hooks: plug in your identity verification provider of choice</li>
+          <li>GDPR / CCPA data residency controls: choose EU or US storage region</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// Compliance export (FinCEN SAR)</div>
+            <br>
+            <div><span class="hp">POST</span> /v2/compliance/export</div>
+            <div>{</div>
+            <div>&nbsp;&nbsp;<span class="hl">"format"</span>: <span class="hg">"fincen_sar"</span>,</div>
+            <div>&nbsp;&nbsp;<span class="hl">"date_range"</span>: {</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"from"</span>: <span class="hg">"2025-01-01"</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"to"</span>: &nbsp;<span class="hg">"2025-03-31"</span></div>
+            <div>&nbsp;&nbsp;},</div>
+            <div>&nbsp;&nbsp;<span class="hl">"filter"</span>: <span class="hg">"declined_or_flagged"</span></div>
+            <div>}</div>
+            <br>
+            <div class="hg">// ✓ 147 events exported</div>
+            <div class="hg">// ✓ Signed: SHA-256</div>
+            <div class="hg">// ✓ Audit trail attached</div>
+            <div class="hy">// Ready for FinCEN filing</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2>See the full platform in 30 minutes</h2>
+  <p>Our team will demo live latency benchmarks, walk through an explainability example, and show how the hybrid engine balances your precision and recall targets.</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn btn-white btn-lg">Book a Demo</a>
+    <a href="developers.html" class="btn btn-ghost btn-lg" style="color:white;border-color:rgba(255,255,255,0.4);">Read the Docs</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo"><div class="logo-icon">SS</div><span style="color:white">SecureStar</span></div>
+    <span>© 2025 SecureStar Labs, Inc.</span>
+    <div style="display:flex;gap:20px;"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

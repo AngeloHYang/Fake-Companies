@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solutions — SecureStar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--navy); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2044 100%); color: white; padding: 80px 24px 70px; }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 18px; }
+    .breadcrumb a { color: var(--cyan); }
+    .page-hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 18px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.65); max-width: 600px; line-height: 1.75; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 600px; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* SOLUTION CARDS */
+    .sol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; margin-top: 52px; }
+    .sol-card {
+      border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .sol-card:hover { transform: translateY(-4px); box-shadow: 0 14px 44px rgba(10,22,40,0.13); }
+    .sol-card-header { padding: 32px 28px 24px; }
+    .sol-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .sol-card-header h3 { font-size: 1.2rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .sol-card-header p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+    .sol-card-body { padding: 0 28px 28px; background: white; }
+    .sol-list { list-style: none; border-top: 1px solid var(--border); padding-top: 18px; }
+    .sol-list li { display: flex; gap: 10px; font-size: 0.88rem; color: var(--text); margin-bottom: 10px; }
+    .sol-list li::before { content: '→'; color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+    .sol-card.highlight .sol-card-header { background: linear-gradient(135deg, var(--navy), #1a3070); }
+    .sol-card.highlight .sol-card-header h3 { color: white; }
+    .sol-card.highlight .sol-icon { filter: none; }
+    .sol-card.highlight .sol-card-header p { color: rgba(255,255,255,0.65); }
+
+    /* REQUIREMENTS MATCH TABLE */
+    .match-bg { background: var(--light-bg); }
+    .match-table-wrap { overflow-x: auto; margin-top: 40px; }
+    .match-table { width: 100%; border-collapse: collapse; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .match-table thead th { background: var(--navy); color: white; padding: 16px 20px; font-size: 0.85rem; font-weight: 700; text-align: left; }
+    .match-table tbody td { padding: 16px 20px; font-size: 0.92rem; border-bottom: 1px solid var(--border); background: white; }
+    .match-table tbody tr:last-child td { border-bottom: none; }
+    .match-table tbody tr:hover td { background: #f8faff; }
+    .check-icon { color: var(--green); font-weight: 800; font-size: 1.1rem; }
+    .dim { font-size: 0.78rem; color: var(--muted); display: block; margin-top: 2px; }
+    .match-score { font-weight: 800; color: var(--blue); font-size: 1rem; }
+
+    /* USE CASE DEEP DIVES */
+    .usecase { border: 1px solid var(--border); border-radius: 16px; padding: 36px; margin-bottom: 28px; background: white; box-shadow: var(--shadow); }
+    .usecase-header { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 20px; }
+    .usecase-icon { font-size: 2rem; width: 56px; height: 56px; background: var(--light-bg); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .usecase-header h3 { font-size: 1.15rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .usecase-header p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+    .usecase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .usecase-col h4 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cyan); margin-bottom: 10px; }
+    .usecase-col ul { list-style: none; }
+    .usecase-col ul li { font-size: 0.88rem; color: var(--text); margin-bottom: 8px; padding-left: 16px; position: relative; line-height: 1.6; }
+    .usecase-col ul li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    /* COMPLIANCE SECTION */
+    .compliance-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 40px; }
+    .comp-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+    .comp-badge { display: inline-block; background: #ecfdf5; color: #059669; border: 1px solid #6ee7b7; border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: 700; margin-bottom: 14px; }
+    .comp-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .comp-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* CTA */
+    .cta-band { background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%); color: white; padding: 72px 24px; text-align: center; }
+    .cta-band h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-band p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; }
+    .btn-white:hover { background: #e0e7ff; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+    .footer-inner a { color: rgba(255,255,255,0.4); transition: color .2s; }
+    .footer-inner a:hover { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .usecase-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">SS</div><span>SecureStar</span></a>
+    <div class="nav-links">
+      <a href="platform.html">Platform</a>
+      <a href="solutions.html" class="active">Solutions</a>
+      <a href="developers.html">Developers</a>
+      <a href="company.html">Company</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">Docs</a>
+      <a href="index.html#contact" class="btn btn-primary">Request Demo</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Solutions</div>
+    <h1>Built for financial institutions<br>that can't afford to get it wrong</h1>
+    <p>From digital banking to high-volume payments, SecureStar adapts to the exact risk profile, regulatory requirements, and technical constraints of your platform.</p>
+  </div>
+</div>
+
+<!-- SOLUTION CARDS -->
+<section>
+  <div class="section-inner">
+    <div class="sol-grid">
+
+      <div class="sol-card highlight">
+        <div class="sol-card-header">
+          <div class="sol-icon">🏦</div>
+          <h3>Digital Banking Platforms</h3>
+          <p>Purpose-built for neobanks and digital-first banks where every millisecond of fraud delay costs customer trust and revenue.</p>
+        </div>
+        <div class="sol-card-body">
+          <ul class="sol-list">
+            <li>Real-time ACH and card transaction scoring</li>
+            <li>Account takeover detection (new device, geo anomaly)</li>
+            <li>Onboarding fraud signals (KYC augmentation)</li>
+            <li>Compliance-ready audit logs from day one</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sol-card">
+        <div class="sol-card-header" style="background:var(--light-bg);">
+          <div class="sol-icon">💳</div>
+          <h3>Payment Processors</h3>
+          <p>Handle thousands of transactions per second without sacrificing detection accuracy or exceeding authorization latency budgets.</p>
+        </div>
+        <div class="sol-card-body">
+          <ul class="sol-list">
+            <li>Sub-80ms scoring at peak throughput</li>
+            <li>Chargeback prediction and prevention</li>
+            <li>Merchant risk profiling</li>
+            <li>3DS2 data enrichment hooks</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sol-card">
+        <div class="sol-card-header" style="background:var(--light-bg);">
+          <div class="sol-icon">📈</div>
+          <h3>Lending &amp; Credit</h3>
+          <p>Detect first-party and synthetic identity fraud at the application stage before credit is extended.</p>
+        </div>
+        <div class="sol-card-body">
+          <ul class="sol-list">
+            <li>Application fraud scoring</li>
+            <li>Synthetic identity pattern detection</li>
+            <li>Post-disbursement behavioral monitoring</li>
+            <li>Adverse action reason codes (FCRA-compliant)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sol-card">
+        <div class="sol-card-header" style="background:var(--light-bg);">
+          <div class="sol-icon">🛡️</div>
+          <h3>AML &amp; Compliance Programs</h3>
+          <p>Replace manual alert triage with explainable, audit-ready AI that your compliance officers can actually understand and defend.</p>
+        </div>
+        <div class="sol-card-body">
+          <ul class="sol-list">
+            <li>Structuring and smurfing detection</li>
+            <li>Layering and integration pattern recognition</li>
+            <li>SAR filing workflow integration</li>
+            <li>Regulator-ready export formats</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- REQUIREMENTS MATCH -->
+<section class="match-bg">
+  <div class="section-inner">
+    <div class="section-label">Fit Analysis</div>
+    <h2 class="section-title">How SecureStar maps to your requirements</h2>
+    <p class="section-sub">A transparent breakdown of how our platform addresses the four dimensions financial engineering teams evaluate most.</p>
+    <div class="match-table-wrap">
+      <table class="match-table">
+        <thead>
+          <tr>
+            <th>Requirement Dimension</th>
+            <th>What You Need</th>
+            <th>How SecureStar Delivers</th>
+            <th>Fit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Technical</strong><span class="dim">Performance &amp; Scale</span></td>
+            <td>Real-time scoring, &lt;100ms latency, Kafka-native, scalable to millions of transactions/day</td>
+            <td>p99 &lt;80ms guaranteed · Kafka consumer groups · horizontal autoscale · edge deployment option</td>
+            <td class="match-score check-icon">✓ Strong</td>
+          </tr>
+          <tr>
+            <td><strong>Compliance</strong><span class="dim">Explainability &amp; Auditability</span></td>
+            <td>AML / KYC explainability, immutable audit logs, regulator exports</td>
+            <td>SHAP feature attribution · human-readable rules · signed audit logs · FinCEN SAR export</td>
+            <td class="match-score check-icon">✓ Strong</td>
+          </tr>
+          <tr>
+            <td><strong>Integration</strong><span class="dim">Stack Compatibility</span></td>
+            <td>Works with existing Kafka, AWS, Python infrastructure without major rework</td>
+            <td>Native Kafka connector · AWS Lambda &amp; SQS · Python SDK · REST API · no schema migration</td>
+            <td class="match-score check-icon">✓ Native</td>
+          </tr>
+          <tr>
+            <td><strong>Business</strong><span class="dim">Precision / Recall Balance</span></td>
+            <td>Tunable thresholds, ability to train on own data, no black-box model</td>
+            <td>Custom threshold configuration · fine-tuning on your data · hybrid ML + rule engine · full model transparency</td>
+            <td class="match-score check-icon">✓ Strong</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASE DEEP DIVES -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">Deep Dives</div>
+    <h2 class="section-title">Common scenarios, solved</h2>
+
+    <div class="usecase">
+      <div class="usecase-header">
+        <div class="usecase-icon">⚡</div>
+        <div>
+          <h3>High-throughput real-time transaction authorization</h3>
+          <p>Your payment flow processes thousands of transactions per second and your authorization SLA is under 200ms total. SecureStar's fraud scoring must fit inside that window without compromise.</p>
+        </div>
+      </div>
+      <div class="usecase-grid">
+        <div class="usecase-col">
+          <h4>How SecureStar handles it</h4>
+          <ul>
+            <li>Dedicated inference cluster with p99 &lt;80ms contractual guarantee</li>
+            <li>Kafka-native consumer eliminates HTTP round-trip overhead</li>
+            <li>Pre-computed feature caches reduce per-request compute</li>
+            <li>Circuit breaker: safe fallback score on timeout (configurable)</li>
+          </ul>
+        </div>
+        <div class="usecase-col">
+          <h4>Outcome</h4>
+          <ul>
+            <li>Total latency budget preserved even at peak load</li>
+            <li>Zero changes to authorization flow required</li>
+            <li>Automatic scale-out during traffic spikes</li>
+            <li>SLA backed by financial penalty clause in enterprise contracts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="usecase">
+      <div class="usecase-header">
+        <div class="usecase-icon">🔍</div>
+        <div>
+          <h3>Regulatory examination — AML program audit</h3>
+          <p>Your regulator asks why a set of transactions were not flagged. You need to reproduce every decision, show what signals were considered, and demonstrate the model is not a black box.</p>
+        </div>
+      </div>
+      <div class="usecase-grid">
+        <div class="usecase-col">
+          <h4>How SecureStar handles it</h4>
+          <ul>
+            <li>Every decision stored with full feature attribution vector</li>
+            <li>Immutable log queryable by transaction ID, date range, or rule hit</li>
+            <li>One-click SAR export in FinCEN, FATF, and EBA formats</li>
+            <li>Human-readable explanation attached to every flagged event</li>
+          </ul>
+        </div>
+        <div class="usecase-col">
+          <h4>Outcome</h4>
+          <ul>
+            <li>Compliance team can answer examiner questions in minutes, not days</li>
+            <li>Model behavior is defensible and interpretable</li>
+            <li>Audit trail covers decisions back to your go-live date</li>
+            <li>Reduces time-to-respond to regulatory inquiries by ~70%</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="usecase">
+      <div class="usecase-header">
+        <div class="usecase-icon">🎯</div>
+        <div>
+          <h3>Model performance — reducing false positives</h3>
+          <p>Your off-the-shelf fraud model is flagging too many legitimate transactions, creating friction for good customers and overloading your review queue.</p>
+        </div>
+      </div>
+      <div class="usecase-grid">
+        <div class="usecase-col">
+          <h4>How SecureStar handles it</h4>
+          <ul>
+            <li>Fine-tune on your own labeled transaction history via API</li>
+            <li>Adjust approve/flag/decline thresholds independently</li>
+            <li>Shadow mode: test new thresholds on live traffic before switching</li>
+            <li>Real-time precision/recall dashboard tracks impact of changes</li>
+          </ul>
+        </div>
+        <div class="usecase-col">
+          <h4>Outcome</h4>
+          <ul>
+            <li>Typical 20–35% reduction in false positives after first tuning cycle</li>
+            <li>No waiting on vendor engineering team for threshold changes</li>
+            <li>Model learns from your specific customer behavior patterns</li>
+            <li>Review queue shrinks, analyst capacity freed for high-risk cases</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COMPLIANCE CERTIFICATIONS -->
+<section style="background:var(--light-bg);padding:72px 24px;">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Compliance &amp; Certifications</div>
+      <h2 class="section-title">Built for regulated environments</h2>
+      <p class="section-sub">SecureStar maintains the certifications and controls required by financial regulators in the US, EU, and UK.</p>
+    </div>
+    <div class="compliance-cards">
+      <div class="comp-card">
+        <div class="comp-badge">✓ Certified</div>
+        <h4>SOC 2 Type II</h4>
+        <p>Annual third-party audit of security, availability, and confidentiality controls. Report available under NDA.</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-badge">✓ Compliant</div>
+        <h4>PCI-DSS Level 1</h4>
+        <p>Highest level of payment card data security compliance. All cardholder data handled in certified environments.</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-badge">✓ Supported</div>
+        <h4>AML Directive 6 (6AMLD)</h4>
+        <p>Explainability and audit trail features satisfy EU 6th Anti-Money Laundering Directive requirements.</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-badge">✓ Supported</div>
+        <h4>FinCEN / BSA</h4>
+        <p>SAR filing support and transaction monitoring capabilities aligned with Bank Secrecy Act obligations.</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-badge">✓ Compliant</div>
+        <h4>GDPR / CCPA</h4>
+        <p>Data residency controls (EU / US), right-to-erasure workflows, and data processing agreements available.</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-badge">✓ Aligned</div>
+        <h4>ISO 27001</h4>
+        <p>Information security management system aligned with ISO 27001. Certification audit in progress.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2>Discuss your specific requirements</h2>
+  <p>Every financial platform is different. Talk to a solutions engineer about your stack, latency budget, and compliance requirements.</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn btn-white btn-lg">Talk to Sales</a>
+    <a href="platform.html" class="btn btn-ghost btn-lg" style="color:white;border-color:rgba(255,255,255,0.4);">Platform Details</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo"><div class="logo-icon">SS</div><span style="color:white">SecureStar</span></div>
+    <span>© 2025 SecureStar Labs, Inc.</span>
+    <div style="display:flex;gap:20px;"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
