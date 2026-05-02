@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support & Contact – Harrison Financial</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d; --blue: #1a4fad; --accent: #2db4a0; --light-bg: #f4f7fb;
+      --white: #ffffff; --text: #1e2a3b; --muted: #5a6a7e; --border: #d5dce8;
+      --radius: 12px; --shadow: 0 4px 24px rgba(13,30,61,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,30,61,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; font-weight: 700; }
+    .btn-accent:hover { background: #229988; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #1a3570 100%); color: white; padding: 72px 24px 64px; text-align: center; }
+    .page-label { display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 5px 16px; font-size: 0.8rem; font-weight: 600; color: #a8c8ff; letter-spacing: 0.5px; margin-bottom: 20px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+    .page-hero p { font-size: 1.1rem; color: #b8ccec; line-height: 1.7; max-width: 560px; margin: 0 auto; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .light-bg { background: var(--light-bg); }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* SEARCH BAR */
+    .search-wrap { max-width: 580px; margin: 32px auto 0; }
+    .search-bar { display: flex; background: white; border: 2px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+    .search-bar input { flex: 1; padding: 14px 20px; font-size: 1rem; border: none; outline: none; color: var(--text); }
+    .search-bar button { background: var(--blue); color: white; border: none; padding: 14px 24px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+    .search-bar button:hover { background: #153d8a; }
+
+    /* CONTACT CHANNELS */
+    .channels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 48px; }
+    .channel-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 28px 24px; box-shadow: var(--shadow); text-align: center; }
+    .channel-icon { font-size: 2.4rem; margin-bottom: 14px; }
+    .channel-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .channel-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .channel-avail { font-size: 0.8rem; font-weight: 600; color: var(--accent); }
+    .channel-card .btn { display: inline-flex; justify-content: center; margin-top: 12px; }
+    .btn-channel { background: var(--light-bg); border: 1.5px solid var(--border); color: var(--navy); }
+    .btn-channel:hover { border-color: var(--blue); color: var(--blue); background: white; }
+
+    /* URGENT */
+    .urgent-bar { background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius); padding: 18px 24px; display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+    .urgent-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .urgent-text h4 { font-size: 0.97rem; font-weight: 700; color: #664d00; margin-bottom: 4px; }
+    .urgent-text p { font-size: 0.87rem; color: #7a5c00; line-height: 1.5; }
+    .urgent-text a { color: #1a4fad; font-weight: 700; }
+
+    /* TOPICS */
+    .topics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 40px; }
+    .topic-item { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 18px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(13,30,61,0.06); transition: border-color .2s; cursor: pointer; }
+    .topic-item:hover { border-color: var(--blue); }
+    .topic-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .topic-name { font-size: 0.9rem; font-weight: 600; color: var(--navy); }
+
+    /* CONTACT FORM */
+    .form-section { background: var(--light-bg); }
+    .form-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; max-width: 1000px; margin: 0 auto; }
+    .contact-form { background: white; border-radius: 16px; padding: 36px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .form-field label { font-size: 0.85rem; font-weight: 600; color: var(--navy); }
+    .form-field input, .form-field select, .form-field textarea {
+      border: 1.5px solid var(--border); border-radius: 8px; padding: 11px 14px;
+      font-size: 0.93rem; color: var(--text); outline: none; font-family: inherit;
+      transition: border-color .2s; background: white;
+    }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--blue); }
+    .form-field textarea { resize: vertical; min-height: 100px; }
+    .form-submit { background: var(--blue); color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .form-submit:hover { background: #153d8a; }
+    .info-block { margin-bottom: 28px; }
+    .info-block h4 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .info-block p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+    .info-block a { color: var(--blue); font-weight: 600; }
+
+    /* FAQ */
+    .faq-list { margin-top: 40px; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { padding: 18px 24px; font-weight: 600; font-size: 0.97rem; color: var(--navy); background: white; display: flex; justify-content: space-between; align-items: center; cursor: default; }
+    .faq-a { padding: 0 24px 18px; font-size: 0.91rem; color: var(--muted); line-height: 1.7; background: white; }
+
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+
+    @media (max-width: 860px) { .form-wrap { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">HF</div>Harrison Financial</a>
+    <div class="nav-links">
+      <a href="banking.html">Banking</a>
+      <a href="cards.html">Cards</a>
+      <a href="lending.html">Lending</a>
+      <a href="security.html">Security</a>
+      <a href="about.html">About</a>
+      <a href="support.html" class="active">Support</a>
+    </div>
+    <div class="nav-actions">
+      <a href="#" class="btn btn-outline">Log In</a>
+      <a href="banking.html" class="btn btn-primary">Open Account</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-label">💬 Help Center</div>
+  <h1>How Can We Help You Today?</h1>
+  <p>Search our help articles, chat with a real person, or call us directly—we're here 24/7.</p>
+  <div class="search-wrap">
+    <div class="search-bar">
+      <input type="text" placeholder="Search help articles… e.g., 'dispute a charge'" />
+      <button>Search</button>
+    </div>
+  </div>
+</div>
+
+<!-- URGENT ALERT -->
+<section>
+  <div class="section-inner" style="max-width:900px">
+    <div class="urgent-bar">
+      <span class="urgent-icon">🚨</span>
+      <div class="urgent-text">
+        <h4>Suspect fraudulent activity on your account?</h4>
+        <p>Call our dedicated Fraud Hotline immediately: <a href="tel:18005554277">1-800-555-HARR</a> (available 24/7). You can also freeze your card instantly in the Harrison app.</p>
+      </div>
+    </div>
+
+    <!-- CHANNELS -->
+    <div class="section-label">Get In Touch</div>
+    <h2 class="section-title">Contact Us Your Way</h2>
+    <p class="section-sub">Every support channel is staffed by real Harrison Financial employees—not outsourced agents, not chatbots (unless you want one for quick answers).</p>
+    <div class="channels-grid">
+      <div class="channel-card">
+        <div class="channel-icon">💬</div>
+        <h3>In-App Live Chat</h3>
+        <p>The fastest way to reach us. Open the Harrison app, tap Support, and start a live chat with a specialist.</p>
+        <div class="channel-avail">⚡ Average wait: &lt;2 minutes</div>
+        <a href="#" class="btn btn-channel" style="margin-top:14px;display:inline-flex">Open App</a>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📞</div>
+        <h3>Phone Support</h3>
+        <p>Speak directly with a Harrison Financial specialist. No phone trees—your account context is pulled up automatically.</p>
+        <div class="channel-avail">📅 Mon–Fri: 8 AM–10 PM ET · Sat–Sun: 9 AM–6 PM ET</div>
+        <a href="tel:18005554277" class="btn btn-channel" style="margin-top:14px;display:inline-flex">1-800-555-HARR</a>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📧</div>
+        <h3>Email Support</h3>
+        <p>Send us a detailed message and receive a thorough response. Best for non-urgent issues requiring documentation.</p>
+        <div class="channel-avail">⏱ Response within 4 business hours</div>
+        <a href="mailto:support@harrisonfinancial.com" class="btn btn-channel" style="margin-top:14px;display:inline-flex">Send Email</a>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🤖</div>
+        <h3>AI Chat Assistant</h3>
+        <p>Get instant answers to common questions—account balance, how-tos, and policy information—available around the clock.</p>
+        <div class="channel-avail">🕐 Available 24/7 · Escalates to human if needed</div>
+        <a href="#" class="btn btn-channel" style="margin-top:14px;display:inline-flex">Start Chat</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HELP TOPICS -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Help Topics</div>
+      <h2 class="section-title">Browse by Topic</h2>
+      <p class="section-sub">Find answers quickly by browsing our most common support topics below.</p>
+    </div>
+    <div class="topics-grid">
+      <div class="topic-item"><span class="topic-icon">💳</span><span class="topic-name">Card Issues</span></div>
+      <div class="topic-item"><span class="topic-icon">🔐</span><span class="topic-name">Account Security</span></div>
+      <div class="topic-item"><span class="topic-icon">💸</span><span class="topic-name">Transfers &amp; Payments</span></div>
+      <div class="topic-item"><span class="topic-icon">📈</span><span class="topic-name">Savings &amp; Interest</span></div>
+      <div class="topic-item"><span class="topic-icon">🏦</span><span class="topic-name">Account Opening</span></div>
+      <div class="topic-item"><span class="topic-icon">🚨</span><span class="topic-name">Dispute a Charge</span></div>
+      <div class="topic-item"><span class="topic-icon">📊</span><span class="topic-name">Statements &amp; Docs</span></div>
+      <div class="topic-item"><span class="topic-icon">🔑</span><span class="topic-name">Password / Login</span></div>
+      <div class="topic-item"><span class="topic-icon">📱</span><span class="topic-name">Mobile App Help</span></div>
+      <div class="topic-item"><span class="topic-icon">📋</span><span class="topic-name">Loans &amp; Credit</span></div>
+      <div class="topic-item"><span class="topic-icon">🏧</span><span class="topic-name">ATM Issues</span></div>
+      <div class="topic-item"><span class="topic-icon">📬</span><span class="topic-name">Card Delivery</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section class="form-section">
+  <div class="section-inner">
+    <div class="form-wrap">
+      <div>
+        <div class="section-label">Send a Message</div>
+        <h2 class="section-title">Contact Support</h2>
+        <p class="section-sub">Can't find your answer? Fill out the form and a member of our team will respond within 4 business hours.</p>
+        <div style="margin-top:32px">
+          <div class="info-block">
+            <h4>📞 Fraud Hotline (24/7)</h4>
+            <p><a href="tel:18005554277">1-800-555-HARR</a></p>
+          </div>
+          <div class="info-block">
+            <h4>📞 General Support</h4>
+            <p><a href="tel:18005554278">1-800-555-4278</a><br>Mon–Fri 8 AM–10 PM ET · Sat–Sun 9 AM–6 PM ET</p>
+          </div>
+          <div class="info-block">
+            <h4>📧 Email</h4>
+            <p><a href="mailto:support@harrisonfinancial.com">support@harrisonfinancial.com</a></p>
+          </div>
+          <div class="info-block">
+            <h4>🏢 Mailing Address</h4>
+            <p>Harrison Financial, Inc.<br>350 Fifth Avenue, Suite 4800<br>New York, NY 10118</p>
+          </div>
+          <div class="info-block">
+            <h4>📰 Press Inquiries</h4>
+            <p><a href="mailto:press@harrisonfinancial.com">press@harrisonfinancial.com</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:24px">Send Us a Message</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>First Name</label>
+            <input type="text" placeholder="Jane" />
+          </div>
+          <div class="form-field">
+            <label>Last Name</label>
+            <input type="text" placeholder="Smith" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Email Address</label>
+          <input type="email" placeholder="jane@example.com" />
+        </div>
+        <div class="form-field">
+          <label>Subject</label>
+          <select>
+            <option>Select a topic…</option>
+            <option>Card Issue</option>
+            <option>Dispute a Charge</option>
+            <option>Transfer Problem</option>
+            <option>Account Access</option>
+            <option>Loan Question</option>
+            <option>Security Concern</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Message</label>
+          <textarea placeholder="Please describe your issue in detail…"></textarea>
+        </div>
+        <button class="form-submit">Send Message</button>
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:12px;line-height:1.6">By submitting this form, you agree to our <a href="#" style="color:var(--blue)">Privacy Policy</a>. We typically respond within 4 business hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="section-inner" style="max-width:760px">
+    <div class="section-label">Common Questions</div>
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">How do I dispute a transaction? <span>+</span></div>
+        <div class="faq-a">Open the Harrison app, navigate to the transaction in question, and tap "Dispute this charge." You'll be prompted to select a reason and provide details. Most disputes are resolved within 5–7 business days, and provisional credit is typically issued within 24 hours while we investigate.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">My card was lost or stolen. What do I do? <span>+</span></div>
+        <div class="faq-a">Open the Harrison app and tap Cards → Freeze Card immediately. This stops all new transactions. Then go to Cards → Report Lost/Stolen to cancel the card and order a replacement. A new card will arrive within 5–7 business days, with expedited delivery available. Your virtual card remains active during this time.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">I can't log in to my account. What should I do? <span>+</span></div>
+        <div class="faq-a">Tap "Forgot Password" on the login screen and follow the prompts to reset your credentials via email or SMS. If you're locked out due to failed attempts, your account will unlock after 30 minutes or you can contact our support team directly. Never share your password or OTP codes with anyone, including Harrison Financial employees.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How long do transfers take? <span>+</span></div>
+        <div class="faq-a">P2P transfers between Harrison members are instant. ACH transfers to external banks take 1–3 business days (standard) or same business day (expedited, $2.99 fee). Domestic wires are processed same business day if submitted before 3 PM ET. Zelle® transfers typically complete within minutes.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How do I close my account? <span>+</span></div>
+        <div class="faq-a">We're sorry to see you go! To close your account, contact our support team by phone or chat. We'll verify your identity, ensure your balance is transferred out, and close the account within 3–5 business days. Make sure to update any automatic payments or direct deposits beforehand.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;padding:28px 24px 0">
+    <div class="logo" style="margin-bottom:10px"><div class="logo-icon">HF</div><span style="color:white;font-size:1.1rem">Harrison Financial</span></div>
+    <p style="color:#8aadda;font-size:0.85rem;max-width:500px;line-height:1.6;margin-bottom:24px">For fraud emergencies, call 1-800-555-HARR at any hour. Banking services provided by Meridian Bank, N.A., Member FDIC.</p>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc.</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap"><a href="#">Privacy</a><a href="#">Terms</a><a href="security.html">Security</a></div>
+    <span>Member FDIC · Equal Housing Lender</span>
+  </div>
+</footer>
+
+</body>
+</html>
