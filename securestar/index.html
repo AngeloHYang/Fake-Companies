@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureStar — Real-Time Fraud Detection Infrastructure</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --slate:   #1e2d4a;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav {
+      background: var(--navy);
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 68px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 900; font-size: 1rem; letter-spacing: -1px;
+    }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-cyan { background: var(--cyan); color: var(--navy); font-weight: 700; }
+    .btn-cyan:hover { background: #0891b2; color: white; }
+    .btn-lg { font-size: 1rem; padding: 14px 32px; border-radius: 10px; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #0f2044 55%, #1a3070 100%);
+      color: white; padding: 100px 24px 90px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(6,182,212,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.3);
+      border-radius: 20px; padding: 5px 14px 5px 10px;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.4px;
+      color: var(--cyan); margin-bottom: 24px;
+    }
+    .hero-badge-dot { width: 7px; height: 7px; background: var(--cyan); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .hero h1 { font-size: clamp(2rem, 4.5vw, 3.4rem); font-weight: 800; line-height: 1.15; margin-bottom: 22px; }
+    .hero h1 span { color: var(--cyan); }
+    .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.7); max-width: 520px; line-height: 1.75; margin-bottom: 36px; }
+    .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px; overflow: hidden; margin-top: 56px;
+    }
+    .hero-stat { background: rgba(255,255,255,0.03); padding: 24px 20px; }
+    .hero-stat .value { font-size: 1.8rem; font-weight: 800; color: white; }
+    .hero-stat .value span { color: var(--cyan); }
+    .hero-stat .label { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+    /* TERMINAL WIDGET */
+    .terminal {
+      background: #0d1b2a; border: 1px solid rgba(6,182,212,0.25);
+      border-radius: 14px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .terminal-bar {
+      background: #162032; padding: 12px 16px;
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f56; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #27c93f; }
+    .terminal-title { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-left: auto; font-family: monospace; }
+    .terminal-body { padding: 20px; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.8; }
+    .t-comment { color: #4b5e72; }
+    .t-key { color: #7dd3fc; }
+    .t-str { color: #86efac; }
+    .t-num { color: #fbbf24; }
+    .t-kw { color: #c084fc; }
+    .t-label { color: var(--cyan); font-weight: 700; }
+    .t-green { color: #34d399; }
+    .t-red { color: #f87171; }
+    .t-badge { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; border-radius: 4px; padding: 0 6px; font-size: 0.75rem; }
+
+    /* SECTION COMMON */
+    section { padding: 80px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1.05rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* FEATURES */
+    .features-bg { background: var(--light-bg); }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 52px; }
+    .feature-card {
+      background: white; border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 32px 28px; box-shadow: var(--shadow);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(10,22,40,0.14); }
+    .feature-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 18px;
+    }
+    .icon-blue { background: #eff6ff; }
+    .icon-cyan { background: #ecfeff; }
+    .icon-green { background: #ecfdf5; }
+    .icon-purple { background: #f5f3ff; }
+    .icon-orange { background: #fff7ed; }
+    .icon-red { background: #fff1f2; }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+    .feature-card p { font-size: 0.93rem; color: var(--muted); line-height: 1.65; }
+    .feature-tag {
+      display: inline-block; margin-top: 14px;
+      background: #ecfeff; color: #0891b2; border: 1px solid #a5f3fc;
+      border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: 600;
+    }
+    .feature-tag.green { background: #ecfdf5; color: #059669; border-color: #6ee7b7; }
+    .feature-tag.purple { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+
+    /* HOW IT WORKS */
+    .flow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0; margin-top: 52px; position: relative; }
+    .flow-step {
+      text-align: center; padding: 36px 24px;
+      border: 1px solid var(--border); background: white;
+      border-radius: var(--radius); position: relative;
+    }
+    .flow-step + .flow-step { margin-left: -1px; }
+    .flow-num {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: white; font-weight: 800; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .flow-step h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .flow-step p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+    .flow-arrow { display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--border); }
+
+    /* INTEGRATIONS */
+    .integrations-bg { background: var(--navy); color: white; }
+    .integrations-bg .section-title { color: white; }
+    .integrations-bg .section-sub { color: rgba(255,255,255,0.55); }
+    .integration-chips { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 36px; justify-content: center; }
+    .integration-chip {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50px; padding: 10px 20px;
+      color: rgba(255,255,255,0.85); font-weight: 600; font-size: 0.9rem;
+      transition: all .2s;
+    }
+    .integration-chip:hover { background: rgba(6,182,212,0.12); border-color: var(--cyan); color: var(--cyan); }
+    .chip-icon { font-size: 1.2rem; }
+
+    /* COMPLIANCE */
+    .compliance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-top: 52px; }
+    .compliance-list { list-style: none; margin-top: 24px; }
+    .compliance-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      font-size: 0.95rem; color: var(--text);
+    }
+    .compliance-list li:last-child { border-bottom: none; }
+    .check { color: var(--green); font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .compliance-visual {
+      background: var(--navy); border-radius: 16px; padding: 36px;
+      color: white;
+    }
+    .audit-row {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+    }
+    .audit-icon { font-size: 1.2rem; }
+    .audit-info { flex: 1; }
+    .audit-title { font-size: 0.85rem; font-weight: 600; color: white; }
+    .audit-sub { font-size: 0.75rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+    .audit-badge {
+      font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    }
+    .badge-green { background: rgba(16,185,129,0.2); color: #34d399; }
+    .badge-blue { background: rgba(37,99,235,0.25); color: #93c5fd; }
+    .badge-yellow { background: rgba(251,191,36,0.2); color: #fbbf24; }
+
+    /* SOCIAL PROOF */
+    .quotes-bg { background: var(--light-bg); }
+    .quotes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 52px; }
+    .quote-card {
+      background: white; border-radius: var(--radius);
+      border: 1px solid var(--border); padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .quote-stars { color: #f59e0b; font-size: 1rem; margin-bottom: 14px; }
+    .quote-text { font-size: 0.95rem; color: var(--text); line-height: 1.7; font-style: italic; margin-bottom: 18px; }
+    .quote-author { display: flex; align-items: center; gap: 12px; }
+    .author-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 800; font-size: 0.9rem;
+    }
+    .author-name { font-size: 0.88rem; font-weight: 700; color: var(--navy); }
+    .author-role { font-size: 0.78rem; color: var(--muted); }
+
+    /* CTA BAND */
+    .cta-band {
+      background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%);
+      color: white; padding: 80px 24px; text-align: center;
+    }
+    .cta-band h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; margin-bottom: 16px; }
+    .cta-band p { font-size: 1.05rem; color: rgba(255,255,255,0.75); max-width: 500px; margin: 0 auto 36px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; }
+    .btn-white:hover { background: #e0e7ff; }
+    .btn-outline-white { border: 2px solid rgba(255,255,255,0.5); color: white; background: transparent; font-weight: 600; }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,0.6);
+      padding: 60px 24px 30px;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .footer-brand p { font-size: 0.88rem; line-height: 1.7; max-width: 280px; margin-top: 12px; color: rgba(255,255,255,0.45); }
+    .footer-col h5 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.8); margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { font-size: 0.88rem; color: rgba(255,255,255,0.5); transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--cyan); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 24px; font-size: 0.82rem; color: rgba(255,255,255,0.3); }
+
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .terminal { display: none; }
+      .hero-stats { grid-template-columns: 1fr; }
+      .compliance-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-icon">SS</div>
+      <span>SecureStar</span>
+    </div>
+    <div class="nav-links">
+      <a href="platform.html">Platform</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="developers.html">Developers</a>
+      <a href="company.html">Company</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">Docs</a>
+      <a href="#contact" class="btn btn-primary">Request Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        AI-Powered Risk Infrastructure
+      </div>
+      <h1>Fraud detection built for the <span>milliseconds</span> that matter</h1>
+      <p>SecureStar delivers sub-80ms real-time transaction scoring, explainable decisions, and audit-ready compliance — purpose-built for high-throughput financial platforms.</p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-cyan btn-lg">Request Demo</a>
+        <a href="developers.html" class="btn btn-ghost btn-lg">View API Docs →</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="value">&lt;<span>80</span>ms</div>
+          <div class="label">p99 API latency</div>
+        </div>
+        <div class="hero-stat">
+          <div class="value"><span>99.97</span>%</div>
+          <div class="label">Platform uptime SLA</div>
+        </div>
+        <div class="hero-stat">
+          <div class="value"><span>94</span>%+</div>
+          <div class="label">Precision on live data</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TERMINAL DEMO -->
+    <div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <div class="terminal-title">securestar-api · response</div>
+        </div>
+        <div class="terminal-body">
+          <div class="t-comment">// POST /v2/score</div>
+          <br>
+          <div><span class="t-kw">const</span> <span class="t-key">result</span> = <span class="t-kw">await</span> securestar.score({</div>
+          <div>&nbsp;&nbsp;<span class="t-key">transaction_id</span>: <span class="t-str">"txn_9x2q8a"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">amount</span>: <span class="t-num">4820.00</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">currency</span>: <span class="t-str">"USD"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">account_id</span>: <span class="t-str">"acct_h82jk"</span>,</div>
+          <div>});</div>
+          <br>
+          <div class="t-comment">// ✓ Response in 43ms</div>
+          <br>
+          <div>{</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"risk_score"</span>: <span class="t-num">0.08</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"decision"</span>: <span class="t-str">"approve"</span> <span class="t-badge">APPROVED</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"confidence"</span>: <span class="t-num">0.97</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"latency_ms"</span>: <span class="t-num">43</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"explanation"</span>: {</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">"top_factors"</span>: [<span class="t-str">"known_merchant"</span>, <span class="t-str">"consistent_geo"</span>],</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">"rule_hits"</span>: [],</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">"model_version"</span>: <span class="t-str">"v3.2.1"</span></div>
+          <div>&nbsp;&nbsp;},</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"audit_id"</span>: <span class="t-str">"aud_7gk2p1"</span></div>
+          <div>}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CORE CAPABILITIES -->
+<section class="features-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Core Platform</div>
+      <h2 class="section-title">Everything your risk team needs, nothing it doesn't</h2>
+      <p class="section-sub">Engineered for financial infrastructure teams who need speed, explainability, and compliance in a single platform.</p>
+    </div>
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon icon-blue">⚡</div>
+        <h3>Ultra-Low Latency Scoring</h3>
+        <p>Optimized inference pipelines and edge deployment options deliver sub-80ms p99 response times — even at peak throughput. Your payment flow never waits.</p>
+        <span class="feature-tag">&lt;80ms p99 guaranteed</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-cyan">🔍</div>
+        <h3>Explainable AI Decisions</h3>
+        <p>Every score comes with feature attribution, human-readable rule explanations, and a full audit trail. Satisfy AML and KYC auditors without writing custom reports.</p>
+        <span class="feature-tag green">AML / KYC Ready</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-purple">🧬</div>
+        <h3>Hybrid Decision Engine</h3>
+        <p>Combines ML pattern detection with a deterministic rule layer. Compliance teams control the rules; the model handles the anomalies. No black-box surprises.</p>
+        <span class="feature-tag purple">ML + Rule-Based</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-green">🛠️</div>
+        <h3>Custom Model Tuning</h3>
+        <p>Train on your own transaction history, set precision/recall thresholds, and push dynamic rule updates — all without redeploying or waiting on our team.</p>
+        <span class="feature-tag green">Your data, your model</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-blue">🔗</div>
+        <h3>Native Stack Integrations</h3>
+        <p>Pre-built connectors for Kafka event streams, AWS environments, and Python SDKs. Drop into your existing infrastructure with zero heavy lifting.</p>
+        <span class="feature-tag">Kafka · AWS · Python</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-orange">📊</div>
+        <h3>Real-Time Dashboards</h3>
+        <p>Live heatmaps, score distributions, rule-hit breakdowns, and model drift alerts — all in one operations console. Know what's happening before your customers do.</p>
+        <span class="feature-tag">Live monitoring</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">From transaction to decision in under 80ms</h2>
+      <p class="section-sub">A streaming-first architecture means every event is scored the moment it enters your system.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;margin-top:52px;">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <h4>Transaction Event</h4>
+        <p>Your platform emits a transaction event to SecureStar via REST API or Kafka topic.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <h4>Feature Extraction</h4>
+        <p>Streaming pipelines enrich the event with historical signals, velocity checks, and geo data — in real time.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <h4>Hybrid Scoring</h4>
+        <p>The ML model and rule engine run in parallel. The decision layer reconciles outputs into a single risk score.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <h4>Scored Response</h4>
+        <p>You receive risk score, decision recommendation, explanation factors, and an audit ID — typically in &lt;50ms.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">5</div>
+        <h4>Audit Log Written</h4>
+        <p>Every decision is persisted to an immutable audit log, queryable by regulators, compliance teams, or your own ops.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section class="integrations-bg">
+  <div class="section-inner text-center">
+    <div class="section-label" style="color:var(--cyan)">Integrations</div>
+    <h2 class="section-title">Built for modern financial stacks</h2>
+    <p class="section-sub">No rip-and-replace. SecureStar plugs into the tools you already run.</p>
+    <div class="integration-chips">
+      <div class="integration-chip"><span class="chip-icon">⚙️</span> Apache Kafka</div>
+      <div class="integration-chip"><span class="chip-icon">☁️</span> AWS (Lambda · SQS · RDS)</div>
+      <div class="integration-chip"><span class="chip-icon">🐍</span> Python SDK</div>
+      <div class="integration-chip"><span class="chip-icon">🔌</span> REST API</div>
+      <div class="integration-chip"><span class="chip-icon">🪝</span> Webhooks</div>
+      <div class="integration-chip"><span class="chip-icon">🗄️</span> PostgreSQL · Snowflake</div>
+      <div class="integration-chip"><span class="chip-icon">📦</span> Docker · Kubernetes</div>
+      <div class="integration-chip"><span class="chip-icon">🛡️</span> Splunk · Datadog</div>
+    </div>
+    <p style="color:rgba(255,255,255,0.3);font-size:0.85rem;margin-top:28px;">
+      Full integration docs → <a href="developers.html" style="color:var(--cyan)">developers.securestar.io</a>
+    </p>
+  </div>
+</section>
+
+<!-- COMPLIANCE -->
+<section>
+  <div class="section-inner">
+    <div class="compliance-grid">
+      <div>
+        <div class="section-label">Compliance & Explainability</div>
+        <h2 class="section-title">Audit-ready from day one</h2>
+        <p class="section-sub">Unlike black-box ML vendors, every SecureStar decision can be explained, traced, and exported.</p>
+        <ul class="compliance-list">
+          <li><span class="check">✓</span><span><strong>Feature attribution</strong> — Know exactly which signals drove each risk score.</span></li>
+          <li><span class="check">✓</span><span><strong>Human-readable rules</strong> — Compliance teams write and read rules in plain language.</span></li>
+          <li><span class="check">✓</span><span><strong>Immutable audit logs</strong> — Every decision is timestamped and cryptographically signed.</span></li>
+          <li><span class="check">✓</span><span><strong>AML &amp; KYC reports</strong> — One-click regulatory export in FinCEN, FATF, and EBA formats.</span></li>
+          <li><span class="check">✓</span><span><strong>SOC 2 Type II</strong> certified, PCI-DSS compliant infrastructure.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="compliance-visual">
+          <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:16px;">Audit Event Stream</div>
+          <div class="audit-row">
+            <div class="audit-icon">🟢</div>
+            <div class="audit-info">
+              <div class="audit-title">txn_9x2q8a — APPROVED</div>
+              <div class="audit-sub">risk_score: 0.08 · 43ms · model v3.2.1</div>
+            </div>
+            <div class="audit-badge badge-green">PASS</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-icon">🟡</div>
+            <div class="audit-info">
+              <div class="audit-title">txn_4h1k9b — FLAGGED</div>
+              <div class="audit-sub">risk_score: 0.71 · 38ms · rule: vel_1h_exceeded</div>
+            </div>
+            <div class="audit-badge badge-yellow">REVIEW</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-icon">🔴</div>
+            <div class="audit-info">
+              <div class="audit-title">txn_8m3r2c — DECLINED</div>
+              <div class="audit-sub">risk_score: 0.96 · 51ms · rule: aml_threshold</div>
+            </div>
+            <div class="audit-badge badge-blue">LOGGED</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-icon">🟢</div>
+            <div class="audit-info">
+              <div class="audit-title">txn_2z7p4d — APPROVED</div>
+              <div class="audit-sub">risk_score: 0.12 · 29ms · model v3.2.1</div>
+            </div>
+            <div class="audit-badge badge-green">PASS</div>
+          </div>
+          <div style="margin-top:14px;font-size:0.78rem;color:rgba(255,255,255,0.3);text-align:center;">
+            All events exported to compliance dashboard · KYC/AML-ready
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTES -->
+<section class="quotes-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Customer Stories</div>
+      <h2 class="section-title">Trusted by risk teams at scale</h2>
+    </div>
+    <div class="quotes-grid">
+      <div class="quote-card">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"We evaluated six fraud vendors. SecureStar was the only one that met our &lt;100ms SLA and could actually explain why a transaction was flagged to our compliance officer. That combination is rare."</p>
+        <div class="quote-author">
+          <div class="author-avatar">MR</div>
+          <div>
+            <div class="author-name">Marcus R.</div>
+            <div class="author-role">Head of Risk Engineering, Nexo Payments</div>
+          </div>
+        </div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"The Kafka-native integration saved us weeks of build time. We were live in production within 10 days. The hybrid rule + ML engine is exactly the right design for a regulated environment."</p>
+        <div class="quote-author">
+          <div class="author-avatar">SL</div>
+          <div>
+            <div class="author-name">Sophia L.</div>
+            <div class="author-role">VP Engineering, ClearRoute Financial</div>
+          </div>
+        </div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"Custom threshold tuning on our own data cut false positives by 31% in the first month. Our compliance team finally stopped rejecting the vendor's recommendations — because now they can read them."</p>
+        <div class="quote-author">
+          <div class="author-avatar">DP</div>
+          <div>
+            <div class="author-name">David P.</div>
+            <div class="author-role">Chief Risk Officer, Stratum Bank</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-band" id="contact">
+  <h2>Ready to see SecureStar in action?</h2>
+  <p>Book a 30-minute technical demo. We'll walk through our API, show live latency benchmarks, and discuss how to tune the model on your data.</p>
+  <div class="cta-actions">
+    <a href="#" class="btn btn-white btn-lg">Book a Demo</a>
+    <a href="developers.html" class="btn btn-outline-white btn-lg">Read the Docs</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-icon">SS</div>
+          <span>SecureStar</span>
+        </div>
+        <p>AI risk infrastructure for high-throughput financial systems. Built by engineers who know the difference between a fraud model and a fraud platform.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="platform.html">Risk Scoring API</a></li>
+          <li><a href="platform.html">Explainable AI</a></li>
+          <li><a href="platform.html">Hybrid Engine</a></li>
+          <li><a href="platform.html">Model Tuning</a></li>
+          <li><a href="platform.html">Audit Logs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Solutions</h5>
+        <ul>
+          <li><a href="solutions.html">Digital Banking</a></li>
+          <li><a href="solutions.html">Payments</a></li>
+          <li><a href="solutions.html">Lending</a></li>
+          <li><a href="solutions.html">AML / KYC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="company.html">About</a></li>
+          <li><a href="company.html">Team</a></li>
+          <li><a href="developers.html">Developers</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 SecureStar Labs, Inc. All rights reserved.</span>
+      <div style="display:flex;gap:20px;">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

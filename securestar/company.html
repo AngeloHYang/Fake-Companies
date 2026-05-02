@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Company — SecureStar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--navy); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-cyan { background: var(--cyan); color: var(--navy); font-weight: 700; }
+    .btn-cyan:hover { background: #0891b2; color: white; }
+
+    /* HERO */
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2044 100%); color: white; padding: 100px 24px 80px; text-align: center; }
+    .page-hero-inner { max-width: 860px; margin: 0 auto; }
+    .hero-eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 18px; }
+    .page-hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; margin-bottom: 22px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.65); max-width: 640px; margin: 0 auto; line-height: 1.8; }
+
+    section { padding: 80px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 640px; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* MISSION */
+    .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 40px; }
+    .mission-text p { font-size: 1rem; color: var(--muted); line-height: 1.8; margin-bottom: 18px; }
+    .mission-text strong { color: var(--text); }
+    .mission-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .mission-stat { background: var(--light-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .mission-stat .value { font-size: 1.8rem; font-weight: 800; color: var(--blue); }
+    .mission-stat .label { font-size: 0.85rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+    /* STORY / TIMELINE */
+    .story-bg { background: var(--light-bg); }
+    .timeline { margin-top: 40px; position: relative; }
+    .timeline::before { content: ''; position: absolute; left: 22px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--blue), var(--cyan)); }
+    .tl-item { display: flex; gap: 28px; margin-bottom: 36px; position: relative; }
+    .tl-dot { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--cyan)); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1rem; flex-shrink: 0; z-index: 1; }
+    .tl-content { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow); flex: 1; }
+    .tl-year { font-size: 0.78rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .tl-event { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .tl-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* TEAM */
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 48px; }
+    .team-card {
+      background: white; border: 1px solid var(--border); border-radius: 16px; padding: 28px;
+      box-shadow: var(--shadow); text-align: center;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .team-card:hover { transform: translateY(-4px); box-shadow: 0 14px 44px rgba(10,22,40,0.12); }
+    .team-avatar {
+      width: 70px; height: 70px; border-radius: 50%; margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; font-weight: 800; color: white;
+    }
+    .av-blue { background: linear-gradient(135deg, var(--blue), #1d4ed8); }
+    .av-cyan { background: linear-gradient(135deg, var(--cyan), #0891b2); }
+    .av-purple { background: linear-gradient(135deg, var(--purple), #6d28d9); }
+    .av-green { background: linear-gradient(135deg, var(--green), #059669); }
+    .av-navy { background: linear-gradient(135deg, var(--navy), #1e2d4a); }
+    .av-slate { background: linear-gradient(135deg, #334155, #1e293b); }
+    .team-name { font-size: 1rem; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .team-role { font-size: 0.85rem; color: var(--blue); font-weight: 600; margin-bottom: 8px; }
+    .team-bio { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+    .team-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+    .tag { background: var(--light-bg); color: var(--muted); border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 600; }
+
+    /* VALUES */
+    .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 48px; }
+    .value-card { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius); background: white; box-shadow: var(--shadow); }
+    .value-icon { font-size: 1.8rem; margin-bottom: 14px; }
+    .value-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .value-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* PRESS LOGOS */
+    .press-bg { background: var(--navy); color: white; padding: 60px 24px; text-align: center; }
+    .press-inner { max-width: 1000px; margin: 0 auto; }
+    .press-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 28px; }
+    .press-logos { display: flex; gap: 36px; justify-content: center; flex-wrap: wrap; align-items: center; }
+    .press-name { font-size: 0.9rem; font-weight: 800; color: rgba(255,255,255,0.3); letter-spacing: 0.5px; transition: color .2s; }
+    .press-name:hover { color: var(--cyan); }
+
+    /* CTA */
+    .cta-band { background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%); color: white; padding: 80px 24px; text-align: center; }
+    .cta-band h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-band p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; padding: 14px 32px; font-size: 1rem; }
+    .btn-white:hover { background: #e0e7ff; }
+    .btn-outline-white { border: 2px solid rgba(255,255,255,0.5); color: white; background: transparent; font-weight: 600; padding: 14px 32px; font-size: 1rem; }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+    .footer-inner a { color: rgba(255,255,255,0.4); transition: color .2s; }
+    .footer-inner a:hover { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .mission-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">SS</div><span>SecureStar</span></a>
+    <div class="nav-links">
+      <a href="platform.html">Platform</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="developers.html">Developers</a>
+      <a href="company.html" class="active">Company</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">Docs</a>
+      <a href="index.html#contact" class="btn btn-primary">Request Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-eyebrow">About SecureStar</div>
+    <h1>We build the fraud infrastructure that banks can actually explain</h1>
+    <p>SecureStar was founded by engineers who spent years inside fintech and ML platforms watching the same problem repeat: companies with real fraud risk, and vendors with real solutions, unable to find each other — or trust each other once found.</p>
+  </div>
+</div>
+
+<!-- MISSION -->
+<section>
+  <div class="section-inner">
+    <div class="mission-grid">
+      <div class="mission-text">
+        <div class="section-label">Our Mission</div>
+        <h2 class="section-title">Fraud detection that's fast, honest, and auditable</h2>
+        <p>Most fraud platforms are built by data scientists who think in model performance metrics. SecureStar was built by engineers who also had to sit in front of regulators and explain why a transaction was declined.</p>
+        <p>That experience shaped every product decision we've made. <strong>Speed matters.</strong> A fraud check that adds 200ms to your authorization is a fraud check your users will feel. <strong>Explainability matters.</strong> A model that can't justify its decisions to a compliance officer is a liability, not an asset. <strong>Control matters.</strong> One-size-fits-all fraud models don't fit anyone.</p>
+        <p>We built SecureStar to be the platform we wished existed when we were on the other side of the table.</p>
+      </div>
+      <div>
+        <div class="mission-stat-grid">
+          <div class="mission-stat">
+            <div class="value">~50</div>
+            <div class="label">Team members across engineering, research, and customer success</div>
+          </div>
+          <div class="mission-stat">
+            <div class="value">2020</div>
+            <div class="label">Founded in San Francisco, CA by fintech + ML veterans</div>
+          </div>
+          <div class="mission-stat">
+            <div class="value">3B+</div>
+            <div class="label">Transactions scored across all customers since launch</div>
+          </div>
+          <div class="mission-stat">
+            <div class="value">$42M</div>
+            <div class="label">Series B raised to accelerate infrastructure and compliance tooling</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story-bg">
+  <div class="section-inner">
+    <div class="section-label">Our Story</div>
+    <h2 class="section-title">From pain point to platform</h2>
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot">💡</div>
+        <div class="tl-content">
+          <div class="tl-year">2019 — The Problem</div>
+          <div class="tl-event">The realization</div>
+          <div class="tl-desc">Co-founders Priya Nair and James Kowalski are working at separate fintech companies. Both experience the same frustration: fraud vendors with impressive pitch decks that crumble when it's time to explain a decision to a compliance examiner — or meet a sub-100ms latency budget.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🛠️</div>
+        <div class="tl-content">
+          <div class="tl-year">2020 — Foundation</div>
+          <div class="tl-event">SecureStar Labs incorporated</div>
+          <div class="tl-desc">Priya and James incorporate SecureStar Labs in San Francisco. Seed round of $4.8M led by Emergence Capital. First 8 engineers hired from Stripe, Palantir, and Two Sigma. Core mission: build a fraud platform that satisfies engineers and compliance teams simultaneously.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🚀</div>
+        <div class="tl-content">
+          <div class="tl-year">2021 — Product</div>
+          <div class="tl-event">v1 launches with hybrid engine and explainability</div>
+          <div class="tl-desc">First production version ships with the hybrid ML + rule engine. Early customer Nexo Payments runs parallel tests against their incumbent vendor — SecureStar delivers 31% fewer false positives and sub-60ms p99 latency on their Kafka stack. Series A closes at $18M.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">📈</div>
+        <div class="tl-content">
+          <div class="tl-year">2022 — Scale</div>
+          <div class="tl-event">Kafka-native connector and Python SDK released</div>
+          <div class="tl-desc">Engineering team ships the Kafka connector and Python SDK, cutting typical integration time from 3–4 weeks to under 2 weeks. Customer count reaches 40. First enterprise AML compliance deployment with full regulatory export pipeline.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🔬</div>
+        <div class="tl-content">
+          <div class="tl-year">2023 — Research</div>
+          <div class="tl-event">Custom model tuning API and edge deployment beta</div>
+          <div class="tl-desc">Custom model fine-tuning on customer data launches, eliminating the one-size-fits-all problem. Edge deployment beta achieves sub-20ms p50 for select enterprise customers. SOC 2 Type II certification completed.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🌍</div>
+        <div class="tl-content">
+          <div class="tl-year">2024–2025 — Expansion</div>
+          <div class="tl-event">Series B and international expansion</div>
+          <div class="tl-desc">Series B closes at $42M. EU data residency launched for GDPR compliance. Team grows to ~50 people. Platform processes over 3 billion transactions. New features: dynamic rule updates, A/B shadow mode, and FinCEN SAR export for US customers.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Leadership</div>
+      <h2 class="section-title">Built by people who've been on both sides</h2>
+      <p class="section-sub">Our founding team brings experience from fintech engineering, ML research, and financial compliance — the exact combination needed to build this product right.</p>
+    </div>
+    <div class="team-grid">
+
+      <div class="team-card">
+        <div class="team-avatar av-blue">PN</div>
+        <div class="team-name">Priya Nair</div>
+        <div class="team-role">Co-Founder & CEO</div>
+        <div class="team-bio">Former Head of Risk Engineering at Stripe. Built fraud systems processing $80B+ annually. Knows exactly what breaks at scale and why latency budgets are non-negotiable.</div>
+        <div class="team-tags"><span class="tag">Fintech</span><span class="tag">Risk</span><span class="tag">Systems</span></div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-avatar av-cyan">JK</div>
+        <div class="team-name">James Kowalski</div>
+        <div class="team-role">Co-Founder & CTO</div>
+        <div class="team-bio">Former ML Research Lead at Two Sigma. Specializes in low-latency ML inference and explainability methods. Holds 4 patents in financial anomaly detection. MIT PhD in Applied ML.</div>
+        <div class="team-tags"><span class="tag">ML Research</span><span class="tag">Inference</span><span class="tag">XAI</span></div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-avatar av-purple">AR</div>
+        <div class="team-name">Amara Reeves</div>
+        <div class="team-role">VP of Engineering</div>
+        <div class="team-bio">Previously Staff Engineer at Palantir's financial crimes unit. Expert in streaming data pipelines and Kafka at scale. Led the architecture of SecureStar's core inference infrastructure.</div>
+        <div class="team-tags"><span class="tag">Kafka</span><span class="tag">AWS</span><span class="tag">Infra</span></div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-avatar av-green">DM</div>
+        <div class="team-name">David Marchetti</div>
+        <div class="team-role">Chief Compliance Officer</div>
+        <div class="team-bio">Former BSA/AML officer at JPMorgan Chase. Spent 12 years working directly with FinCEN and OCC examiners. Designed SecureStar's audit log and regulatory export architecture.</div>
+        <div class="team-tags"><span class="tag">AML</span><span class="tag">KYC</span><span class="tag">FinCEN</span></div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-avatar av-navy">SL</div>
+        <div class="team-name">Sophia Liu</div>
+        <div class="team-role">Head of ML Research</div>
+        <div class="team-bio">PhD in Statistics from Stanford. Previously at DeepMind and Capital One's fraud research lab. Leads development of SecureStar's explainability layer and SHAP-based attribution methods.</div>
+        <div class="team-tags"><span class="tag">SHAP</span><span class="tag">XGBoost</span><span class="tag">Research</span></div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-avatar av-slate">MT</div>
+        <div class="team-name">Marcus Torres</div>
+        <div class="team-role">VP of Customer Engineering</div>
+        <div class="team-bio">Former solutions architect at Confluent (Kafka). Has personally integrated SecureStar into 25+ production environments across digital banking and payments stacks.</div>
+        <div class="team-tags"><span class="tag">Integrations</span><span class="tag">Customer Success</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section style="background:var(--light-bg);padding:80px 24px;">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Values</div>
+      <h2 class="section-title">What we believe</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">⚡</div>
+        <h3>Speed is a feature</h3>
+        <p>Latency isn't a technical footnote. In payment authorization, every millisecond is a UX decision. We treat our latency SLA as a product commitment, not an aspiration.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🔍</div>
+        <h3>Opacity is a liability</h3>
+        <p>An AI system that can't explain itself isn't trustworthy — it's a regulatory risk. We believe every automated financial decision should be explainable to the person it affected.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🎛️</div>
+        <h3>Control belongs to the customer</h3>
+        <p>You know your customers better than we do. Your compliance team should own the rules. Your data scientists should tune the model. We provide the infrastructure; you make the decisions.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <h3>Integration should be boring</h3>
+        <p>The best vendor integration is one that takes days, not months, and doesn't require a migration project. We obsess over our SDK ergonomics, connector simplicity, and zero-rework deployments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESS -->
+<div class="press-bg">
+  <div class="press-inner">
+    <div class="press-label">As featured in</div>
+    <div class="press-logos">
+      <span class="press-name">TechCrunch</span>
+      <span class="press-name">The Information</span>
+      <span class="press-name">Finextra</span>
+      <span class="press-name">American Banker</span>
+      <span class="press-name">Forbes Fintech 50</span>
+      <span class="press-name">MIT Technology Review</span>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2>Work with us, or join us</h2>
+  <p>We're hiring engineers, ML researchers, and compliance specialists. And if you're a financial platform evaluating fraud infrastructure — let's talk.</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn btn-white">Book a Demo</a>
+    <a href="#" class="btn btn-outline-white">View Open Roles</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo"><div class="logo-icon">SS</div><span style="color:white">SecureStar</span></div>
+    <span>© 2025 SecureStar Labs, Inc.</span>
+    <div style="display:flex;gap:20px;"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
