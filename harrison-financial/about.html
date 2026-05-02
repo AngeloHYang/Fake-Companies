@@ -52,8 +52,10 @@
     /* MISSION */
     .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
     .mission-copy p { font-size: 1rem; color: var(--muted); line-height: 1.8; margin-bottom: 18px; }
-    .mission-visual { background: var(--navy); border-radius: 20px; padding: 36px; }
-    .mission-visual .quote { font-size: 1.15rem; color: white; line-height: 1.75; font-style: italic; margin-bottom: 20px; }
+    .mission-visual { background: var(--navy); border-radius: 20px; overflow: hidden; }
+    .mission-lifestyle { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .mission-visual-text { padding: 28px 36px; }
+    .mission-visual .quote { font-size: 1.05rem; color: white; line-height: 1.75; font-style: italic; margin-bottom: 16px; }
     .mission-visual .attr { font-size: 0.88rem; color: #8aadda; font-weight: 600; }
 
     /* VALUES */
@@ -66,15 +68,14 @@
     /* LEADERSHIP */
     .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 48px; }
     .team-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
-    .team-photo { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
-    .photo-blue { background: linear-gradient(135deg, #1a4fad, #2db4a0); }
-    .photo-navy { background: linear-gradient(135deg, #0d1e3d, #1a4fad); }
-    .photo-teal { background: linear-gradient(135deg, #2db4a0, #1a9e8c); }
-    .photo-purple { background: linear-gradient(135deg, #6c5ce7, #1a4fad); }
+    .team-photo { width: 100%; height: 180px; object-fit: cover; object-position: top; display: block; }
     .team-info { padding: 18px 20px; }
     .team-name { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
     .team-title { font-size: 0.83rem; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
     .team-bio { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+
+    /* OFFICE PHOTO */
+    .office-banner { width: 100%; max-height: 420px; object-fit: cover; display: block; }
 
     /* TIMELINE */
     .timeline { position: relative; margin-top: 48px; padding-left: 32px; border-left: 2px solid var(--border); display: flex; flex-direction: column; gap: 0; }
@@ -161,8 +162,11 @@
         <a href="careers.html" class="btn btn-primary" style="margin-top:20px;display:inline-flex">Join Our Team</a>
       </div>
       <div class="mission-visual">
-        <div class="quote">"We measured success not by how much revenue we extracted from customers, but by how much wealth they accumulated while banking with us. That's the only metric that matters in the long run."</div>
-        <div class="attr">— Eleanor Harrison, Co-Founder &amp; CEO</div>
+        <img src="images/app-lifestyle.png" alt="Harrison Financial member using the mobile app" class="mission-lifestyle" />
+        <div class="mission-visual-text">
+          <div class="quote">"We measured success not by how much revenue we extracted from customers, but by how much wealth they accumulated while banking with us. That's the only metric that matters in the long run."</div>
+          <div class="attr">— Eleanor Harrison, Co-Founder &amp; CEO</div>
+        </div>
       </div>
     </div>
   </div>
@@ -218,7 +222,7 @@
     <p class="section-sub">A leadership team with deep roots in banking, technology, and regulatory compliance.</p>
     <div class="team-grid">
       <div class="team-card">
-        <div class="team-photo photo-blue">👩‍💼</div>
+        <img src="images/eleanor-harrison.png" alt="Eleanor Harrison" class="team-photo" />
         <div class="team-info">
           <div class="team-name">Eleanor Harrison</div>
           <div class="team-title">Co-Founder &amp; CEO</div>
@@ -226,7 +230,7 @@
         </div>
       </div>
       <div class="team-card">
-        <div class="team-photo photo-navy">👨‍💼</div>
+        <img src="images/marcus-reid.png" alt="Marcus Reid" class="team-photo" />
         <div class="team-info">
           <div class="team-name">Marcus Reid</div>
           <div class="team-title">Co-Founder &amp; CTO</div>
@@ -234,7 +238,7 @@
         </div>
       </div>
       <div class="team-card">
-        <div class="team-photo photo-teal">👩‍💻</div>
+        <img src="images/priya-nair.png" alt="Priya Nair" class="team-photo" />
         <div class="team-info">
           <div class="team-name">Priya Nair</div>
           <div class="team-title">Chief Risk Officer</div>
@@ -242,7 +246,7 @@
         </div>
       </div>
       <div class="team-card">
-        <div class="team-photo photo-purple">👨‍🔬</div>
+        <img src="images/james-okafor.png" alt="James Okafor" class="team-photo" />
         <div class="team-info">
           <div class="team-name">James Okafor</div>
           <div class="team-title">Chief Product Officer</div>
@@ -250,7 +254,7 @@
         </div>
       </div>
       <div class="team-card">
-        <div class="team-photo photo-blue">👩‍⚖️</div>
+        <img src="images/sarah-kwan.png" alt="Sarah Kwan" class="team-photo" />
         <div class="team-info">
           <div class="team-name">Sarah Kwan</div>
           <div class="team-title">General Counsel</div>
@@ -258,7 +262,7 @@
         </div>
       </div>
       <div class="team-card">
-        <div class="team-photo photo-navy">👨‍💵</div>
+        <img src="images/david-castellano.png" alt="David Castellano" class="team-photo" />
         <div class="team-info">
           <div class="team-name">David Castellano</div>
           <div class="team-title">Chief Financial Officer</div>
@@ -268,6 +272,9 @@
     </div>
   </div>
 </section>
+
+<!-- OFFICE PHOTO -->
+<img src="images/hf-office.png" alt="Harrison Financial headquarters" class="office-banner" />
 
 <!-- TIMELINE -->
 <section class="light-bg">
