@@ -56,7 +56,8 @@ bottom to open the chat overlay and ask the agent any
 question (e.g. "What are my jobs today?").
 
   ▶ NEXT: Tap the "📞 New Leads" stat card, or tap "Leads"
-    in the bottom navigation bar.
+    in the bottom navigation bar (four icons at the bottom
+    of the phone: 🏠 Home · 📞 Leads · 🎙️ Field · ✅ Jobs).
 
 
 STEP 2 — Leads: View Sarah Chen  (leads.html)

@@ -365,7 +365,8 @@ function _onStepChange() {
 }
 
 function updateSarahCard() {
-  const done = getStep() >= 8;
+  const INVOICE_SENT_STEP = 8;
+  const done = getStep() >= INVOICE_SENT_STEP;
   const dot  = document.getElementById('sarah-dot');
   const pill = document.getElementById('sarah-pill');
   if (dot)  { dot.className  = 'job-dot ' + (done ? 'dot-green' : 'dot-orange'); }
