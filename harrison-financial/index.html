@@ -161,7 +161,8 @@
     .stars { color: #f5a623; font-size: 1rem; margin-bottom: 12px; letter-spacing: 2px; }
     .review-text { font-size: 0.94rem; color: var(--text); line-height: 1.65; margin-bottom: 16px; font-style: italic; }
     .reviewer { display: flex; align-items: center; gap: 12px; }
-    .avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .reviewer-name { font-size: 0.9rem; font-weight: 700; color: var(--navy); }
     .reviewer-meta { font-size: 0.8rem; color: var(--muted); }
 
@@ -413,7 +414,7 @@
         <div class="stars">★★★★★</div>
         <p class="review-text">"I switched from my old bank after 12 years and I wish I had done it sooner. The app is incredible and I actually earned interest on my savings for once."</p>
         <div class="reviewer">
-          <div class="avatar">MJ</div>
+          <div class="avatar"><img src="images/member-marcus-j.png" alt="Marcus J." /></div>
           <div>
             <div class="reviewer-name">Marcus J.</div>
             <div class="reviewer-meta">Member since 2022 · Chicago, IL</div>
@@ -424,7 +425,7 @@
         <div class="stars">★★★★★</div>
         <p class="review-text">"The fraud alert caught a suspicious charge before I even noticed it. Harrison froze my card automatically and had a replacement to me in two days. Zero stress."</p>
         <div class="reviewer">
-          <div class="avatar">SR</div>
+          <div class="avatar"><img src="images/member-sarah-r.png" alt="Sarah R." /></div>
           <div>
             <div class="reviewer-name">Sarah R.</div>
             <div class="reviewer-meta">Member since 2021 · Austin, TX</div>
@@ -435,7 +436,7 @@
         <div class="stars">★★★★★</div>
         <p class="review-text">"Getting a personal loan through Harrison was the smoothest financial experience I've had. Approved in 24 hours, funds in my account the next morning."</p>
         <div class="reviewer">
-          <div class="avatar">DK</div>
+          <div class="avatar"><img src="images/member-david-k.png" alt="David K." /></div>
           <div>
             <div class="reviewer-name">David K.</div>
             <div class="reviewer-meta">Member since 2023 · Seattle, WA</div>
