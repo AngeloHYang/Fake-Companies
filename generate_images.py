@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Generate AI photos for SecureStar and Harrison Financial websites
-using OpenAI's gpt-image-1 model (Image Generation 2.0).
+Generate realistic AI photos for SecureStar and Harrison Financial websites
+using OpenAI's gpt-image-2 model.
 
 Usage:
-    OPENAI_API_KEY=<your-key> python3 generate_images.py
+    OPENAI_API_KEY=<your-key> python generate_images.py
 
-Images are saved to:
+Images are overwritten in:
     securestar/images/
     harrison-financial/images/
 """
@@ -22,35 +22,41 @@ except ImportError:
     raise SystemExit("openai package not installed. Run: pip install openai")
 
 
+MODEL_CANDIDATES = ("gpt-image-2", "gpt-image-1")
+
+
 def generate_image(client: OpenAI, prompt: str, output_path: str) -> bool:
-    """Generate an image using gpt-image-1 and save it."""
+    """Generate an image and save it, trying model fallbacks if needed."""
     print(f"  Generating: {Path(output_path).name}")
-    try:
-        response = client.images.generate(
-            model="gpt-image-1",
-            prompt=prompt,
-            n=1,
-            size="1024x1024",
-            quality="medium",
-        )
-        image_bytes = base64.b64decode(response.data[0].b64_json)
-        with open(output_path, "wb") as f:
-            f.write(image_bytes)
-        print(f"    ✓ Saved ({len(image_bytes) // 1024} KB)")
-        return True
-    except Exception as exc:
-        print(f"    ✗ Error: {exc}")
-        return False
+    last_error = None
+    for model in MODEL_CANDIDATES:
+        try:
+            response = client.images.generate(
+                model=model,
+                prompt=prompt,
+                size="1024x1024",
+            )
+            image_bytes = base64.b64decode(response.data[0].b64_json)
+            with open(output_path, "wb") as f:
+                f.write(image_bytes)
+            print(f"    ✓ Saved via {model} ({len(image_bytes) // 1024} KB)")
+            return True
+        except Exception as exc:
+            last_error = exc
+            print(f"    ! {model} failed: {exc}")
+
+    print(f"    ✗ All models failed. Last error: {last_error}")
+    return False
 
 
 def main() -> None:
-    api_key = os.environ.get("OPENAI_API_KEY")
+    api_key = ""
     if not api_key:
         raise SystemExit(
             "OPENAI_API_KEY environment variable not set.\n"
-            "Export your key and re-run:\n"
-            "  export OPENAI_API_KEY=sk-...\n"
-            "  python3 generate_images.py"
+            "Set your key and re-run:\n"
+            "  Windows PowerShell: $env:OPENAI_API_KEY='sk-...'\n"
+            "  python generate_images.py"
         )
 
     client = OpenAI(api_key=api_key)
@@ -61,161 +67,235 @@ def main() -> None:
     hf_dir.mkdir(parents=True, exist_ok=True)
 
     images = [
-        # ── SecureStar leadership portraits ──────────────────────────────────
+        # SecureStar leadership portraits (company.html team section)
         {
             "file": ss_dir / "priya-nair.png",
             "prompt": (
-                "Professional corporate headshot portrait of a South Asian woman in her late 30s, "
-                "CEO executive. She wears a dark navy business blazer. Confident, warm expression. "
-                "Soft neutral light-gray background. Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for website leadership profile. "
+                "Subject name: Priya Nair, co-founder and CEO of an AI risk infrastructure company. "
+                "South Asian woman, late 30s to early 40s, navy blazer, confident approachable expression, "
+                "clean neutral studio background, centered framing, chest-up composition, high detail, realistic skin texture."
             ),
         },
         {
             "file": ss_dir / "james-kowalski.png",
             "prompt": (
-                "Professional corporate headshot portrait of a white man in his early 40s, "
-                "CTO technology executive. He wears a navy blue dress shirt, no tie. "
-                "Intelligent, thoughtful expression. Soft neutral background. "
-                "Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for website leadership profile. "
+                "Subject name: James Kowalski, co-founder and CTO. "
+                "White man, early 40s, business-casual navy shirt and blazer, focused thoughtful expression, "
+                "soft neutral background, chest-up crop, studio lighting, realistic photography."
             ),
         },
         {
             "file": ss_dir / "amara-reeves.png",
             "prompt": (
-                "Professional corporate headshot portrait of a Black woman in her mid-30s, "
-                "VP of Engineering. She wears a charcoal blazer. Confident, warm smile. "
-                "Soft neutral light background. Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for website leadership profile. "
+                "Subject name: Amara Reeves, VP of Engineering. "
+                "Black woman, mid-30s, charcoal blazer, confident warm smile, "
+                "neutral light background, chest-up framing, sharp focus, realistic professional portrait."
             ),
         },
         {
             "file": ss_dir / "david-marchetti.png",
             "prompt": (
-                "Professional corporate headshot portrait of a white man in his mid-50s, "
-                "Chief Compliance Officer. He wears a dark suit and tie. "
-                "Authoritative, trustworthy expression. Soft neutral background. "
-                "Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for website leadership profile. "
+                "Subject name: David Marchetti, Chief Compliance Officer. "
+                "White man, mid-50s, dark suit and tie, trustworthy and experienced expression, "
+                "neutral studio background, chest-up composition, high realism."
             ),
         },
         {
             "file": ss_dir / "sophia-liu.png",
             "prompt": (
-                "Professional corporate headshot portrait of an East Asian woman in her early 30s, "
-                "machine learning researcher. She wears a smart casual blazer. "
-                "Intelligent, focused expression. Soft neutral background. "
-                "Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for website leadership profile. "
+                "Subject name: Sophia Liu, Head of ML Research. "
+                "East Asian woman, early 30s, smart blazer, intelligent focused expression, "
+                "subtle neutral background, chest-up framing, studio portrait look."
             ),
         },
         {
             "file": ss_dir / "marcus-torres.png",
             "prompt": (
-                "Professional corporate headshot portrait of a Latino man in his late 30s, "
-                "VP of Customer Engineering. He wears a business-casual button-down shirt. "
-                "Friendly, approachable smile. Soft neutral background. "
-                "Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for website leadership profile. "
+                "Subject name: Marcus Torres, VP of Customer Engineering. "
+                "Latino man, late 30s, business-casual shirt and blazer, friendly approachable smile, "
+                "neutral background, chest-up crop, realistic studio lighting."
             ),
         },
-        # ── SecureStar office / place ─────────────────────────────────────────
+        # SecureStar customer quote avatars (index.html customer stories)
+        {
+            "file": ss_dir / "customer-marcus-r.png",
+            "prompt": (
+                "Photorealistic customer avatar photo for a fintech testimonial card. "
+                "Subject label: Marcus R., head of risk engineering persona. "
+                "Man in his early 40s, smart-casual attire, friendly professional expression, "
+                "close-up headshot, clean background, centered face suitable for circular crop, high realism."
+            ),
+        },
+        {
+            "file": ss_dir / "customer-sophia-l.png",
+            "prompt": (
+                "Photorealistic customer avatar photo for a fintech testimonial card. "
+                "Subject label: Sophia L., VP engineering persona. "
+                "Woman in late 30s, business-casual attire, confident expression, "
+                "close-up headshot, clean background, centered face suitable for circular crop, realistic photo style."
+            ),
+        },
+        {
+            "file": ss_dir / "customer-david-p.png",
+            "prompt": (
+                "Photorealistic customer avatar photo for a fintech testimonial card. "
+                "Subject label: David P., chief risk officer persona. "
+                "Man in his 50s, business attire, trustworthy expression, "
+                "close-up headshot, clean background, centered face suitable for circular crop, natural lighting."
+            ),
+        },
+        # SecureStar office / place (company.html office photo)
         {
             "file": ss_dir / "sf-office.png",
             "prompt": (
-                "Modern tech startup open-plan office interior in San Francisco. "
-                "Sleek minimalist design with dark navy walls and blue accent lighting. "
-                "Multiple large monitors showing data dashboards and graphs. "
-                "Standing desks with developers working. Exposed industrial ceiling. "
-                "Wide-angle shot, professional corporate photography, photorealistic."
+                "Photorealistic office environment image for cybersecurity startup company page. "
+                "SecureStar headquarters in San Francisco, modern open-plan engineering office, "
+                "mix of collaborative tables and standing desks, monitors with analytics dashboards, "
+                "glass walls, natural daylight, wide-angle architectural photo, realistic corporate photography."
             ),
         },
-        # ── Harrison Financial leadership portraits ───────────────────────────
+        # Harrison Financial leadership portraits (about.html team section)
         {
             "file": hf_dir / "eleanor-harrison.png",
             "prompt": (
-                "Professional corporate headshot portrait of a white woman in her early 40s, "
-                "bank CEO and founder. She wears an elegant navy blue business blazer. "
-                "Confident, professional smile. Clean light background. "
-                "Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for digital bank leadership profile. "
+                "Subject name: Eleanor Harrison, co-founder and CEO. "
+                "White woman, early 40s, elegant navy blazer, confident professional smile, "
+                "neutral studio background, chest-up framing, sharp realistic detail."
             ),
         },
         {
             "file": hf_dir / "marcus-reid.png",
             "prompt": (
-                "Professional corporate headshot portrait of a Black man in his late 30s, "
-                "CTO of a fintech startup. He wears a dark business shirt. "
-                "Confident, professional expression. Clean neutral background. "
-                "Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for digital bank leadership profile. "
+                "Subject name: Marcus Reid, co-founder and CTO. "
+                "Black man, late 30s, dark business shirt and blazer, confident expression, "
+                "clean neutral background, chest-up composition, professional studio portrait."
             ),
         },
         {
             "file": hf_dir / "priya-nair.png",
             "prompt": (
-                "Professional corporate headshot portrait of a South Asian woman in her mid-40s, "
-                "Chief Risk Officer at a bank. She wears a teal-accented business blazer. "
-                "Serious, professional demeanor. Clean neutral background. "
-                "Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for digital bank leadership profile. "
+                "Subject name: Priya Nair, Chief Risk Officer. "
+                "South Asian woman, mid-40s, business blazer with subtle teal accent, "
+                "calm and authoritative expression, neutral background, chest-up framing, realistic photo."
             ),
         },
         {
             "file": hf_dir / "james-okafor.png",
             "prompt": (
-                "Professional corporate headshot portrait of a Nigerian man in his mid-30s, "
-                "Chief Product Officer at a fintech company. He wears a casual blazer. "
-                "Enthusiastic, approachable smile. Clean neutral background. "
-                "Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for digital bank leadership profile. "
+                "Subject name: James Okafor, Chief Product Officer. "
+                "Nigerian man, mid-30s, smart casual blazer, approachable smile, "
+                "clean neutral background, chest-up framing, high-quality realistic portrait."
             ),
         },
         {
             "file": hf_dir / "sarah-kwan.png",
             "prompt": (
-                "Professional corporate headshot portrait of an East Asian woman in her late 30s, "
-                "General Counsel and banking attorney. She wears a formal dark business suit. "
-                "Composed, professional expression. Clean neutral background. "
-                "Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for digital bank leadership profile. "
+                "Subject name: Sarah Kwan, General Counsel. "
+                "East Asian woman, late 30s, formal dark suit, composed professional expression, "
+                "neutral background, chest-up composition, realistic studio lighting."
             ),
         },
         {
             "file": hf_dir / "david-castellano.png",
             "prompt": (
-                "Professional corporate headshot portrait of a Hispanic man in his early 50s, "
-                "Chief Financial Officer. He wears a dark charcoal suit. "
-                "Trustworthy, experienced smile. Clean neutral background. "
-                "Photorealistic, studio lighting, sharp focus."
+                "Photorealistic corporate headshot for digital bank leadership profile. "
+                "Subject name: David Castellano, Chief Financial Officer. "
+                "Hispanic man, early 50s, charcoal suit, experienced trustworthy smile, "
+                "clean neutral background, chest-up framing, realistic professional portrait."
             ),
         },
-        # ── Harrison Financial lifestyle / place ──────────────────────────────
+        # Harrison Financial member review avatars (index.html testimonials)
+        {
+            "file": hf_dir / "member-marcus-j.png",
+            "prompt": (
+                "Photorealistic member avatar for consumer banking testimonial card. "
+                "Subject label: Marcus J., everyday banking customer in Chicago. "
+                "Man in his 30s, casual modern clothing, genuine smile, "
+                "tight headshot, simple background, centered face suitable for circular crop, realistic photo."
+            ),
+        },
+        {
+            "file": hf_dir / "member-sarah-r.png",
+            "prompt": (
+                "Photorealistic member avatar for consumer banking testimonial card. "
+                "Subject label: Sarah R., everyday banking customer in Austin. "
+                "Woman in her 30s, casual-professional look, friendly expression, "
+                "tight headshot, simple background, centered face suitable for circular crop, realistic natural lighting."
+            ),
+        },
+        {
+            "file": hf_dir / "member-david-k.png",
+            "prompt": (
+                "Photorealistic member avatar for consumer banking testimonial card. "
+                "Subject label: David K., everyday banking customer in Seattle. "
+                "Man in his 40s, casual clothing, approachable expression, "
+                "tight headshot, simple background, centered face suitable for circular crop, realistic photography."
+            ),
+        },
+        # Harrison Financial lifestyle / place images (about.html)
         {
             "file": hf_dir / "app-lifestyle.png",
             "prompt": (
-                "Young diverse professional woman in her late 20s smiling while using a "
-                "mobile banking app on her smartphone. Modern bright apartment background "
-                "with warm natural daylight from a window. Lifestyle photography, "
-                "candid and authentic feel. Photorealistic, high quality."
+                "Photorealistic lifestyle image for a digital bank mission section. "
+                "A bank member using a mobile banking app on a smartphone, "
+                "modern home environment with natural daylight, candid and optimistic mood, "
+                "editorial lifestyle photography, realistic human details."
             ),
         },
         {
             "file": hf_dir / "hf-office.png",
             "prompt": (
-                "Modern open-plan fintech startup office. Bright, airy space with white walls "
-                "and teal-blue accents. Diverse team of professionals at standing desks with "
-                "monitors. Large floor-to-ceiling windows overlooking a city skyline. "
-                "Professional corporate photography, wide-angle shot. Photorealistic."
+                "Photorealistic headquarters image for financial company about page. "
+                "Modern fintech office interior, bright and airy with glass meeting rooms, "
+                "diverse professionals collaborating at desks with laptops and monitors, "
+                "city skyline visible through large windows, wide-angle corporate photo."
             ),
         },
     ]
 
-    print(f"Generating {len(images)} images using gpt-image-1...\n")
+    print(
+        f"Generating {len(images)} images using fallback models "
+        f"{', '.join(MODEL_CANDIDATES)}...\n"
+    )
+
+    success_count = 0
+    failure_count = 0
 
     print("SecureStar images:")
     securestar_images = [img for img in images if "securestar" in str(img["file"])]
     for img in securestar_images:
-        generate_image(client, img["prompt"], str(img["file"]))
+        if generate_image(client, img["prompt"], str(img["file"])):
+            success_count += 1
+        else:
+            failure_count += 1
         time.sleep(1)
 
     print("\nHarrison Financial images:")
     hf_images = [img for img in images if "harrison-financial" in str(img["file"])]
     for img in hf_images:
-        generate_image(client, img["prompt"], str(img["file"]))
+        if generate_image(client, img["prompt"], str(img["file"])):
+            success_count += 1
+        else:
+            failure_count += 1
         time.sleep(1)
 
-    print(f"\nDone! Generated images in securestar/images/ and harrison-financial/images/")
+    print(
+        f"\nFinished. Success: {success_count}, Failed: {failure_count}. "
+        "Output folders: securestar/images/ and harrison-financial/images/"
+    )
+    if failure_count:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
