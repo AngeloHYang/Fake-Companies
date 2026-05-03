@@ -371,7 +371,7 @@ function releaseVoice() {
     setTimeout(() => {
       const s = document.getElementById(t.spin);
       const l = document.getElementById(t.lbl);
-      if (s) { s.className = 'spinner-done'; }
+      if (s) { s.classList.remove('spinner-sm', 'spinner-pending'); s.classList.add('spinner-done'); }
       if (l)  { l.textContent = t.text; }
     }, t.delay);
   });
@@ -380,7 +380,7 @@ function releaseVoice() {
   setTimeout(() => {
     const s = document.getElementById('spin-price');
     const l = document.getElementById('lbl-price');
-    if (s) { s.className = 'spinner-pending'; }
+    if (s) { s.classList.remove('spinner-sm', 'spinner-done'); s.classList.add('spinner-pending'); }
     if (l) { l.textContent = '⏰ Pricing ready — needs your approval'; l.classList.add('tc-title-pending'); }
     // All tasks have now settled — update header
     updateTasksHeader('needs-approval');
@@ -425,12 +425,12 @@ function approveOrder() {
 function _markPricingDone(supplier, price) {
   // Pricing task → green done
   const spinP = document.getElementById('spin-price');
-  if (spinP) { spinP.className = 'spinner-done'; }
+  if (spinP) { spinP.classList.remove('spinner-sm', 'spinner-pending'); spinP.classList.add('spinner-done'); }
   const lblP = document.getElementById('lbl-price');
   if (lblP) { lblP.textContent = '✓ Pricing — ' + supplier + ' order placed'; lblP.classList.remove('tc-title-pending'); }
   // Quote task → agent can now finalise → green done
   const spinQ = document.getElementById('spin-quote');
-  if (spinQ) { spinQ.className = 'spinner-done'; }
+  if (spinQ) { spinQ.classList.remove('spinner-sm', 'spinner-pending'); spinQ.classList.add('spinner-done'); }
   const lblQ = document.getElementById('lbl-quote');
   if (lblQ) { lblQ.textContent = '✓ Quote drafted — ' + price + ' + labor + permit'; }
   // Header → all complete
