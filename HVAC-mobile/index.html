@@ -542,7 +542,7 @@ function openChat(mode, btnEl) {
 
   chatOverlay.style.display = 'flex';
   chatOverlay.classList.remove('closing');
-  void chatOverlay.offsetWidth; // reflow
+  chatOverlay.getBoundingClientRect(); // trigger reflow so opening animation replays
   chatOverlay.classList.add('opening');
   setTimeout(() => chatOverlay.classList.remove('opening'), 500);
 
@@ -576,7 +576,8 @@ function scrollChatToBottom() {
 
 function nowTime() {
   const d = new Date();
-  return d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0');
+  const h = d.getHours(), m = String(d.getMinutes()).padStart(2, '0');
+  return (h % 12 || 12) + ':' + m + ' ' + (h < 12 ? 'AM' : 'PM');
 }
 
 function addUserMsg(text) {
@@ -628,6 +629,9 @@ function agentReply(text) {
 /* ─────────────────────────────────────────────
    Text input
 ───────────────────────────────────────────── */
+const REPLY_BASE_DELAY   = 900;
+const REPLY_RANDOM_DELAY = 500;
+
 function sendTextMsg() {
   const inp = document.getElementById('chatTextInput');
   const text = inp.value.trim();
@@ -635,7 +639,7 @@ function sendTextMsg() {
   inp.value = '';
   addUserMsg(text);
   showTyping();
-  setTimeout(() => addAgentMsg(agentReply(text)), 900 + Math.random() * 500);
+  setTimeout(() => addAgentMsg(agentReply(text)), REPLY_BASE_DELAY + Math.random() * REPLY_RANDOM_DELAY);
 }
 
 document.getElementById('chatTextInput').addEventListener('keydown', function(e) {
@@ -659,7 +663,7 @@ function startVoiceInput() {
 
   // After 2 s show simulated transcript, then submit
   voiceTimer = setTimeout(() => {
-    const demo = '"What\'s the status of today\'s jobs?"';
+    const demo = "What's the status of today's jobs?";
     transcript.textContent = demo;
     status.textContent = 'Got it — processing…';
 
