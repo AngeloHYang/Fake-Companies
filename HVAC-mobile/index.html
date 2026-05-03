@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mike's HVAC — Home</title>
+<style>
+:root {
+  --orange: #f97316;
+  --orange-dark: #ea580c;
+  --green: #22c55e;
+  --blue: #0ea5e9;
+  --yellow: #eab308;
+  --red: #ef4444;
+  --app-bg: #0a1628;
+  --app-surface: #0f2035;
+  --app-card: rgba(255,255,255,0.05);
+  --app-border: rgba(255,255,255,0.09);
+  --app-muted: rgba(255,255,255,0.38);
+  --app-text: rgba(255,255,255,0.88);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #05101f;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px 48px;
+  font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+
+/* ── Phone shell ── */
+.phone {
+  width: 390px; max-width: 100%;
+  background: var(--app-bg);
+  border-radius: 50px;
+  border: 3px solid rgba(255,255,255,0.13);
+  box-shadow: 0 52px 130px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.notch-bar { height: 34px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 5px; background: var(--app-bg); }
+.notch-pill { width: 126px; height: 17px; background: #000; border-radius: 9px; }
+.status-bar { display: flex; justify-content: space-between; padding: 4px 22px 8px; font-size: 0.72rem; color: rgba(255,255,255,0.5); font-weight: 600; }
+.phone-body { overflow-y: auto; max-height: 700px; scrollbar-width: none; }
+.phone-body::-webkit-scrollbar { display: none; }
+
+/* ── Bottom nav ── */
+.bottom-nav { display: flex; background: var(--app-surface); border-top: 1px solid rgba(255,255,255,0.08); }
+.bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0 15px; text-decoration: none; color: var(--app-muted); font-size: 0.6rem; font-weight: 600; letter-spacing: .3px; transition: color .15s; cursor: pointer; }
+.bnav-item.active { color: var(--orange); }
+.bnav-icon { font-size: 1.25rem; margin-bottom: 3px; display: block; }
+
+/* ── Shared screen styles ── */
+.screen { display: none; padding: 16px 18px 22px; animation: fadeIn .18s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+
+.card { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 13px; padding: 13px 14px; margin-bottom: 10px; }
+.tappable { cursor: pointer; transition: background .15s; }
+.tappable:active { background: rgba(255,255,255,0.09); }
+
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.btn { border-radius: 9px; padding: 11px 10px; font-size: 0.72rem; font-weight: 700; text-align: center; cursor: pointer; border: none; transition: all .15s; }
+.btn-orange { background: var(--orange); color: #fff; }
+.btn-orange:active { background: var(--orange-dark); }
+.btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.6); }
+.btn-ghost:active { background: rgba(255,255,255,0.06); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-disabled { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); cursor: default; border: 1px solid rgba(255,255,255,0.07); }
+
+.pill { display: inline-block; border-radius: 5px; padding: 3px 9px; font-size: 0.68rem; font-weight: 600; }
+.pill-green { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); color: #22c55e; }
+.pill-orange { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); color: var(--orange); }
+.pill-yellow { background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2); color: var(--yellow); }
+.pill-blue { background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.2); color: var(--blue); }
+
+.section-lbl { font-size: 0.7rem; font-weight: 700; color: var(--app-muted); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 10px; }
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes popIn { from{transform:scale(.86);opacity:0} to{transform:scale(1);opacity:1} }
+
+/* ── Dashboard-specific ── */
+.app-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--orange-dark)); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; font-weight: 900; color: #fff; flex-shrink: 0; }
+.app-name { font-size: 1rem; font-weight: 800; color: var(--app-text); }
+.app-sub { font-size: 0.72rem; color: var(--green); font-weight: 600; }
+.live-badge { display: flex; align-items: center; gap: 5px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); border-radius: 20px; padding: 4px 11px; font-size: 0.68rem; font-weight: 700; color: var(--green); margin-left: auto; }
+.live-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 1.4s infinite; }
+
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+.stat-card { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 13px; padding: 13px 13px 11px; cursor: pointer; transition: background .15s; }
+.stat-card:active { background: rgba(255,255,255,0.09); }
+.stat-icon { font-size: 1.1rem; margin-bottom: 4px; }
+.stat-num { font-size: 1.85rem; font-weight: 900; color: var(--app-text); line-height: 1; margin-bottom: 2px; }
+.stat-label { font-size: 0.73rem; font-weight: 700; color: var(--app-text); margin-bottom: 1px; }
+.stat-sub { font-size: 0.64rem; color: var(--app-muted); }
+
+.activity-item { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 13px; padding: 12px 13px; margin-bottom: 8px; cursor: pointer; transition: background .15s; }
+.activity-item:active { background: rgba(255,255,255,0.08); }
+.activity-top { display: flex; align-items: flex-start; gap: 10px; }
+.activity-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.activity-body { flex: 1; min-width: 0; }
+.activity-main { font-size: 0.78rem; font-weight: 600; color: var(--app-text); line-height: 1.35; margin-bottom: 3px; }
+.activity-time { font-size: 0.64rem; color: var(--app-muted); margin-bottom: 5px; }
+.activity-expand { font-size: 0.71rem; color: rgba(255,255,255,0.55); line-height: 1.45; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.07); display: none; animation: fadeIn .15s ease; }
+.activity-expand.open { display: block; }
+
+.voice-section { margin-top: 18px; }
+.voice-hint { font-size: 0.67rem; color: var(--app-muted); text-align: center; margin-bottom: 10px; }
+.voice-btn {
+  width: 100%; padding: 16px; border-radius: 14px; border: none;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer;
+  transition: background .2s, transform .1s; color: #fff;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.voice-btn:active { transform: scale(0.97); }
+.voice-idle { background: var(--orange); box-shadow: 0 4px 20px rgba(249,115,22,.35); }
+.voice-listening { background: var(--red); animation: pulse .9s infinite; }
+.voice-thinking { background: var(--blue); }
+.voice-response { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); border-radius: 13px; padding: 13px 14px; font-size: 0.78rem; color: var(--app-text); line-height: 1.5; cursor: pointer; animation: popIn .2s ease; margin-top: 10px; display: none; }
+.vr-label { font-size: 0.64rem; font-weight: 700; color: var(--green); margin-bottom: 5px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="notch-bar"><div class="notch-pill"></div></div>
+  <div class="status-bar"><span>9:41</span><span>●●●● LTE 🔋</span></div>
+  <div class="phone-body">
+    <div class="screen active" id="home">
+
+      <div class="app-header">
+        <div class="avatar">M</div>
+        <div>
+          <div class="app-name">Mike's HVAC</div>
+          <div class="app-sub">Agent: ACTIVE</div>
+        </div>
+        <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card" onclick="location.href='leads.html'">
+          <div class="stat-icon">📞</div>
+          <div class="stat-num">3</div>
+          <div class="stat-label">New Leads</div>
+          <div class="stat-sub">handled by agent</div>
+        </div>
+        <div class="stat-card" onclick="location.href='jobs.html'">
+          <div class="stat-icon">🔧</div>
+          <div class="stat-num">2</div>
+          <div class="stat-label">Jobs Today</div>
+          <div class="stat-sub">7am + 11am</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-num">1</div>
+          <div class="stat-label">Part Arriving</div>
+          <div class="stat-sub">Ferguson · 8am</div>
+        </div>
+        <div class="stat-card" onclick="location.href='jobs.html'">
+          <div class="stat-icon">📋</div>
+          <div class="stat-num">1</div>
+          <div class="stat-label">Permit Pending</div>
+          <div class="stat-sub">City of Austin</div>
+        </div>
+      </div>
+
+      <div class="section-lbl">Recent Agent Activity</div>
+
+      <div class="activity-item" onclick="toggleActivity(this)">
+        <div class="activity-top">
+          <div class="activity-icon">📅</div>
+          <div class="activity-body">
+            <div class="activity-main">Booked Mrs. Chen · 7:00 AM tomorrow · 142 Oak St</div>
+            <div class="activity-time">11:49 PM · last night</div>
+            <span class="pill pill-green">Confirmed</span>
+          </div>
+        </div>
+        <div class="activity-expand">Carrier furnace 58STA090-16 · Diagnostic $120, likely ignitor failure · Tech: Mike</div>
+      </div>
+
+      <div class="activity-item" onclick="toggleActivity(this)">
+        <div class="activity-top">
+          <div class="activity-icon">💰</div>
+          <div class="activity-body">
+            <div class="activity-main">Quoted Garcia furnace install · $4,800 · 3-ton Carrier 96K BTU</div>
+            <div class="activity-time">8:32 AM · today</div>
+            <span class="pill pill-orange">Awaiting approval</span>
+          </div>
+        </div>
+        <div class="activity-expand">3-ton system for 2,400 sqft home · Includes labor + parts · Quote valid 7 days</div>
+      </div>
+
+      <div class="activity-item" onclick="toggleActivity(this)">
+        <div class="activity-top">
+          <div class="activity-icon">📦</div>
+          <div class="activity-body">
+            <div class="activity-main">Ordered condenser → Grainger · Carrier CA16NA · 3-ton</div>
+            <div class="activity-time">8:55 AM · today</div>
+            <span class="pill pill-blue">Pickup Tomorrow 10am</span>
+          </div>
+        </div>
+        <div class="activity-expand">Order #GR-48291 · 5201 N Lamar Blvd · Call ahead required</div>
+      </div>
+
+      <div class="voice-section">
+        <div class="voice-hint">Primary input — tap to speak</div>
+        <button class="voice-btn voice-idle" id="voiceBtn" onclick="cycleVoice()">🎙️ Tap to talk to agent</button>
+        <div class="voice-response" id="voiceResp" onclick="resetVoice()">
+          <div class="vr-label">🤖 Agent responded</div>
+          Tomorrow 7am: Sarah Chen at 142 Oak St. Part arriving 8am from Ferguson. Clear until 11am.
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <a class="bnav-item active" href="index.html"><span class="bnav-icon">🏠</span>Home</a>
+    <a class="bnav-item" href="leads.html"><span class="bnav-icon">📞</span>Leads</a>
+    <a class="bnav-item" href="field.html"><span class="bnav-icon">🎙️</span>Field</a>
+    <a class="bnav-item" href="jobs.html"><span class="bnav-icon">✅</span>Jobs</a>
+  </div>
+</div>
+
+<script>
+let vState = 0, vTimer = null;
+function cycleVoice() {
+  const btn = document.getElementById('voiceBtn');
+  const resp = document.getElementById('voiceResp');
+  if (vTimer) { clearTimeout(vTimer); vTimer = null; }
+  vState = (vState % 3) + 1;
+  resp.style.display = 'none';
+  btn.className = 'voice-btn';
+  if (vState === 1) {
+    btn.classList.add('voice-listening');
+    btn.innerHTML = '🔴 Listening&hellip;';
+    vTimer = setTimeout(() => { vState = 1; cycleVoice(); }, 2400);
+  } else if (vState === 2) {
+    btn.classList.add('voice-thinking');
+    btn.innerHTML = '⏳ Agent thinking&hellip;';
+    vTimer = setTimeout(() => { vState = 2; cycleVoice(); }, 1600);
+  } else {
+    btn.classList.add('voice-idle');
+    btn.innerHTML = '🎙️ Tap to talk to agent';
+    resp.style.display = 'block';
+    vState = 0;
+  }
+}
+function resetVoice() {
+  if (vTimer) { clearTimeout(vTimer); vTimer = null; }
+  const btn = document.getElementById('voiceBtn');
+  const resp = document.getElementById('voiceResp');
+  btn.className = 'voice-btn voice-idle';
+  btn.innerHTML = '🎙️ Tap to talk to agent';
+  resp.style.display = 'none';
+  vState = 0;
+}
+function toggleActivity(el) {
+  el.querySelector('.activity-expand').classList.toggle('open');
+}
+</script>
+</body>
+</html>

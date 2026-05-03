@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jobs — Mike's HVAC &amp; Air Agent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:        #0d1f2d;
+      --slate:       #1a3148;
+      --orange:      #f97316;
+      --orange-dark: #ea580c;
+      --orange-light:#fff7ed;
+      --blue:        #0ea5e9;
+      --teal:        #14b8a6;
+      --green:       #22c55e;
+      --yellow:      #eab308;
+      --red:         #ef4444;
+      --white:       #ffffff;
+      --light-bg:    #f8fafc;
+      --text:        #1e293b;
+      --muted:       #64748b;
+      --border:      #e2e8f0;
+      --radius:      12px;
+      --shadow:      0 4px 24px rgba(13,31,45,0.10);
+      --app-bg:      #0a1628;
+      --app-card:    rgba(255,255,255,0.05);
+      --app-border:  rgba(255,255,255,0.09);
+      --app-muted:   rgba(255,255,255,0.38);
+      --app-text:    rgba(255,255,255,0.85);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,31,45,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 38px; height: 38px; background: linear-gradient(135deg, var(--orange), var(--orange-dark)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--orange); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--orange); color: var(--orange); }
+    .btn-outline:hover { background: var(--orange); color: white; }
+    .btn-primary { background: var(--orange); color: white; }
+    .btn-primary:hover { background: var(--orange-dark); }
+
+    /* PAGE HERO */
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2e45 100%); color: white; padding: 72px 24px 64px; }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.35); margin-bottom: 14px; }
+    .breadcrumb a { color: var(--orange); }
+    .page-label { display: inline-flex; align-items: center; gap: 6px; background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.3); border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 600; color: #fdba74; margin-bottom: 16px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; margin-bottom: 14px; line-height: 1.2; }
+    .page-hero p { font-size: 1rem; color: rgba(255,255,255,0.6); max-width: 620px; line-height: 1.75; }
+
+    /* SECTIONS */
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .light-bg { background: var(--light-bg); }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+    .section-sub { font-size: 0.95rem; color: var(--muted); max-width: 620px; line-height: 1.75; }
+
+    /* JOBS TODAY TABLE */
+    .jobs-grid { display: flex; flex-direction: column; gap: 0; margin-top: 32px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .job-row { display: grid; grid-template-columns: 24px 1fr 1fr 100px 80px 100px; gap: 14px; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 0.88rem; background: white; }
+    .job-row:last-child { border-bottom: none; }
+    .job-row.header { background: var(--light-bg); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
+    .job-name { font-weight: 700; color: var(--navy); }
+    .job-addr { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+    .job-service { color: var(--muted); font-size: 0.83rem; }
+    .job-time { font-size: 0.82rem; color: var(--navy); font-weight: 600; }
+    .status-complete { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); border-radius: 5px; padding: 3px 9px; font-size: 0.72rem; font-weight: 600; color: #16a34a; display: inline-block; }
+    .status-active { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); border-radius: 5px; padding: 3px 9px; font-size: 0.72rem; font-weight: 600; color: var(--orange-dark); display: inline-block; }
+    .status-upcoming { background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.2); border-radius: 5px; padding: 3px 9px; font-size: 0.72rem; font-weight: 600; color: #0369a1; display: inline-block; }
+    .job-indicator { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .ind-green { background: var(--green); }
+    .ind-orange { background: var(--orange); animation: pulse 1.5s infinite; }
+    .ind-blue { background: var(--blue); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+
+    /* TWO PHONES */
+    .phones-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    .phone-col-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 7px; }
+    .dot-orange { width: 7px; height: 7px; background: var(--orange); border-radius: 50%; }
+    .dot-green { width: 7px; height: 7px; background: var(--green); border-radius: 50%; }
+
+    /* PHONE DEVICE */
+    .phone-device {
+      width: 100%; max-width: 320px; margin: 0 auto;
+      background: #0a1628;
+      border: 3px solid rgba(255,255,255,0.12); border-radius: 36px;
+      overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .phone-notch { background: #0a1628; height: 26px; display: flex; align-items: center; justify-content: center; }
+    .notch-pill { width: 90px; height: 13px; background: #000; border-radius: 7px; }
+    .phone-status { display: flex; justify-content: space-between; align-items: center; padding: 4px 20px 0; font-size: 0.68rem; color: rgba(255,255,255,0.4); }
+    .phone-screen { background: #0a1628; padding: 14px 16px 20px; }
+
+    /* SCREEN 6 — PERMIT NOTIFICATION */
+    .notif-header { display: flex; align-items: flex-start; gap: 10px; padding: 12px; background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; margin-bottom: 14px; }
+    .notif-bell { font-size: 1.1rem; flex-shrink: 0; }
+    .notif-title { font-size: 0.78rem; font-weight: 700; color: #fef08a; margin-bottom: 3px; }
+    .notif-sub { font-size: 0.65rem; color: rgba(255,255,255,0.55); }
+    .permit-body { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 10px; padding: 13px; margin-bottom: 12px; }
+    .pb-title { font-size: 0.75rem; color: rgba(255,255,255,0.75); line-height: 1.55; margin-bottom: 10px; }
+    .pb-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; font-size: 0.68rem; color: rgba(255,255,255,0.6); }
+    .pb-row:last-child { margin-bottom: 0; }
+    .pb-check { color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .pb-bold { color: var(--app-text); font-weight: 600; }
+    .permit-cost { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .pc-label { font-size: 0.68rem; color: rgba(255,255,255,0.5); }
+    .pc-val { font-size: 0.9rem; font-weight: 800; color: white; }
+    .pc-time { font-size: 0.62rem; color: rgba(255,255,255,0.4); }
+    .permit-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .pb-btn { border-radius: 8px; padding: 10px; font-size: 0.72rem; font-weight: 700; text-align: center; cursor: pointer; }
+    .pb-file { background: var(--orange); color: white; border: none; }
+    .pb-later { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); }
+
+    /* SCREEN 7 — JOB WRAP-UP */
+    .s7-header { margin-bottom: 14px; }
+    .s7-title { font-size: 0.85rem; font-weight: 700; color: var(--app-text); margin-bottom: 2px; }
+    .s7-sub { font-size: 0.65rem; color: var(--app-muted); }
+    .prepared-section { margin-bottom: 12px; }
+    .prep-title { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--app-muted); margin-bottom: 8px; }
+    .prep-item { display: flex; align-items: center; gap: 8px; padding: 9px 11px; background: var(--app-card); border: 1px solid var(--app-border); border-radius: 8px; margin-bottom: 6px; font-size: 0.72rem; color: var(--app-text); }
+    .prep-check { color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .prep-amount { margin-left: auto; font-size: 0.72rem; font-weight: 700; color: white; }
+    .pending-section { margin-bottom: 12px; }
+    .pend-item { display: flex; align-items: center; gap: 8px; padding: 9px 11px; background: rgba(234,179,8,0.07); border: 1px solid rgba(234,179,8,0.15); border-radius: 8px; margin-bottom: 6px; font-size: 0.72rem; color: rgba(255,255,255,0.65); }
+    .pend-spinner { width: 9px; height: 9px; border: 1.5px solid rgba(234,179,8,0.3); border-top-color: var(--yellow); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+    .pend-amount { margin-left: auto; font-size: 0.7rem; color: rgba(255,255,255,0.45); }
+    .close-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .cb { border-radius: 8px; padding: 11px 8px; font-size: 0.72rem; font-weight: 700; text-align: center; cursor: pointer; }
+    .cb-send { background: var(--orange); color: white; border: none; }
+    .cb-review { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.65); }
+
+    /* NAV PILLS */
+    .nav-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+    .nav-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+    .nav-pill.active { background: var(--orange-light); border-color: rgba(249,115,22,0.3); color: var(--orange-dark); }
+    .nav-pill a { color: inherit; }
+
+    /* STAGE BREAKDOWN */
+    .stages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 40px; }
+    .stage-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+    .stage-num { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
+    .stage-title { font-size: 0.92rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .stage-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+    .stage-agent { display: inline-block; background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.2); border-radius: 4px; padding: 2px 8px; font-size: 0.65rem; font-weight: 600; color: #0369a1; margin-top: 8px; }
+
+    /* REVENUE SECTION */
+    .revenue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 40px; }
+    .rev-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); text-align: center; }
+    .rev-val { font-size: 2rem; font-weight: 800; color: var(--orange); margin-bottom: 4px; }
+    .rev-label { font-size: 0.82rem; color: var(--muted); }
+
+    /* FOOTER */
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 44px 24px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { color: white; font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .footer-links { display: flex; gap: 20px; font-size: 0.83rem; flex-wrap: wrap; }
+    .footer-links a:hover { color: var(--orange); }
+
+    @media (max-width: 780px) {
+      .phones-2 { grid-template-columns: 1fr; }
+      .job-row { grid-template-columns: 14px 1fr 90px; }
+      .job-row .job-service, .job-row .job-time { display: none; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🌬️</div>
+      Mike's HVAC &amp; Air
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="dashboard.html">Agent Dashboard</a>
+      <a href="leads.html">Leads</a>
+      <a href="field.html">Field Mode</a>
+      <a href="jobs.html" class="active">Jobs</a>
+    </div>
+    <div class="nav-actions">
+      <a href="field.html" class="btn btn-outline">← Field Mode</a>
+      <a href="dashboard.html" class="btn btn-primary">Dashboard →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> › <a href="dashboard.html">Agent App</a> › Jobs</div>
+    <div class="page-label">📱 Screens 6 &amp; 7 of 7</div>
+    <h1>Permit Notification &amp;<br>Job Wrap-Up</h1>
+    <p>Mike finishes the install at Sarah's house. While he was working, the agent already prepared the invoice, registered the warranty, scheduled a review request, and is waiting on his approval to file the permit. One screen to close it all out.</p>
+  </div>
+</div>
+
+<!-- JOBS TODAY -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="section-label">Today's Schedule</div>
+    <h2 class="section-title">2 Jobs — Both Managed by Agent</h2>
+    <p class="section-sub">Route optimized, parts pre-ordered, customer ETAs sent automatically. Mike just drives.</p>
+    <div class="jobs-grid">
+      <div class="job-row header">
+        <span></span>
+        <span>Customer</span>
+        <span>Service</span>
+        <span>Time</span>
+        <span>Invoice</span>
+        <span>Status</span>
+      </div>
+      <div class="job-row">
+        <div class="job-indicator ind-green"></div>
+        <div>
+          <div class="job-name">Sarah Chen</div>
+          <div class="job-addr">142 Oak St, Austin · Carrier 96K BTU install</div>
+        </div>
+        <div class="job-service">Furnace replacement · Full install · Permit req.</div>
+        <div class="job-time">7:00 AM</div>
+        <div class="job-service">$4,820</div>
+        <div><span class="status-complete">Complete</span></div>
+      </div>
+      <div class="job-row">
+        <div class="job-indicator ind-orange"></div>
+        <div>
+          <div class="job-name">Marco Garcia</div>
+          <div class="job-addr">2208 Barton Springs, Austin · AC + furnace</div>
+        </div>
+        <div class="job-service">New system install · 3-ton Carrier · 2,400 sqft</div>
+        <div class="job-time">11:00 AM</div>
+        <div class="job-service">$4,800</div>
+        <div><span class="status-active">In Progress</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENS 6 + 7 SIDE BY SIDE -->
+<section>
+  <div class="section-inner">
+    <div class="nav-pills">
+      <span class="nav-pill"><a href="dashboard.html">📱 Screen 1 — Dashboard</a></span>
+      <span class="nav-pill"><a href="leads.html">📞 Screen 2–3 — Leads</a></span>
+      <span class="nav-pill"><a href="field.html">🎙️ Screen 4–5 — Field</a></span>
+      <span class="nav-pill active">✅ Screen 6–7 — Jobs</span>
+    </div>
+
+    <div class="phones-2">
+
+      <!-- SCREEN 6: PERMIT NOTIFICATION -->
+      <div>
+        <div class="phone-col-label">
+          <div class="dot-orange"></div>
+          Screen 6 — Permit Notification
+        </div>
+        <div class="phone-device">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-status"><span>10:48</span><span>●●●●◦ LTE 🔋</span></div>
+          <div class="phone-screen">
+            <div class="notif-header">
+              <div class="notif-bell">🔔</div>
+              <div>
+                <div class="notif-title">Heads up from your agent</div>
+                <div class="notif-sub">Proactive permit alert · 10:48 AM</div>
+              </div>
+            </div>
+
+            <div class="permit-body">
+              <div class="pb-title">This install requires a mechanical permit in Austin. I can file it now if you want.</div>
+              <div class="pb-row"><span class="pb-check">✓</span><span>License # (on file) <span class="pb-bold">TACLB #104836</span></span></div>
+              <div class="pb-row"><span class="pb-check">✓</span><span>Job address <span class="pb-bold">142 Oak St</span></span></div>
+              <div class="pb-row"><span class="pb-check">✓</span><span>Equipment specs <span class="pb-bold">Carrier 96AFUE 96K BTU</span></span></div>
+            </div>
+
+            <div class="permit-cost">
+              <div>
+                <div class="pc-label">Permit fee</div>
+                <div class="pc-val">$145</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="pc-label">Est. approval</div>
+                <div class="pc-time">2–3 business days</div>
+              </div>
+            </div>
+
+            <div class="permit-btns">
+              <div class="pb-btn pb-file">📋 File it</div>
+              <div class="pb-btn pb-later">Not now</div>
+            </div>
+          </div>
+        </div>
+        <!-- Screen 6 description -->
+        <div style="margin-top:24px;background:var(--light-bg);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+          <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--orange);margin-bottom:6px;">Screen 6 — Proactive Agent Suggestion</div>
+          <p style="font-size:0.85rem;color:var(--muted);line-height:1.65;">
+            While Mike is still on-site, the agent surfaces a permit requirement proactively. It has already gathered everything needed — license number from profile, job address from the booking, equipment specs from the order. Mike taps "File it" and the agent talks to the city building department's agent.
+          </p>
+        </div>
+      </div>
+
+      <!-- SCREEN 7: JOB WRAP-UP -->
+      <div>
+        <div class="phone-col-label">
+          <div class="dot-green"></div>
+          Screen 7 — Job Wrap-Up
+        </div>
+        <div class="phone-device">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-status"><span>13:22</span><span>●●●●◦ LTE 🔋</span></div>
+          <div class="phone-screen">
+            <div class="s7-header">
+              <div class="s7-title">Closing job: Sarah Chen</div>
+              <div class="s7-sub">142 Oak St · Carrier 96K BTU · Install complete</div>
+            </div>
+
+            <div class="prepared-section">
+              <div class="prep-title">Your agent prepared</div>
+              <div class="prep-item">
+                <span class="prep-check">✓</span>
+                <span>Invoice ready to send</span>
+                <span class="prep-amount">$4,820</span>
+              </div>
+              <div class="prep-item">
+                <span class="prep-check">✓</span>
+                <span>Warranty registration filed</span>
+                <span class="prep-amount">Carrier</span>
+              </div>
+              <div class="prep-item">
+                <span class="prep-check">✓</span>
+                <span>Maintenance plan offer</span>
+                <span class="prep-amount">$229/yr</span>
+              </div>
+              <div class="prep-item">
+                <span class="prep-check">✓</span>
+                <span>Review request sent</span>
+                <span class="prep-amount">Google</span>
+              </div>
+              <div class="prep-item">
+                <span class="prep-check">✓</span>
+                <span>Photos archived to job file</span>
+                <span class="prep-amount">6 photos</span>
+              </div>
+            </div>
+
+            <div class="pending-section">
+              <div class="prep-title">Pending</div>
+              <div class="pend-item">
+                <div class="pend-spinner"></div>
+                <span>Insurance docs to GC</span>
+                <span class="pend-amount">Awaiting</span>
+              </div>
+              <div class="pend-item">
+                <div class="pend-spinner"></div>
+                <span>Subcontractor invoice — electrician</span>
+                <span class="pend-amount">$400</span>
+              </div>
+            </div>
+
+            <div class="close-btns">
+              <div class="cb cb-send">💰 Send invoice</div>
+              <div class="cb cb-review">Review all</div>
+            </div>
+          </div>
+        </div>
+        <!-- Screen 7 description -->
+        <div style="margin-top:24px;background:var(--light-bg);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+          <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--green);margin-bottom:6px;">Screen 7 — Job Close-Out</div>
+          <p style="font-size:0.85rem;color:var(--muted);line-height:1.65;">
+            Mike finishes the install. The agent has already prepared everything — the invoice, warranty registration, maintenance plan offer, and review request. Two pending items (insurance docs and subcontractor invoice) are tracked. Mike taps "Send invoice" and drives to the next job. The agent handles the rest.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FULL JOURNEY OVERVIEW -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="section-label">The Full Journey</div>
+    <h2 class="section-title">Every Stage — Agent-Augmented</h2>
+    <p class="section-sub">From the moment a homeowner's AC breaks to the warranty card filed three months later, the agent removes admin from every stage of the job.</p>
+    <div class="stages-grid">
+      <div class="stage-card">
+        <div class="stage-num">Stage 1</div>
+        <div class="stage-title">Lead Generation</div>
+        <div class="stage-desc">Customer calls, texts, or their home agent reaches out. Your agent answers 24/7, qualifies the lead, and books the appointment.</div>
+        <span class="stage-agent">Agent replaces: voicemail + callback</span>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Stage 2</div>
+        <div class="stage-title">Qualification &amp; Triage</div>
+        <div class="stage-desc">Equipment type, photos, urgency scoring, service area check. Handled in the initial agent conversation — no owner involved.</div>
+        <span class="stage-agent">Agent replaces: back-and-forth calls</span>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Stage 3</div>
+        <div class="stage-title">Quoting &amp; Estimating</div>
+        <div class="stage-desc">Live pricing from Ferguson, Grainger, and Johnstone. Agent builds the quote and sends to customer before the tech even arrives.</div>
+        <span class="stage-agent">Agent replaces: manual supplier calls</span>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Stage 4</div>
+        <div class="stage-title">Scheduling &amp; Dispatch</div>
+        <div class="stage-desc">Route optimization, tech skill matching, ETA texts to customer. Reschedules automatically when a job runs long.</div>
+        <span class="stage-agent">Agent replaces: whiteboard dispatch</span>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Stage 5</div>
+        <div class="stage-title">Pre-Job Prep</div>
+        <div class="stage-desc">Morning brief, parts orders placed the night before, customer history pulled, permit paperwork started.</div>
+        <span class="stage-agent">Agent replaces: Sunday-night prep</span>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Stage 6</div>
+        <div class="stage-title">On-Site Execution</div>
+        <div class="stage-desc">Tech talks to field agent for mid-job supplier orders, customer updates, and schedule shifts. Human stays human.</div>
+        <span class="stage-agent">Agent augments: field communication</span>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Stage 7</div>
+        <div class="stage-title">Invoicing &amp; Payment</div>
+        <div class="stage-desc">Auto-invoice post-job. Payment reminder agent. Financing application handled in-chat. Chase unpaid invoices automatically.</div>
+        <span class="stage-agent">Agent replaces: Sunday-night invoicing</span>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Stage 8</div>
+        <div class="stage-title">Follow-Up &amp; Retention</div>
+        <div class="stage-desc">Maintenance plan offers, warranty registrations, filter reminders, review requests, and referral asks — all timed and automated.</div>
+        <span class="stage-agent">Agent replaces: CRM follow-up</span>
+      </div>
+      <div class="stage-card">
+        <div class="stage-num">Stage 9</div>
+        <div class="stage-title">Back-Office &amp; Compliance</div>
+        <div class="stage-desc">EPA refrigerant tracking, license renewal reminders, insurance docs, payroll prep, and equipment depreciation logs.</div>
+        <span class="stage-agent">Agent replaces: Sunday admin nights</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVENUE IMPACT -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">Business Impact</div>
+    <h2 class="section-title">What This Does to a 5-Person HVAC Shop</h2>
+    <p class="section-sub">When admin disappears, revenue goes up. Faster response times mean more jobs won. Automated follow-up means maintenance contracts actually get sold.</p>
+    <div class="revenue-grid">
+      <div class="rev-card">
+        <div class="rev-val">&lt;2min</div>
+        <div class="rev-label">Lead response time (was: voicemail)</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-val">+34%</div>
+        <div class="rev-label">Lead conversion rate improvement</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-val">3×</div>
+        <div class="rev-label">Maintenance plan close rate</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-val">$0</div>
+        <div class="rev-label">Missed invoice follow-ups</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-val">8hrs</div>
+        <div class="rev-label">Weekly admin time saved per owner</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-val">4.9★</div>
+        <div class="rev-label">Average Google rating (automated reviews)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div style="width:30px;height:30px;background:linear-gradient(135deg,#f97316,#ea580c);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;">🌬️</div>
+      Mike's HVAC &amp; Air — Agent App
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="leads.html">Leads</a>
+      <a href="field.html">← Field Mode</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

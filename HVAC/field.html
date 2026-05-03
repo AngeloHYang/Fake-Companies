@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Field Mode — Mike's HVAC &amp; Air Agent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:        #0d1f2d;
+      --slate:       #1a3148;
+      --orange:      #f97316;
+      --orange-dark: #ea580c;
+      --orange-light:#fff7ed;
+      --blue:        #0ea5e9;
+      --teal:        #14b8a6;
+      --green:       #22c55e;
+      --yellow:      #eab308;
+      --red:         #ef4444;
+      --white:       #ffffff;
+      --light-bg:    #f8fafc;
+      --text:        #1e293b;
+      --muted:       #64748b;
+      --border:      #e2e8f0;
+      --radius:      12px;
+      --shadow:      0 4px 24px rgba(13,31,45,0.10);
+      --app-bg:      #0a1628;
+      --app-card:    rgba(255,255,255,0.05);
+      --app-border:  rgba(255,255,255,0.09);
+      --app-muted:   rgba(255,255,255,0.38);
+      --app-text:    rgba(255,255,255,0.85);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,31,45,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 38px; height: 38px; background: linear-gradient(135deg, var(--orange), var(--orange-dark)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--orange); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--orange); color: var(--orange); }
+    .btn-outline:hover { background: var(--orange); color: white; }
+    .btn-primary { background: var(--orange); color: white; }
+    .btn-primary:hover { background: var(--orange-dark); }
+
+    /* PAGE HERO */
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2e45 100%); color: white; padding: 72px 24px 64px; }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.35); margin-bottom: 14px; }
+    .breadcrumb a { color: var(--orange); }
+    .page-label { display: inline-flex; align-items: center; gap: 6px; background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.3); border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 600; color: #fdba74; margin-bottom: 16px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; margin-bottom: 14px; line-height: 1.2; }
+    .page-hero p { font-size: 1rem; color: rgba(255,255,255,0.6); max-width: 620px; line-height: 1.75; }
+
+    /* SECTIONS */
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .light-bg { background: var(--light-bg); }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+    .section-sub { font-size: 0.95rem; color: var(--muted); max-width: 620px; line-height: 1.75; }
+
+    /* PHONES ROW — 3 PHONES */
+    .phones-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; align-items: start; }
+    .phone-col-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 7px; }
+    .dot-orange { width: 7px; height: 7px; background: var(--orange); border-radius: 50%; }
+    .dot-blue { width: 7px; height: 7px; background: var(--blue); border-radius: 50%; }
+    .dot-green { width: 7px; height: 7px; background: var(--green); border-radius: 50%; }
+
+    /* PHONE DEVICE */
+    .phone-device {
+      width: 100%; max-width: 300px; margin: 0 auto;
+      background: #0a1628;
+      border: 3px solid rgba(255,255,255,0.12); border-radius: 36px;
+      overflow: hidden; box-shadow: 0 20px 56px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .phone-notch { background: #0a1628; height: 26px; display: flex; align-items: center; justify-content: center; }
+    .notch-pill { width: 85px; height: 13px; background: #000; border-radius: 7px; }
+    .phone-status { display: flex; justify-content: space-between; align-items: center; padding: 4px 18px 0; font-size: 0.65rem; color: rgba(255,255,255,0.4); }
+    .phone-screen { background: #0a1628; padding: 13px 14px 18px; min-height: 480px; }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    @keyframes wave { 0%,100%{transform:scaleY(0.4)} 50%{transform:scaleY(1)} }
+    @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+
+    /* SCREEN 4a — VOICE LISTENING */
+    .live-header { background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.25); border-radius: 10px; padding: 10px 12px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .live-dot { width: 7px; height: 7px; background: #ef4444; border-radius: 50%; animation: pulse 1.2s infinite; flex-shrink: 0; }
+    .live-text { font-size: 0.75rem; font-weight: 700; color: #fdba74; }
+    .voice-visualizer { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 14px; }
+    .waveform { display: flex; align-items: center; justify-content: center; gap: 4px; height: 40px; margin-bottom: 10px; }
+    .wave-bar { width: 4px; background: var(--orange); border-radius: 2px; }
+    .wb1 { height: 12px; animation: wave 0.8s ease-in-out infinite 0.0s; }
+    .wb2 { height: 20px; animation: wave 0.8s ease-in-out infinite 0.1s; }
+    .wb3 { height: 32px; animation: wave 0.8s ease-in-out infinite 0.2s; }
+    .wb4 { height: 24px; animation: wave 0.8s ease-in-out infinite 0.15s; }
+    .wb5 { height: 36px; animation: wave 0.8s ease-in-out infinite 0.25s; }
+    .wb6 { height: 28px; animation: wave 0.8s ease-in-out infinite 0.3s; }
+    .wb7 { height: 18px; animation: wave 0.8s ease-in-out infinite 0.35s; }
+    .wb8 { height: 14px; animation: wave 0.8s ease-in-out infinite 0.4s; }
+    .listening-label { font-size: 0.7rem; font-weight: 600; color: var(--orange); }
+    .transcript-preview { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; margin-bottom: 12px; font-size: 0.72rem; color: rgba(255,255,255,0.75); line-height: 1.6; font-style: italic; }
+    .voice-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .vc-btn { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 9px; font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.7); text-align: center; }
+
+    /* SCREEN 4b — AGENT WORKING */
+    .tasks-header { font-size: 0.75rem; font-weight: 700; color: #fdba74; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .spinner { width: 14px; height: 14px; border: 2px solid rgba(249,115,22,0.3); border-top-color: var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+    .task-card { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 10px; padding: 11px 13px; margin-bottom: 8px; }
+    .tc-top { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .tc-spinner { width: 10px; height: 10px; border: 1.5px solid rgba(249,115,22,0.25); border-top-color: var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+    .tc-title { font-size: 0.72rem; font-weight: 600; color: var(--app-text); }
+    .tc-sub { font-size: 0.62rem; color: var(--app-muted); padding-left: 18px; }
+    .tc-sub .tcs { display: block; margin-bottom: 2px; }
+    .expand-hint { text-align: center; margin-top: 12px; font-size: 0.62rem; color: var(--app-muted); border-top: 1px solid var(--app-border); padding-top: 10px; }
+
+    /* SCREEN 5 — PRICING EXPANDED */
+    .s5-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .s5-back { color: var(--orange); font-size: 0.72rem; font-weight: 600; }
+    .s5-title { font-size: 0.78rem; font-weight: 700; color: var(--app-text); }
+    .supplier-card { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 10px; padding: 12px; margin-bottom: 9px; }
+    .spc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+    .spc-name { font-size: 0.78rem; font-weight: 700; color: var(--app-text); }
+    .spc-price { font-size: 0.95rem; font-weight: 800; color: white; }
+    .spc-detail { font-size: 0.62rem; color: var(--app-muted); line-height: 1.5; }
+    .spc-detail .spc-row { display: flex; gap: 5px; margin-bottom: 2px; }
+    .spc-check { color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .spc-warn { color: var(--yellow); font-weight: 700; flex-shrink: 0; }
+    .recommend-card { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); border-radius: 10px; padding: 11px; margin-bottom: 11px; }
+    .rec-title { font-size: 0.65rem; font-weight: 700; color: #86efac; margin-bottom: 4px; }
+    .rec-text { font-size: 0.7rem; color: rgba(255,255,255,0.7); line-height: 1.45; }
+    .approve-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .ab { border-radius: 8px; padding: 10px; font-size: 0.72rem; font-weight: 700; text-align: center; cursor: pointer; }
+    .ab-approve { background: var(--green); color: white; border: none; }
+    .ab-override { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
+    .check-green { color: var(--green); font-size: 0.7rem; }
+
+    /* NAV PILLS */
+    .nav-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+    .nav-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+    .nav-pill.active { background: var(--orange-light); border-color: rgba(249,115,22,0.3); color: var(--orange-dark); }
+    .nav-pill a { color: inherit; }
+
+    /* EXPLANATION CARDS */
+    .explain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+    .explain-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+    .ec-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
+    .ec-title { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .ec-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+    /* VOICE QUOTE BLOCK */
+    .quote-block { background: var(--navy); border-radius: 16px; padding: 32px; margin-top: 44px; }
+    .qb-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--app-muted); margin-bottom: 14px; }
+    .qb-quote { font-size: 1rem; color: white; line-height: 1.7; font-style: italic; border-left: 3px solid var(--orange); padding-left: 16px; margin-bottom: 16px; }
+    .qb-then { font-size: 0.82rem; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+    .task-mini { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 7px; margin-bottom: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.65); }
+    .tm-spinner { width: 10px; height: 10px; border: 1.5px solid rgba(249,115,22,0.2); border-top-color: var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+    .tm-arrow { color: var(--app-muted); font-size: 0.65rem; margin-left: auto; }
+
+    /* FOOTER */
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 44px 24px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { color: white; font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .footer-links { display: flex; gap: 20px; font-size: 0.83rem; flex-wrap: wrap; }
+    .footer-links a:hover { color: var(--orange); }
+
+    @media (max-width: 900px) {
+      .phones-3 { grid-template-columns: 1fr 1fr; }
+      .explain-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 560px) {
+      .phones-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🌬️</div>
+      Mike's HVAC &amp; Air
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="dashboard.html">Agent Dashboard</a>
+      <a href="leads.html">Leads</a>
+      <a href="field.html" class="active">Field Mode</a>
+      <a href="jobs.html">Jobs</a>
+    </div>
+    <div class="nav-actions">
+      <a href="leads.html" class="btn btn-outline">← Leads</a>
+      <a href="jobs.html" class="btn btn-primary">Jobs →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> › <a href="dashboard.html">Agent App</a> › Field Mode</div>
+    <div class="page-label">📱 Screens 4 &amp; 5 of 7</div>
+    <h1>On-Site Voice Mode &amp;<br>Background Tasks</h1>
+    <p>Mike is at Sarah's place. He pulls out his phone, holds the voice button, and talks naturally. The agent fans out to four external agents in parallel — pricing, permits, history, quote — and reports back in under a minute.</p>
+  </div>
+</div>
+
+<!-- THREE SCREENS -->
+<section>
+  <div class="section-inner">
+    <div class="nav-pills">
+      <span class="nav-pill"><a href="dashboard.html">📱 Screen 1 — Dashboard</a></span>
+      <span class="nav-pill"><a href="leads.html">📞 Screen 2–3 — Leads</a></span>
+      <span class="nav-pill active">🎙️ Screen 4–5 — Field</span>
+      <span class="nav-pill"><a href="jobs.html">✅ Screen 6–7 — Jobs</a></span>
+    </div>
+
+    <div class="phones-3">
+
+      <!-- SCREEN 4a: VOICE LISTENING -->
+      <div class="phone-col">
+        <div class="phone-col-label">
+          <div class="dot-orange"></div>
+          Screen 4a — Listening
+        </div>
+        <div class="phone-device">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-status"><span>10:14</span><span>●●●●◦ LTE 🔋</span></div>
+          <div class="phone-screen">
+            <div class="live-header">
+              <div class="live-dot"></div>
+              <div class="live-text">🎙️ LIVE — Talking to agent</div>
+            </div>
+
+            <div class="voice-visualizer">
+              <div class="waveform">
+                <div class="wave-bar wb1"></div>
+                <div class="wave-bar wb2"></div>
+                <div class="wave-bar wb3"></div>
+                <div class="wave-bar wb4"></div>
+                <div class="wave-bar wb5"></div>
+                <div class="wave-bar wb6"></div>
+                <div class="wave-bar wb7"></div>
+                <div class="wave-bar wb8"></div>
+              </div>
+              <div class="listening-label">Listening…</div>
+            </div>
+
+            <div class="transcript-preview">
+              "Okay I'm at Sarah's place. The furnace is worse than I thought. Heat exchanger is cracked. We need a full replacement. Get me a quote on a Carrier 96K BTU from Grainger and Ferguson…"
+            </div>
+
+            <div class="voice-controls">
+              <div class="vc-btn">📷 Add photo</div>
+              <div class="vc-btn">⏸ Pause</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 4b: AGENT WORKING -->
+      <div class="phone-col">
+        <div class="phone-col-label">
+          <div class="dot-blue"></div>
+          Screen 4b — Agent Working
+        </div>
+        <div class="phone-device">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-status"><span>10:14</span><span>●●●●◦ LTE 🔋</span></div>
+          <div class="phone-screen">
+            <div class="tasks-header">
+              <div class="spinner"></div>
+              🤖 Agent working on 4 tasks
+            </div>
+
+            <div class="task-card">
+              <div class="tc-top">
+                <div class="tc-spinner"></div>
+                <div class="tc-title">⏳ Pricing furnace</div>
+              </div>
+              <div class="tc-sub">
+                <span class="tcs">→ Grainger agent</span>
+                <span class="tcs">→ Ferguson agent</span>
+              </div>
+            </div>
+
+            <div class="task-card">
+              <div class="tc-top">
+                <div class="tc-spinner"></div>
+                <div class="tc-title">⏳ Checking permit needs</div>
+              </div>
+              <div class="tc-sub">
+                <span class="tcs">→ City of Austin building dept</span>
+              </div>
+            </div>
+
+            <div class="task-card">
+              <div class="tc-top">
+                <div class="tc-spinner"></div>
+                <div class="tc-title">⏳ Pulling Sarah's history</div>
+              </div>
+              <div class="tc-sub">
+                <span class="tcs">→ Job history lookup</span>
+              </div>
+            </div>
+
+            <div class="task-card">
+              <div class="tc-top">
+                <div class="tc-spinner"></div>
+                <div class="tc-title">⏳ Drafting quote</div>
+              </div>
+              <div class="tc-sub">
+                <span class="tcs">→ Waiting on pricing data</span>
+              </div>
+            </div>
+
+            <div class="expand-hint">Tap any task to expand</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 5: PRICING EXPANDED -->
+      <div class="phone-col">
+        <div class="phone-col-label">
+          <div class="dot-green"></div>
+          Screen 5 — Pricing Expanded
+        </div>
+        <div class="phone-device">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-status"><span>10:15</span><span>●●●●◦ LTE 🔋</span></div>
+          <div class="phone-screen">
+            <div class="s5-header">
+              <span class="s5-back">←</span>
+              <span class="s5-title">Pricing: Carrier 96K BTU</span>
+            </div>
+
+            <div class="supplier-card">
+              <div class="spc-top">
+                <div class="spc-name">📦 Grainger</div>
+                <div class="spc-price">$3,240</div>
+              </div>
+              <div class="spc-detail">
+                <div class="spc-row"><span class="spc-check">✓</span><span>In stock</span></div>
+                <div class="spc-row"><span class="spc-warn">⏱</span><span>Pickup: Tomorrow 10am</span></div>
+                <div class="spc-row"><span class="spc-warn">📦</span><span>Delivery: Wednesday</span></div>
+              </div>
+            </div>
+
+            <div class="supplier-card">
+              <div class="spc-top">
+                <div class="spc-name">📦 Ferguson</div>
+                <div class="spc-price">$3,180</div>
+              </div>
+              <div class="spc-detail">
+                <div class="spc-row"><span class="spc-check">✓</span><span>In stock</span></div>
+                <div class="spc-row"><span class="spc-check">✓</span><span>Pickup: Tomorrow 8am</span></div>
+                <div class="spc-row"><span class="spc-check">✓</span><span>Delivery: Tomorrow 2pm</span></div>
+              </div>
+            </div>
+
+            <div class="recommend-card">
+              <div class="rec-title">💡 Agent recommends: Ferguson</div>
+              <div class="rec-text">Faster pickup (8am vs 10am) and $60 cheaper. Delivery same day if needed.</div>
+            </div>
+
+            <div class="approve-btns">
+              <div class="ab ab-approve">✓ Approve</div>
+              <div class="ab ab-override">Override</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SCREEN EXPLANATIONS -->
+    <div class="explain-grid">
+      <div class="explain-card">
+        <div class="ec-label">Screen 4a</div>
+        <div class="ec-title">Voice Mode — The Workhorse</div>
+        <div class="ec-desc">
+          Mike holds the button and talks naturally — no forms, no menus. The waveform visualizes listening. The live transcript shows what the agent heard in real-time. He can add a photo mid-call or pause if he needs to talk to the customer.
+          <br><br>
+          This is the primary interaction for a field tech. Everything else in the app is a result of what was said here.
+        </div>
+      </div>
+      <div class="explain-card">
+        <div class="ec-label">Screen 4b</div>
+        <div class="ec-title">Agent Fans Out — 4 Tasks in Parallel</div>
+        <div class="ec-desc">
+          The moment Mike releases the button, the agent fans out to four external agents simultaneously. No sequential calls. No waiting. Grainger, Ferguson, the city building department, and the job history database — all contacted at once.
+          <br><br>
+          Each task is a live card. Mike can tap any card to see the agent-to-agent conversation happening in real time. He can intervene or override at any point.
+        </div>
+      </div>
+      <div class="explain-card">
+        <div class="ec-label">Screen 5</div>
+        <div class="ec-title">Background Task Expanded — Pricing</div>
+        <div class="ec-desc">
+          Mike taps "Pricing furnace" and sees the result of the agent's conversation with two suppliers. Two prices, two availability windows, side by side. The agent makes a recommendation with reasoning — faster pickup, lower cost.
+          <br><br>
+          Mike taps Approve. The Ferguson order is placed. The agent updates the draft quote automatically and sends an ETA update to Sarah.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- VOICE QUOTE BLOCK -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="section-label">What Mike Said</div>
+    <h2 class="section-title">One Voice Instruction. Four Agent Calls.</h2>
+    <p class="section-sub">This is the agentic economy in action. One sentence from Mike turns into a cascade of parallel agent calls — all happening while he's still standing in Sarah's basement.</p>
+
+    <div class="quote-block">
+      <div class="qb-label">Mike's voice instruction</div>
+      <div class="qb-quote">
+        "Okay I'm at Sarah's place. The furnace is worse than I thought. Heat exchanger is cracked. We need a full replacement. Get me a quote on a Carrier 96K BTU from Grainger and Ferguson, check if we need a permit, and pull up her service history."
+      </div>
+      <div class="qb-then">Agent immediately triggered 4 parallel tasks →</div>
+
+      <div class="task-mini">
+        <div class="tm-spinner"></div>
+        <span>Pricing: Carrier 96K BTU → Grainger agent + Ferguson agent</span>
+        <span class="tm-arrow">→</span>
+      </div>
+      <div class="task-mini">
+        <div class="tm-spinner"></div>
+        <span>Permit check → City of Austin building dept</span>
+        <span class="tm-arrow">→</span>
+      </div>
+      <div class="task-mini">
+        <div class="tm-spinner"></div>
+        <span>Customer history lookup → 142 Oak St · prior visit 2022</span>
+        <span class="tm-arrow">→</span>
+      </div>
+      <div class="task-mini">
+        <div class="tm-spinner"></div>
+        <span>Quote draft → assembling line items from supplier responses</span>
+        <span class="tm-arrow">→</span>
+      </div>
+    </div>
+
+    <div style="margin-top:36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);">
+        <div style="font-size:1.3rem;margin-bottom:8px;">⚡</div>
+        <h4 style="font-size:0.88rem;font-weight:700;color:var(--navy);margin-bottom:6px;">Parallel Execution</h4>
+        <p style="font-size:0.8rem;color:var(--muted);line-height:1.55;">All four tasks run simultaneously. Total time: under 45 seconds from voice release to all results populated.</p>
+      </div>
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);">
+        <div style="font-size:1.3rem;margin-bottom:8px;">🔍</div>
+        <h4 style="font-size:0.88rem;font-weight:700;color:var(--navy);margin-bottom:6px;">Live Visibility</h4>
+        <p style="font-size:0.8rem;color:var(--muted);line-height:1.55;">Mike sees each task as a spinner card. He can tap any of them mid-execution to see what the agents are saying in real time.</p>
+      </div>
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);">
+        <div style="font-size:1.3rem;margin-bottom:8px;">🧑‍💼</div>
+        <h4 style="font-size:0.88rem;font-weight:700;color:var(--navy);margin-bottom:6px;">Human Override</h4>
+        <p style="font-size:0.8rem;color:var(--muted);line-height:1.55;">Every task has an Approve/Override button. Mike is always in control — the agent makes recommendations, Mike makes decisions.</p>
+      </div>
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);">
+        <div style="font-size:1.3rem;margin-bottom:8px;">📋</div>
+        <h4 style="font-size:0.88rem;font-weight:700;color:var(--navy);margin-bottom:6px;">Auto-Quote Build</h4>
+        <p style="font-size:0.8rem;color:var(--muted);line-height:1.55;">As pricing comes in from suppliers, the quote draft populates automatically. Mike reviews, taps Send, and the customer gets it instantly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div style="width:30px;height:30px;background:linear-gradient(135deg,#f97316,#ea580c);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;">🌬️</div>
+      Mike's HVAC &amp; Air — Agent App
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="leads.html">← Leads</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="jobs.html">Jobs →</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
