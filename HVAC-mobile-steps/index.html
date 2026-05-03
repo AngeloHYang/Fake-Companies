@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mike's HVAC — Home</title>
+<style>
+:root {
+  --orange: #f97316;
+  --orange-dark: #ea580c;
+  --green: #22c55e;
+  --blue: #0ea5e9;
+  --yellow: #eab308;
+  --red: #ef4444;
+  --app-bg: #0a1628;
+  --app-surface: #0f2035;
+  --app-card: rgba(255,255,255,0.05);
+  --app-border: rgba(255,255,255,0.09);
+  --app-muted: rgba(255,255,255,0.38);
+  --app-text: rgba(255,255,255,0.88);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #05101f;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px 48px;
+  font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+
+/* ── Phone shell ── */
+.phone {
+  width: 390px; max-width: 100%;
+  height: 844px;
+  display: flex; flex-direction: column;
+  background: var(--app-bg);
+  border-radius: 50px;
+  border: 3px solid rgba(255,255,255,0.13);
+  box-shadow: 0 52px 130px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06);
+  overflow: hidden;
+  position: relative;
+}
+.notch-bar { height: 34px; flex-shrink: 0; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 5px; background: var(--app-bg); }
+.notch-pill { width: 126px; height: 17px; background: #000; border-radius: 9px; }
+.status-bar { flex-shrink: 0; display: flex; justify-content: space-between; padding: 4px 22px 8px; font-size: 0.72rem; color: rgba(255,255,255,0.5); font-weight: 600; }
+.phone-body { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; }
+.phone-body::-webkit-scrollbar { display: none; }
+
+/* ── Bottom nav ── */
+.bottom-nav { display: flex; flex-shrink: 0; background: var(--app-surface); border-top: 1px solid rgba(255,255,255,0.08); }
+.bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0 15px; text-decoration: none; color: var(--app-muted); font-size: 0.6rem; font-weight: 600; letter-spacing: .3px; transition: color .15s; cursor: pointer; }
+.bnav-item.active { color: var(--orange); }
+.bnav-icon { font-size: 1.25rem; margin-bottom: 3px; display: block; }
+
+/* ── Shared screen styles ── */
+.screen { display: none; padding: 16px 18px 22px; animation: fadeIn .18s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+
+.card { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 13px; padding: 13px 14px; margin-bottom: 10px; }
+.tappable { cursor: pointer; transition: background .15s; }
+.tappable:active { background: rgba(255,255,255,0.09); }
+
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.btn { border-radius: 9px; padding: 11px 10px; font-size: 0.72rem; font-weight: 700; text-align: center; cursor: pointer; border: none; transition: all .15s; }
+.btn-orange { background: var(--orange); color: #fff; }
+.btn-orange:active { background: var(--orange-dark); }
+.btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.6); }
+.btn-ghost:active { background: rgba(255,255,255,0.06); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-disabled { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); cursor: default; border: 1px solid rgba(255,255,255,0.07); }
+
+.pill { display: inline-block; border-radius: 5px; padding: 3px 9px; font-size: 0.68rem; font-weight: 600; }
+.pill-green { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); color: #22c55e; }
+.pill-orange { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); color: var(--orange); }
+.pill-yellow { background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2); color: var(--yellow); }
+.pill-blue { background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.2); color: var(--blue); }
+
+.section-lbl { font-size: 0.7rem; font-weight: 700; color: var(--app-muted); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 10px; }
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes popIn { from{transform:scale(.86);opacity:0} to{transform:scale(1);opacity:1} }
+@keyframes wave { 0%,100%{transform:scaleY(.3)} 50%{transform:scaleY(1)} }
+
+/* ── Dashboard-specific ── */
+.app-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--orange-dark)); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; font-weight: 900; color: #fff; flex-shrink: 0; }
+.app-name { font-size: 1rem; font-weight: 800; color: var(--app-text); }
+.app-sub { font-size: 0.72rem; color: var(--green); font-weight: 600; }
+.live-badge { display: flex; align-items: center; gap: 5px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); border-radius: 20px; padding: 4px 11px; font-size: 0.68rem; font-weight: 700; color: var(--green); margin-left: auto; }
+.live-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 1.4s infinite; }
+
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+.stat-card { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 13px; padding: 13px 13px 11px; cursor: pointer; transition: background .15s; }
+.stat-card:active { background: rgba(255,255,255,0.09); }
+.stat-icon { font-size: 1.1rem; margin-bottom: 4px; }
+.stat-num { font-size: 1.85rem; font-weight: 900; color: var(--app-text); line-height: 1; margin-bottom: 2px; }
+.stat-label { font-size: 0.73rem; font-weight: 700; color: var(--app-text); margin-bottom: 1px; }
+.stat-sub { font-size: 0.64rem; color: var(--app-muted); }
+
+.activity-item { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 13px; padding: 12px 13px; margin-bottom: 8px; cursor: pointer; transition: background .15s; }
+.activity-item:active { background: rgba(255,255,255,0.08); }
+.activity-top { display: flex; align-items: flex-start; gap: 10px; }
+.activity-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.activity-body { flex: 1; min-width: 0; }
+.activity-main { font-size: 0.78rem; font-weight: 600; color: var(--app-text); line-height: 1.35; margin-bottom: 3px; }
+.activity-time { font-size: 0.64rem; color: var(--app-muted); margin-bottom: 5px; }
+.activity-expand { font-size: 0.71rem; color: rgba(255,255,255,0.55); line-height: 1.45; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.07); display: none; animation: fadeIn .15s ease; }
+.activity-expand.open { display: block; }
+
+/* ── Inline agent-launch section ── */
+.voice-section { margin-top: 18px; margin-bottom: 6px; }
+.voice-hint { font-size: 0.67rem; color: var(--app-muted); text-align: center; margin-bottom: 10px; }
+.chat-launch-row { display: flex; gap: 8px; }
+.chat-launch-voice {
+  flex: 1; padding: 15px 12px; border-radius: 14px; border: none;
+  background: var(--orange); color: #fff;
+  font-size: 0.88rem; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background .15s, transform .1s;
+  box-shadow: 0 4px 20px rgba(249,115,22,.35);
+}
+.chat-launch-voice:active { background: var(--orange-dark); transform: scale(0.97); }
+.chat-launch-type {
+  padding: 15px 18px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.75);
+  font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, transform .1s;
+}
+.chat-launch-type:active { background: rgba(255,255,255,0.11); transform: scale(0.97); }
+
+/* ── Floating chat bar (above bottom nav) ── */
+.chat-float-bar {
+  position: absolute;
+  left: 16px; right: 16px;
+  z-index: 5;
+  display: none;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(8, 18, 34, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 0 0 1px rgba(249,115,22,0.08);
+  animation: floatUp .3s cubic-bezier(0.22,1,0.36,1);
+}
+@keyframes floatUp { from{transform:translateY(10px);opacity:0} to{transform:translateY(0);opacity:1} }
+.chat-float-talk {
+  flex: 1; padding: 12px 10px; border-radius: 11px; border: none;
+  background: var(--orange); color: #fff;
+  font-size: 0.82rem; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: background .15s;
+}
+.chat-float-talk:active { background: var(--orange-dark); }
+.chat-float-type {
+  padding: 12px 16px; border-radius: 11px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.75);
+  font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.chat-float-type:active { background: rgba(255,255,255,0.12); }
+
+/* ── Chat overlay (covers phone-body + nav) ── */
+@keyframes expandCircle {
+  from { clip-path: circle(0px at var(--cx, 50%) var(--cy, 80%)); }
+  to   { clip-path: circle(160% at var(--cx, 50%) var(--cy, 80%)); }
+}
+@keyframes collapseDown {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(40px); opacity: 0; }
+}
+.chat-overlay {
+  position: absolute;
+  top: 62px; left: 0; right: 0; bottom: 0;
+  background: var(--app-bg);
+  display: none;
+  flex-direction: column;
+  z-index: 20;
+}
+.chat-overlay.opening { animation: expandCircle .45s cubic-bezier(0.22,1,0.36,1) both; }
+.chat-overlay.closing { animation: collapseDown .28s cubic-bezier(0.4,0,1,1) forwards; pointer-events: none; }
+
+/* Chat header */
+.chat-header {
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px 11px 10px;
+  background: var(--app-surface);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.chat-back {
+  font-size: 1.6rem; line-height: 1; color: var(--orange);
+  cursor: pointer; padding: 2px 8px 2px 4px;
+  transition: opacity .15s; user-select: none;
+}
+.chat-back:active { opacity: 0.55; }
+.chat-agent-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.35);
+}
+.chat-agent-name { font-size: 0.86rem; font-weight: 700; color: var(--app-text); }
+.chat-agent-status { font-size: 0.62rem; color: var(--green); font-weight: 600; display: flex; align-items: center; gap: 4px; margin-top: 1px; }
+.chat-status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); animation: pulse 1.4s infinite; }
+
+/* Messages area */
+.chat-msgs {
+  flex: 1; overflow-y: auto; scrollbar-width: none;
+  padding: 14px 16px 10px;
+}
+.chat-msgs::-webkit-scrollbar { display: none; }
+.chat-date-sep { text-align: center; font-size: 0.62rem; color: var(--app-muted); font-weight: 600; margin-bottom: 14px; letter-spacing: .4px; }
+.msg-agent-wrap { margin-bottom: 10px; }
+.msg-user-wrap  { margin-bottom: 10px; text-align: right; }
+.msg-agent {
+  background: rgba(14,165,233,0.12);
+  border: 1px solid rgba(14,165,233,0.22);
+  border-radius: 16px 16px 16px 4px;
+  padding: 10px 13px; font-size: 0.77rem; line-height: 1.5;
+  color: var(--app-text); max-width: 88%; display: inline-block;
+  animation: popIn .2s ease;
+}
+.msg-user {
+  background: var(--orange);
+  border-radius: 16px 16px 4px 16px;
+  padding: 10px 13px; font-size: 0.77rem; line-height: 1.5;
+  color: #fff; max-width: 88%; display: inline-block;
+  animation: popIn .2s ease;
+}
+.msg-time { font-size: 0.58rem; color: var(--app-muted); margin-top: 3px; padding: 0 2px; }
+.msg-time.right { text-align: right; }
+
+/* Typing indicator */
+.typing-wrap { margin-bottom: 10px; }
+.typing-bubble {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(14,165,233,0.12);
+  border: 1px solid rgba(14,165,233,0.22);
+  border-radius: 16px 16px 16px 4px;
+  padding: 11px 14px;
+}
+.tdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+.tdot:nth-child(1) { animation: tdotBounce .8s infinite 0s; }
+.tdot:nth-child(2) { animation: tdotBounce .8s infinite .18s; }
+.tdot:nth-child(3) { animation: tdotBounce .8s infinite .36s; }
+@keyframes tdotBounce {
+  0%,60%,100% { transform:translateY(0); background:rgba(255,255,255,.35); }
+  30% { transform:translateY(-5px); background:rgba(255,255,255,.85); }
+}
+
+/* Voice input area (inside chat) */
+.chat-voice-area {
+  flex-shrink: 0;
+  padding: 18px 22px 14px;
+  background: rgba(249,115,22,0.07);
+  border-top: 1px solid rgba(249,115,22,0.18);
+  text-align: center;
+}
+.chat-waveform { display: flex; align-items: center; justify-content: center; gap: 4px; height: 36px; margin-bottom: 10px; }
+.cwbar { width: 4px; border-radius: 3px; background: var(--orange); }
+.cw1{height:10px;animation:wave .65s ease-in-out infinite 0s}
+.cw2{height:18px;animation:wave .65s ease-in-out infinite .07s}
+.cw3{height:28px;animation:wave .65s ease-in-out infinite .14s}
+.cw4{height:22px;animation:wave .65s ease-in-out infinite .1s}
+.cw5{height:32px;animation:wave .65s ease-in-out infinite .2s}
+.cw6{height:26px;animation:wave .65s ease-in-out infinite .15s}
+.cw7{height:16px;animation:wave .65s ease-in-out infinite .25s}
+.cw8{height:12px;animation:wave .65s ease-in-out infinite .3s}
+.chat-voice-status { font-size: 0.76rem; font-weight: 700; color: var(--orange); margin-bottom: 6px; }
+.chat-voice-transcript {
+  font-size: 0.73rem; color: rgba(255,255,255,0.62);
+  font-style: italic; line-height: 1.5; min-height: 1.4em; margin-bottom: 10px;
+}
+.chat-stop-btn {
+  padding: 8px 22px; border-radius: 9px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.7);
+  font-size: 0.73rem; font-weight: 600; cursor: pointer;
+}
+.chat-stop-btn:active { background: rgba(255,255,255,0.13); }
+
+/* Chat input bar */
+.chat-input-bar {
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px 18px;
+  background: var(--app-bg);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.chat-mic-btn {
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.72);
+  font-size: 1.05rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.chat-mic-btn:active, .chat-mic-btn.listening { background: rgba(239,68,68,0.22); border-color: rgba(239,68,68,0.45); }
+.chat-mic-btn.listening { animation: pulse .9s infinite; }
+.chat-text-input {
+  flex: 1; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 20px;
+  padding: 9px 14px; font-size: 0.78rem; color: var(--app-text);
+  outline: none; font-family: inherit;
+}
+.chat-text-input::placeholder { color: rgba(255,255,255,0.3); }
+.chat-text-input:focus { border-color: rgba(249,115,22,0.45); background: rgba(255,255,255,0.08); }
+.chat-send-btn {
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+  border: none; background: var(--orange); color: #fff;
+  font-size: 0.95rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 10px rgba(249,115,22,.4);
+  transition: background .15s;
+}
+.chat-send-btn:active { background: var(--orange-dark); }
+
+/* ── Step indicator ── */
+.step-bar { flex-shrink: 0; padding: 6px 16px 7px; background: rgba(249,115,22,0.06); border-bottom: 1px solid rgba(249,115,22,0.11); }
+.step-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+.step-progress { flex: 1; height: 3px; background: rgba(255,255,255,0.09); border-radius: 3px; overflow: hidden; }
+.step-fill { height: 100%; background: var(--orange); border-radius: 3px; transition: width .5s ease; }
+.step-num { font-size: 0.6rem; font-weight: 800; color: var(--orange); white-space: nowrap; }
+.step-reset { background: none; border: none; color: rgba(255,255,255,0.2); font-size: 0.72rem; cursor: pointer; padding: 0 0 0 4px; flex-shrink: 0; line-height: 1; }
+.step-reset:hover { color: rgba(255,255,255,0.45); }
+.step-instruction { font-size: 0.6rem; color: rgba(255,255,255,0.45); line-height: 1.3; }
+.next-action { outline: 2px solid var(--orange) !important; outline-offset: 2px !important; box-shadow: 0 0 16px rgba(249,115,22,.5) !important; animation: nextPulse 1.6s ease-in-out infinite !important; }
+@keyframes nextPulse { 0%,100%{ box-shadow: 0 0 12px rgba(249,115,22,.4); } 50%{ box-shadow: 0 0 28px rgba(249,115,22,.75); } }
+.step-toast { position: absolute; bottom: 68px; left: 14px; right: 14px; background: rgba(34,197,94,0.93); border-radius: 10px; padding: 10px 14px; font-size: 0.72rem; font-weight: 700; color: #fff; text-align: center; z-index: 50; pointer-events: none; animation: toastPop .3s ease; }
+@keyframes toastPop { from{transform:translateY(8px);opacity:0} to{transform:translateY(0);opacity:1} }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="notch-bar"><div class="notch-pill"></div></div>
+  <div class="status-bar"><span>9:41</span><span>●●●● LTE 🔋</span></div>
+  <div class="step-bar" id="stepBar">
+    <div class="step-bar-row">
+      <div class="step-progress"><div class="step-fill" style="width:0%"></div></div>
+      <div class="step-num">0/10</div>
+      <button class="step-reset" onclick="resetSteps()" title="Reset demo">↺</button>
+    </div>
+    <div class="step-instruction">Loading…</div>
+  </div>
+
+  <!-- ── Scrollable home content ── -->
+  <div class="phone-body" id="phoneBody">
+    <div class="screen active" id="home">
+
+      <div class="app-header">
+        <div class="avatar">M</div>
+        <div>
+          <div class="app-name">Mike's HVAC</div>
+          <div class="app-sub">Agent: ACTIVE</div>
+        </div>
+        <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card" id="stat-leads" onclick="location.href='leads.html'">
+          <div class="stat-num">3</div>
+          <div class="stat-label">New Leads</div>
+          <div class="stat-sub">handled by agent</div>
+        </div>
+        <div class="stat-card" onclick="location.href='jobs.html'">
+          <div class="stat-icon">🔧</div>
+          <div class="stat-num">2</div>
+          <div class="stat-label">Jobs Today</div>
+          <div class="stat-sub">7am + 11am</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-num">1</div>
+          <div class="stat-label">Part Arriving</div>
+          <div class="stat-sub">Ferguson · 8am</div>
+        </div>
+        <div class="stat-card" onclick="location.href='jobs.html'">
+          <div class="stat-icon">📋</div>
+          <div class="stat-num">1</div>
+          <div class="stat-label">Permit Pending</div>
+          <div class="stat-sub">City of Austin</div>
+        </div>
+      </div>
+
+      <div class="section-lbl">Recent Agent Activity</div>
+
+      <div class="activity-item" id="act-sarah" onclick="toggleActivity(this)">
+        <div class="activity-top">
+          <div class="activity-icon">📅</div>
+          <div class="activity-body">
+            <div class="activity-main">Booked Mrs. Chen · 7:00 AM tomorrow · 142 Oak St</div>
+            <div class="activity-time">11:49 PM · last night</div>
+            <span class="pill pill-green">Confirmed</span>
+          </div>
+        </div>
+        <div class="activity-expand">Carrier furnace 58STA090-16 · Diagnostic $120, likely ignitor failure · Tech: Mike</div>
+      </div>
+
+      <div class="activity-item" id="act-garcia" onclick="toggleActivity(this)">
+        <div class="activity-top">
+          <div class="activity-icon">💰</div>
+          <div class="activity-body">
+            <div class="activity-main">Quoted Garcia furnace install · $4,800 · 3-ton Carrier 96K BTU</div>
+            <div class="activity-time">8:32 AM · today</div>
+            <span class="pill pill-orange">Awaiting approval</span>
+          </div>
+        </div>
+        <div class="activity-expand">3-ton system for 2,400 sqft home · Includes labor + parts · Quote valid 7 days</div>
+      </div>
+
+      <div class="activity-item" id="act-order" onclick="toggleActivity(this)">
+        <div class="activity-top">
+          <div class="activity-icon">📦</div>
+          <div class="activity-body">
+            <div class="activity-main">Ordered condenser → Grainger · Carrier CA16NA · 3-ton</div>
+            <div class="activity-time">8:55 AM · today</div>
+            <span class="pill pill-blue">Pickup Tomorrow 10am</span>
+          </div>
+        </div>
+        <div class="activity-expand">Order #GR-48291 · 5201 N Lamar Blvd · Call ahead required</div>
+      </div>
+
+      <!-- ── Inline agent launch (visible when scrolled to bottom) ── -->
+      <div class="voice-section" id="voiceSection">
+        <div class="voice-hint">Talk or type to your agent</div>
+        <div class="chat-launch-row">
+          <button class="chat-launch-voice" id="btnVoiceInline" onclick="openChat('voice', this)">🎙️ Talk to Agent</button>
+          <button class="chat-launch-type"  onclick="openChat('text',  this)">✏️</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Bottom nav ── -->
+  <div class="bottom-nav" id="bottomNav">
+    <a class="bnav-item active" href="index.html"><span class="bnav-icon">🏠</span>Home</a>
+    <a class="bnav-item" href="leads.html"><span class="bnav-icon">📞</span>Leads</a>
+    <a class="bnav-item" href="field.html"><span class="bnav-icon">🎙️</span>Field</a>
+    <a class="bnav-item" href="jobs.html"><span class="bnav-icon">✅</span>Jobs</a>
+  </div>
+
+  <!-- ── Floating chat bar (above nav, shown when inline section is off-screen) ── -->
+  <div id="chatFloat" class="chat-float-bar">
+    <button class="chat-float-talk" id="btnVoiceFloat" onclick="openChat('voice', this)">🎙️ Talk to Agent</button>
+    <button class="chat-float-type"  onclick="openChat('text',  this)">✏️</button>
+  </div>
+
+  <!-- ── Chat overlay (full-screen conversation view) ── -->
+  <div id="chatOverlay" class="chat-overlay">
+
+    <div class="chat-header">
+      <div class="chat-back" onclick="closeChat()">&#8249;</div>
+      <div class="chat-agent-avatar">🤖</div>
+      <div>
+        <div class="chat-agent-name">HVAC Agent</div>
+        <div class="chat-agent-status"><span class="chat-status-dot"></span>Online</div>
+      </div>
+    </div>
+
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="chat-date-sep">Today</div>
+      <div class="msg-agent-wrap">
+        <div class="msg-agent">Good morning Mike 👋 I handled 3 leads overnight — all booked or quoted. You have 2 jobs today. What do you need?</div>
+        <div class="msg-time">9:41 AM</div>
+      </div>
+    </div>
+
+    <!-- Voice waveform area (shown during voice input) -->
+    <div class="chat-voice-area" id="chatVoiceArea" style="display:none">
+      <div class="chat-waveform">
+        <div class="cwbar cw1"></div><div class="cwbar cw2"></div>
+        <div class="cwbar cw3"></div><div class="cwbar cw4"></div>
+        <div class="cwbar cw5"></div><div class="cwbar cw6"></div>
+        <div class="cwbar cw7"></div><div class="cwbar cw8"></div>
+      </div>
+      <div class="chat-voice-status" id="chatVoiceStatus">Listening…</div>
+      <div class="chat-voice-transcript" id="chatVoiceTranscript"></div>
+      <button class="chat-stop-btn" onclick="stopVoiceInput()">⏹ Stop</button>
+    </div>
+
+    <!-- Text + mic input bar -->
+    <div class="chat-input-bar" id="chatInputBar">
+      <button class="chat-mic-btn" id="chatMicBtn" onclick="toggleChatVoice()">🎙️</button>
+      <input  class="chat-text-input" id="chatTextInput" placeholder="Message your agent…" autocomplete="off">
+      <button class="chat-send-btn" onclick="sendTextMsg()">&#9658;</button>
+    </div>
+
+  </div><!-- end chat-overlay -->
+
+</div><!-- end .phone -->
+
+<script>
+/* ── Step system ── */
+const TOTAL_STEPS = 11;
+const STEP_MSG = [
+  'Tap 🎙️ "Talk to Agent" on the home screen to try the voice AI',
+  'Explore the home dashboard, then tap "📞 New Leads"',
+  'On Leads, tap the Sarah Chen card',
+  'In Sarah\'s detail, tap "View transcript"',
+  'Go to 🎙️ Field Mode — tap "⏸ Release" to let the agent work',
+  'Tap "Pricing furnace" → then "✓ Approve Ferguson"',
+  'Go to ✅ Jobs — tap the Sarah Chen card',
+  'Review the permit alert — tap "📋 File it"',
+  'Tap "Continue to job close-out →", then "💰 Send invoice"',
+  'Go to Leads — tap Marco Garcia → "Approve quote"',
+  'Tap Riverside Apts → "Send proposal"',
+  '🎉 Full workflow complete!',
+];
+function getStep() { return parseInt(localStorage.getItem('hvac_s') || '0'); }
+function setStep(n) { localStorage.setItem('hvac_s', Math.min(n, TOTAL_STEPS)); _renderStepBar(); _onStepChange(); }
+function advanceStep(to) { if (getStep() < to) setStep(to); }
+function resetSteps() { localStorage.removeItem('hvac_s'); setStep(0); showStepToast('↺ Demo reset — start from the Home screen'); }
+function _renderStepBar() {
+  const s = getStep(), bar = document.getElementById('stepBar');
+  if (!bar) return;
+  bar.querySelector('.step-fill').style.width = Math.round(s / TOTAL_STEPS * 100) + '%';
+  bar.querySelector('.step-num').textContent = s + '/' + TOTAL_STEPS;
+  bar.querySelector('.step-instruction').textContent = STEP_MSG[Math.min(s, TOTAL_STEPS)];
+}
+function showStepToast(msg) {
+  const old = document.querySelector('.step-toast');
+  if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'step-toast'; el.textContent = msg;
+  document.querySelector('.phone').appendChild(el);
+  setTimeout(() => { if (el.parentNode) el.remove(); }, 2700);
+}
+function _clearHighlights() { document.querySelectorAll('.next-action').forEach(el => el.classList.remove('next-action')); }
+function _onStepChange() {
+  _clearHighlights();
+  const s = getStep();
+  if (s === 0) {
+    document.querySelectorAll('#btnVoiceInline, #btnVoiceFloat').forEach(el => { if (el) el.classList.add('next-action'); });
+  } else if (s === 1) {
+    const el = document.getElementById('stat-leads');
+    if (el) el.classList.add('next-action');
+  }
+  _updateActivityItems();
+}
+
+function _updateActivityItems() {
+  const s = getStep();
+  // Step 6+: Ferguson order placed — update Grainger activity to reflect Ferguson
+  if (s >= 6) {
+    const actOrder = document.getElementById('act-order');
+    if (actOrder) {
+      const mainEl   = actOrder.querySelector('.activity-main');
+      const pillEl   = actOrder.querySelector('.pill');
+      const expandEl = actOrder.querySelector('.activity-expand');
+      if (mainEl)   mainEl.textContent   = 'Parts ordered from Ferguson · Carrier CA16NA · 3-ton';
+      if (pillEl)   { pillEl.className = 'pill pill-green'; pillEl.textContent = '✓ Ferguson · Pickup 8am'; }
+      if (expandEl) expandEl.textContent = 'Order #FERG-3821 · Ferguson HVAC · $3,180 · Pickup 8am tomorrow ✓';
+    }
+  }
+  // Step 9+: Invoice sent — Sarah job complete
+  if (s >= 9) {
+    const actSarah = document.getElementById('act-sarah');
+    if (actSarah) {
+      const pillEl = actSarah.querySelector('.pill');
+      if (pillEl) { pillEl.className = 'pill pill-green'; pillEl.textContent = '✓ Job complete · $4,820'; }
+    }
+  }
+  // Step 10+: Marco quote approved
+  if (s >= 10) {
+    const actGarcia = document.getElementById('act-garcia');
+    if (actGarcia) {
+      const pillEl = actGarcia.querySelector('.pill');
+      if (pillEl) { pillEl.className = 'pill pill-green'; pillEl.textContent = '✓ Approved'; }
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Mouse-wheel → phone-body scroll
+───────────────────────────────────────────── */
+document.querySelector('.phone').addEventListener('wheel', function(e) {
+  const pb = document.getElementById('phoneBody');
+  if (pb.style.overflowY === 'hidden') return;
+  e.preventDefault();
+  pb.scrollBy({ top: e.deltaY });
+}, { passive: false });
+
+/* ─────────────────────────────────────────────
+   Float bar position + visibility
+───────────────────────────────────────────── */
+const phoneBody  = document.getElementById('phoneBody');
+const chatFloat  = document.getElementById('chatFloat');
+const bottomNav  = document.getElementById('bottomNav');
+const voiceSection = document.getElementById('voiceSection');
+const chatOverlay  = document.getElementById('chatOverlay');
+
+function positionFloat() {
+  const navH = bottomNav.offsetHeight;
+  chatFloat.style.bottom = (navH + 8) + 'px';
+}
+
+function updateFloatVisibility() {
+  if (chatOverlay.style.display === 'flex') { chatFloat.style.display = 'none'; return; }
+  const vsRect = voiceSection.getBoundingClientRect();
+  const pbRect = phoneBody.getBoundingClientRect();
+  const visible = vsRect.top < pbRect.bottom - 16 && vsRect.bottom > pbRect.top + 16;
+  chatFloat.style.display = visible ? 'none' : 'flex';
+}
+
+positionFloat();
+updateFloatVisibility();
+phoneBody.addEventListener('scroll', updateFloatVisibility);
+window.addEventListener('resize', positionFloat);
+
+/* ─────────────────────────────────────────────
+   Open / close chat overlay
+───────────────────────────────────────────── */
+let chatIsOpen = false;
+let voiceTimer = null;
+
+function openChat(mode, btnEl) {
+  chatIsOpen = true;
+  chatFloat.style.display = 'none';
+
+  // Advance voice demo step on first open
+  if (getStep() === 0) {
+    advanceStep(1);
+    showStepToast('✓ Step 1 done — Voice AI demo! Explore the home screen next');
+  }
+
+  // Calculate expand origin relative to .phone
+  const phone = document.querySelector('.phone');
+  const pr = phone.getBoundingClientRect();
+  let cx = '50%', cy = '85%';
+  if (btnEl) {
+    const br = btnEl.getBoundingClientRect();
+    cx = (br.left + br.width  / 2 - pr.left) + 'px';
+    cy = (br.top  + br.height / 2 - pr.top ) + 'px';
+  }
+  chatOverlay.style.setProperty('--cx', cx);
+  chatOverlay.style.setProperty('--cy', cy);
+
+  chatOverlay.style.display = 'flex';
+  chatOverlay.classList.remove('closing');
+  chatOverlay.getBoundingClientRect(); // trigger reflow so opening animation replays
+  chatOverlay.classList.add('opening');
+  setTimeout(() => chatOverlay.classList.remove('opening'), 500);
+
+  scrollChatToBottom();
+
+  if (mode === 'voice') {
+    setTimeout(startVoiceInput, 350);
+  } else {
+    setTimeout(() => document.getElementById('chatTextInput').focus(), 380);
+  }
+}
+
+function closeChat() {
+  chatOverlay.classList.add('closing');
+  setTimeout(() => {
+    chatOverlay.style.display = 'none';
+    chatOverlay.classList.remove('closing');
+    chatIsOpen = false;
+    stopVoiceInput();
+    updateFloatVisibility();
+  }, 290);
+}
+
+/* ─────────────────────────────────────────────
+   Messaging helpers
+───────────────────────────────────────────── */
+function scrollChatToBottom() {
+  const area = document.getElementById('chatMsgs');
+  area.scrollTop = area.scrollHeight;
+}
+
+function nowTime() {
+  const d = new Date();
+  const h = d.getHours(), m = String(d.getMinutes()).padStart(2, '0');
+  return (h % 12 || 12) + ':' + m + ' ' + (h < 12 ? 'AM' : 'PM');
+}
+
+function addUserMsg(text) {
+  const area = document.getElementById('chatMsgs');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-user-wrap';
+  wrap.innerHTML = `<div class="msg-user">${text}</div><div class="msg-time right">${nowTime()}</div>`;
+  area.appendChild(wrap);
+  scrollChatToBottom();
+}
+
+function showTyping() {
+  const area = document.getElementById('chatMsgs');
+  if (document.getElementById('typingWrap')) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'typing-wrap'; wrap.id = 'typingWrap';
+  wrap.innerHTML = '<div class="typing-bubble"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>';
+  area.appendChild(wrap);
+  scrollChatToBottom();
+}
+
+function addAgentMsg(text) {
+  const area = document.getElementById('chatMsgs');
+  const tw = document.getElementById('typingWrap');
+  if (tw) tw.remove();
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-agent-wrap';
+  wrap.innerHTML = `<div class="msg-agent">${text}</div><div class="msg-time">${nowTime()}</div>`;
+  area.appendChild(wrap);
+  scrollChatToBottom();
+}
+
+/* Simple keyword-based response picker */
+function agentReply(text) {
+  const t = text.toLowerCase();
+  if (t.match(/schedul|job|today|morning/))
+    return 'You have 2 jobs today: Sarah Chen at 7 AM (furnace replacement — complete ✓) and Marco Garcia at 11 AM (AC + furnace install — in progress 🔧).';
+  if (t.match(/lead|call|prospect/))
+    return 'I handled 3 leads overnight: Mrs. Chen (booked ✓), Garcia install (quote sent 💰), and Riverside Apts (follow-up at 2 PM). No action needed.';
+  if (t.match(/part|fergu|grainger|order/))
+    return 'The Carrier CA16NA condenser from Ferguson is scheduled for pickup tomorrow at 8 AM — 5201 N Lamar Blvd. Order #GR-48291. ✓';
+  if (t.match(/invoice|money|revenue|earn/))
+    return "Today's revenue: Sarah Chen $4,820 (paid ✓). Marco Garcia $4,800 pending job close. Total: $9,620 for today. 💰";
+  if (t.match(/permit/))
+    return 'Permit for 142 Oak St has been filed — Reference #ATX-2025-04891. City confirmation in 2–3 business days. ✓';
+  return "Got it! I'm on it. Anything else you need for today's jobs or leads?";
+}
+
+/* ─────────────────────────────────────────────
+   Text input
+───────────────────────────────────────────── */
+const REPLY_BASE_DELAY   = 900;
+const REPLY_RANDOM_DELAY = 500;
+
+function sendTextMsg() {
+  const inp = document.getElementById('chatTextInput');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  addUserMsg(text);
+  showTyping();
+  setTimeout(() => addAgentMsg(agentReply(text)), REPLY_BASE_DELAY + Math.random() * REPLY_RANDOM_DELAY);
+}
+
+document.getElementById('chatTextInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') sendTextMsg();
+});
+
+/* ─────────────────────────────────────────────
+   Voice input
+───────────────────────────────────────────── */
+function startVoiceInput() {
+  const voiceArea = document.getElementById('chatVoiceArea');
+  const inputBar  = document.getElementById('chatInputBar');
+  const status    = document.getElementById('chatVoiceStatus');
+  const transcript = document.getElementById('chatVoiceTranscript');
+  document.getElementById('chatMicBtn').classList.add('listening');
+
+  voiceArea.style.display = 'block';
+  inputBar.style.display  = 'none';
+  status.textContent    = 'Listening…';
+  transcript.textContent = '';
+
+  // After 2 s show simulated transcript, then submit
+  voiceTimer = setTimeout(() => {
+    const demo = "What's the status of today's jobs?";
+    transcript.textContent = demo;
+    status.textContent = 'Got it — processing…';
+
+    voiceTimer = setTimeout(() => {
+      stopVoiceInput();
+      addUserMsg("What's the status of today's jobs?");
+      showTyping();
+      voiceTimer = setTimeout(() =>
+        addAgentMsg('You have 2 jobs today: Sarah Chen at 7 AM (furnace replacement — complete ✓) and Marco Garcia at 11 AM (AC + furnace install — in progress 🔧). Parts from Ferguson arrive at 8 AM.')
+      , 1100);
+    }, 1500);
+  }, 2100);
+}
+
+function stopVoiceInput() {
+  if (voiceTimer) { clearTimeout(voiceTimer); voiceTimer = null; }
+  document.getElementById('chatVoiceArea').style.display = 'none';
+  document.getElementById('chatInputBar').style.display  = 'flex';
+  document.getElementById('chatMicBtn').classList.remove('listening');
+}
+
+function toggleChatVoice() {
+  const va = document.getElementById('chatVoiceArea');
+  if (va.style.display === 'none' || !va.style.display) startVoiceInput();
+  else stopVoiceInput();
+}
+
+/* ─────────────────────────────────────────────
+   Activity expand (home screen)
+───────────────────────────────────────────── */
+function toggleActivity(el) {
+  el.querySelector('.activity-expand').classList.toggle('open');
+}
+
+/* ── Init ── */
+_renderStepBar();
+_onStepChange();
+</script>
+</body>
+</html>
