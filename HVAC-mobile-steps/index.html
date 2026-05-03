@@ -395,7 +395,7 @@ body {
 
       <div class="section-lbl">Recent Agent Activity</div>
 
-      <div class="activity-item" onclick="toggleActivity(this)">
+      <div class="activity-item" id="act-sarah" onclick="toggleActivity(this)">
         <div class="activity-top">
           <div class="activity-icon">📅</div>
           <div class="activity-body">
@@ -407,7 +407,7 @@ body {
         <div class="activity-expand">Carrier furnace 58STA090-16 · Diagnostic $120, likely ignitor failure · Tech: Mike</div>
       </div>
 
-      <div class="activity-item" onclick="toggleActivity(this)">
+      <div class="activity-item" id="act-garcia" onclick="toggleActivity(this)">
         <div class="activity-top">
           <div class="activity-icon">💰</div>
           <div class="activity-body">
@@ -419,7 +419,7 @@ body {
         <div class="activity-expand">3-ton system for 2,400 sqft home · Includes labor + parts · Quote valid 7 days</div>
       </div>
 
-      <div class="activity-item" onclick="toggleActivity(this)">
+      <div class="activity-item" id="act-order" onclick="toggleActivity(this)">
         <div class="activity-top">
           <div class="activity-icon">📦</div>
           <div class="activity-body">
@@ -543,6 +543,39 @@ function _onStepChange() {
   if (s <= 1) {
     const el = document.getElementById('stat-leads');
     if (el) el.classList.add('next-action');
+  }
+  _updateActivityItems();
+}
+
+function _updateActivityItems() {
+  const s = getStep();
+  // Step 5+: Ferguson order placed — update Grainger activity to reflect Ferguson
+  if (s >= 5) {
+    const actOrder = document.getElementById('act-order');
+    if (actOrder) {
+      const mainEl   = actOrder.querySelector('.activity-main');
+      const pillEl   = actOrder.querySelector('.pill');
+      const expandEl = actOrder.querySelector('.activity-expand');
+      if (mainEl)   mainEl.textContent   = 'Parts ordered from Ferguson · Carrier CA16NA · 3-ton';
+      if (pillEl)   { pillEl.className = 'pill pill-green'; pillEl.textContent = '✓ Ferguson · Pickup 8am'; }
+      if (expandEl) expandEl.textContent = 'Order #FERG-3821 · Ferguson HVAC · $3,180 · Pickup 8am tomorrow ✓';
+    }
+  }
+  // Step 8+: Invoice sent — Sarah job complete
+  if (s >= 8) {
+    const actSarah = document.getElementById('act-sarah');
+    if (actSarah) {
+      const pillEl = actSarah.querySelector('.pill');
+      if (pillEl) { pillEl.className = 'pill pill-green'; pillEl.textContent = '✓ Job complete · $4,820'; }
+    }
+  }
+  // Step 9+: Marco quote approved
+  if (s >= 9) {
+    const actGarcia = document.getElementById('act-garcia');
+    if (actGarcia) {
+      const pillEl = actGarcia.querySelector('.pill');
+      if (pillEl) { pillEl.className = 'pill pill-green'; pillEl.textContent = '✓ Approved'; }
+    }
   }
 }
 
