@@ -9,9 +9,9 @@ AI-to-AI lead handling, field work, permit filing, and
 invoicing — all guided by an AI agent.
 
 A progress bar at the top of every screen shows your current
-step (e.g. "3/10") and tells you exactly what to do next.
+step (e.g. "3/11") and tells you exactly what to do next.
 The next recommended button glows with an orange outline.
-Follow all 10 steps in order for the full experience.
+Follow all 11 steps in order for the full experience.
 
 To restart the demo at any time, tap the small "↺" reset
 button in the top-right of the progress bar.
@@ -37,11 +37,45 @@ button in the top-right of the progress bar.
   STEP-BY-STEP INSTRUCTIONS
 ================================================================
 
-STEP 1 — Home Dashboard  (index.html)
+STEP 1 — Voice AI Demo  (index.html)
 --------------------------------------
 Page: Home (🏠)
 
-Open the app. You'll see today's summary:
+The step bar at the top reads "0/11" and instructs:
+  "Tap 🎙️ 'Talk to Agent' on the home screen to try the
+   voice AI"
+
+Both the "🎙️ Talk to Agent" button at the bottom of the
+home feed AND the floating orange bar above the navigation
+glow with an orange outline.
+
+  ▶ NEXT: Tap either glowing "🎙️ Talk to Agent" button.
+
+The chat overlay expands from the button with a smooth
+animation. A waveform appears and the agent starts
+"listening". After ~2 seconds you'll see the transcript:
+  "What's the status of today's jobs?"
+
+The agent replies with:
+  "You have 2 jobs today: Sarah Chen at 7 AM (furnace
+   replacement — complete ✓) and Marco Garcia at 11 AM
+   (AC + furnace install — in progress 🔧). Parts from
+   Ferguson arrive at 8 AM."
+
+You can also type any message in the text bar and the agent
+will respond with relevant information about jobs, leads,
+parts orders, or permit status.
+
+Tap "‹" (back) to close the chat overlay. The step bar
+advances to 1/11.
+
+
+STEP 2 — Home Dashboard  (index.html)
+--------------------------------------
+Page: Home (🏠)
+
+Now that you've tried the voice AI, explore the dashboard.
+You'll see today's summary:
   • 3 New Leads — all handled by the AI agent overnight
   • 2 Jobs Today — 7 AM + 11 AM
   • 1 Part Arriving — Ferguson at 8 AM
@@ -51,16 +85,12 @@ Scroll down and read the "Recent Agent Activity" feed to see
 what your agent did while you slept (booked Sarah Chen,
 quoted Marco Garcia, ordered the condenser).
 
-You can also tap "Talk to Agent" or the ✏️ text button at the
-bottom to open the chat overlay and ask the agent any
-question (e.g. "What are my jobs today?").
-
   ▶ NEXT: Tap the "📞 New Leads" stat card, or tap "Leads"
     in the bottom navigation bar (four icons at the bottom
     of the phone: 🏠 Home · 📞 Leads · 🎙️ Field · ✅ Jobs).
 
 
-STEP 2 — Leads: View Sarah Chen  (leads.html)
+STEP 3 — Leads: View Sarah Chen  (leads.html)
 ----------------------------------------------
 Page: Leads (📞)
 
@@ -72,7 +102,7 @@ You'll see today's 3 leads:
   ▶ NEXT: Tap the Sarah Chen card (it glows orange).
 
 
-STEP 3 — Leads: Read the AI Transcript  (leads.html)
+STEP 4 — Leads: Read the AI Transcript  (leads.html)
 ------------------------------------------------------
 Page: Lead Detail — Sarah Chen
 
@@ -96,7 +126,7 @@ From Sarah's detail, tapping "Go to Field →" will take you
 to Field Mode — the next stop in the workflow.
 
 
-STEP 4 — Field Mode: Voice Dictation  (field.html)
+STEP 5 — Field Mode: Voice Dictation  (field.html)
 ---------------------------------------------------
 Page: Field Mode (🎙️)
 
@@ -119,7 +149,7 @@ a confirmation briefly appears.
     input and let the AI agent start working.
 
 
-STEP 5 — Field Mode: Approve Parts Order  (field.html)
+STEP 6 — Field Mode: Approve Parts Order  (field.html)
 -------------------------------------------------------
 Page: Agent Working (Screen 2 of Field Mode)
 
@@ -153,7 +183,7 @@ A confirmation banner appears: "Ferguson order placed · ETA
 tomorrow 8am · Quote updating automatically…"
 
 
-STEP 6 — Jobs: Open Sarah Chen's Job  (jobs.html)
+STEP 7 — Jobs: Open Sarah Chen's Job  (jobs.html)
 --------------------------------------------------
 Page: Jobs (✅)
 
@@ -164,12 +194,12 @@ Today's two jobs are listed:
   🟠 Marco Garcia  — 11:00 AM · $4,800 · In Progress
 
 (Sarah's card shows "In Progress" because the job close-out
-hasn't been completed yet. It turns green after Step 8.)
+hasn't been completed yet. It turns green after Step 9.)
 
   ▶ NEXT: Tap the Sarah Chen card (it glows orange).
 
 
-STEP 7 — Jobs: File the Permit  (jobs.html)
+STEP 8 — Jobs: File the Permit  (jobs.html)
 --------------------------------------------
 Page: Permit Alert (Screen 2 of Jobs)
 
@@ -193,7 +223,7 @@ A "Continue to job close-out →" button appears.
   ▶ NEXT: Tap "Continue to job close-out →".
 
 
-STEP 8 — Jobs: Send Invoice  (jobs.html)
+STEP 9 — Jobs: Send Invoice  (jobs.html)
 -----------------------------------------
 Page: Close Job — Sarah Chen (Screen 3 of Jobs)
 
@@ -226,8 +256,8 @@ Sarah Chen's job card on the list now turns GREEN with a
 "Complete" pill. ✓
 
 
-STEP 9 — Leads: Approve Marco Garcia Quote  (leads.html)
----------------------------------------------------------
+STEP 10 — Leads: Approve Marco Garcia Quote  (leads.html)
+----------------------------------------------------------
 Page: Leads (📞)
 
 Navigate back to Leads via the bottom navigation bar.
@@ -247,7 +277,7 @@ The pending card updates to:
   "✅ Quote approved — Agent will schedule install"
 
 
-STEP 10 — Leads: Send Riverside Proposal  (leads.html)
+STEP 11 — Leads: Send Riverside Proposal  (leads.html)
 -------------------------------------------------------
 Page: Leads (📞)
 
@@ -264,7 +294,7 @@ In the detail, you can see:
   ▶ NEXT: Tap "Send proposal".
 
 The button confirms "✓ Sent" and the progress bar reaches
-10/10 with the banner:
+11/11 with the banner:
   "🎉 Full workflow complete!"
 
 ================================================================
