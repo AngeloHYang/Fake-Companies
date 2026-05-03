@@ -310,8 +310,9 @@ body {
 
 <script>
 /* ── Step system ── */
-const TOTAL_STEPS = 10;
+const TOTAL_STEPS = 11;
 const STEP_MSG = [
+  'Tap 🎙️ "Talk to Agent" on the home screen to try the voice AI',
   'Explore the home dashboard, then tap "📞 New Leads"',
   'On Leads, tap the Sarah Chen card',
   'In Sarah\'s detail, tap "View transcript"',
@@ -347,13 +348,13 @@ function _clearHighlights() { document.querySelectorAll('.next-action').forEach(
 function _onStepChange() {
   _clearHighlights();
   const s = getStep();
-  if (s === 5) {
+  if (s === 6) {
     const el = document.getElementById('job-sarah');
     if (el) el.classList.add('next-action');
-  } else if (s === 6) {
+  } else if (s === 7) {
     const fb = document.getElementById('fileBtn');
     if (fb && !fb.className.includes('btn-disabled')) fb.classList.add('next-action');
-  } else if (s === 7) {
+  } else if (s === 8) {
     const s3Active = document.getElementById('s3').classList.contains('active');
     if (s3Active) {
       const si = document.getElementById('sendInvBtn');
@@ -366,7 +367,7 @@ function _onStepChange() {
 }
 
 function updateSarahCard() {
-  const INVOICE_SENT_STEP = 8;
+  const INVOICE_SENT_STEP = 9;
   const done = getStep() >= INVOICE_SENT_STEP;
   const dot  = document.getElementById('sarah-dot');
   const pill = document.getElementById('sarah-pill');
@@ -383,7 +384,7 @@ function showScreen(id) {
 }
 
 function openSarahJob() {
-  advanceStep(6);
+  advanceStep(7);
   showScreen('s2');
 }
 
@@ -407,8 +408,8 @@ function filePermit() {
     btn.textContent = '✓ Filed';
     document.getElementById('permitSuccess').style.display = 'block';
     document.getElementById('continueBtn').style.display = 'block';
-    advanceStep(7);
-    showStepToast('✓ Step 7 done — Permit filed! Tap "Continue to job close-out →"');
+    advanceStep(8);
+    showStepToast('✓ Step 8 done — Permit filed! Tap "Continue to job close-out →"');
     _onStepChange();
   }, 1500);
 }
@@ -424,9 +425,9 @@ function sendInvoice() {
     document.getElementById('jobSuccess').style.display = 'block';
     btn.textContent = '✓ Sent';
     document.getElementById('reviewBtn').className = 'btn btn-disabled';
-    advanceStep(8);
+    advanceStep(9);
     updateSarahCard();
-    showStepToast('✓ Step 8 done — Invoice sent! Return to Leads 📞');
+    showStepToast('✓ Step 9 done — Invoice sent! Return to Leads 📞');
     _onStepChange();
   }, 1400);
 }
@@ -434,7 +435,7 @@ function sendInvoice() {
 function toggleReview() {
   document.getElementById('invDetail').classList.toggle('open');
   // highlight send invoice once review is open
-  if (getStep() === 7) _onStepChange();
+  if (getStep() === 8) _onStepChange();
 }
 
 /* ── Init ── */

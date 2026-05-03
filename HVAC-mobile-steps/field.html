@@ -298,8 +298,9 @@ body {
 
 <script>
 /* ── Step system ── */
-const TOTAL_STEPS = 10;
+const TOTAL_STEPS = 11;
 const STEP_MSG = [
+  'Tap 🎙️ "Talk to Agent" on the home screen to try the voice AI',
   'Explore the home dashboard, then tap "📞 New Leads"',
   'On Leads, tap the Sarah Chen card',
   'In Sarah\'s detail, tap "View transcript"',
@@ -335,10 +336,10 @@ function _clearHighlights() { document.querySelectorAll('.next-action').forEach(
 function _onStepChange() {
   _clearHighlights();
   const s = getStep();
-  if (s === 3) {
+  if (s === 4) {
     const el = document.getElementById('releaseBtn');
     if (el) el.classList.add('next-action');
-  } else if (s === 4) {
+  } else if (s === 5) {
     const el = document.getElementById('approveBtn');
     if (el && !el.className.includes('btn-disabled')) el.classList.add('next-action');
   }
@@ -358,8 +359,8 @@ function addPhoto() {
 }
 
 function releaseVoice() {
-  advanceStep(4);
-  showStepToast('✓ Step 4 done — Agent working! Tap "Pricing furnace"');
+  advanceStep(5);
+  showStepToast('✓ Step 5 done — Agent working! Tap "Pricing furnace"');
   showScreen('s2');
 
   // Tasks that the agent completes autonomously (no user action needed)
@@ -417,8 +418,8 @@ function approveOrder() {
   document.getElementById('approveBtn').className = 'btn btn-disabled';
   document.getElementById('overrideBtn').className = 'btn btn-disabled';
   document.getElementById('approveConfirm').style.display = 'block';
-  advanceStep(5);
-  showStepToast('✓ Step 5 done — Parts ordered! Head to ✅ Jobs');
+  advanceStep(6);
+  showStepToast('✓ Step 6 done — Parts ordered! Head to ✅ Jobs');
   _markPricingDone('Ferguson', '$3,180');
 }
 
@@ -456,8 +457,8 @@ function selectSupplier(name, price) {
   document.getElementById('recCard').innerHTML = `<div class='rec-title'>✓ ${name} selected — ${price}</div><div class='rec-body'>Order placed. Parts arriving as scheduled.</div>`;
   document.getElementById('approveConfirm').style.display = 'block';
   document.getElementById('approveConfirm').innerHTML = `✓ ${name} order placed · ETA confirmed · Quote updating automatically…`;
-  advanceStep(5);
-  showStepToast('✓ Step 5 done — Parts ordered! Head to ✅ Jobs');
+  advanceStep(6);
+  showStepToast('✓ Step 6 done — Parts ordered! Head to ✅ Jobs');
   _markPricingDone(name, price);
 }
 

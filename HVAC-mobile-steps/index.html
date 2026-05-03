@@ -435,7 +435,7 @@ body {
       <div class="voice-section" id="voiceSection">
         <div class="voice-hint">Talk or type to your agent</div>
         <div class="chat-launch-row">
-          <button class="chat-launch-voice" onclick="openChat('voice', this)">🎙️ Talk to Agent</button>
+          <button class="chat-launch-voice" id="btnVoiceInline" onclick="openChat('voice', this)">🎙️ Talk to Agent</button>
           <button class="chat-launch-type"  onclick="openChat('text',  this)">✏️</button>
         </div>
       </div>
@@ -453,7 +453,7 @@ body {
 
   <!-- ── Floating chat bar (above nav, shown when inline section is off-screen) ── -->
   <div id="chatFloat" class="chat-float-bar">
-    <button class="chat-float-talk" onclick="openChat('voice', this)">🎙️ Talk to Agent</button>
+    <button class="chat-float-talk" id="btnVoiceFloat" onclick="openChat('voice', this)">🎙️ Talk to Agent</button>
     <button class="chat-float-type"  onclick="openChat('text',  this)">✏️</button>
   </div>
 
@@ -503,8 +503,9 @@ body {
 
 <script>
 /* ── Step system ── */
-const TOTAL_STEPS = 10;
+const TOTAL_STEPS = 11;
 const STEP_MSG = [
+  'Tap 🎙️ "Talk to Agent" on the home screen to try the voice AI',
   'Explore the home dashboard, then tap "📞 New Leads"',
   'On Leads, tap the Sarah Chen card',
   'In Sarah\'s detail, tap "View transcript"',
@@ -540,7 +541,9 @@ function _clearHighlights() { document.querySelectorAll('.next-action').forEach(
 function _onStepChange() {
   _clearHighlights();
   const s = getStep();
-  if (s <= 1) {
+  if (s === 0) {
+    document.querySelectorAll('#btnVoiceInline, #btnVoiceFloat').forEach(el => { if (el) el.classList.add('next-action'); });
+  } else if (s === 1) {
     const el = document.getElementById('stat-leads');
     if (el) el.classList.add('next-action');
   }
@@ -549,8 +552,8 @@ function _onStepChange() {
 
 function _updateActivityItems() {
   const s = getStep();
-  // Step 5+: Ferguson order placed — update Grainger activity to reflect Ferguson
-  if (s >= 5) {
+  // Step 6+: Ferguson order placed — update Grainger activity to reflect Ferguson
+  if (s >= 6) {
     const actOrder = document.getElementById('act-order');
     if (actOrder) {
       const mainEl   = actOrder.querySelector('.activity-main');
@@ -561,16 +564,16 @@ function _updateActivityItems() {
       if (expandEl) expandEl.textContent = 'Order #FERG-3821 · Ferguson HVAC · $3,180 · Pickup 8am tomorrow ✓';
     }
   }
-  // Step 8+: Invoice sent — Sarah job complete
-  if (s >= 8) {
+  // Step 9+: Invoice sent — Sarah job complete
+  if (s >= 9) {
     const actSarah = document.getElementById('act-sarah');
     if (actSarah) {
       const pillEl = actSarah.querySelector('.pill');
       if (pillEl) { pillEl.className = 'pill pill-green'; pillEl.textContent = '✓ Job complete · $4,820'; }
     }
   }
-  // Step 9+: Marco quote approved
-  if (s >= 9) {
+  // Step 10+: Marco quote approved
+  if (s >= 10) {
     const actGarcia = document.getElementById('act-garcia');
     if (actGarcia) {
       const pillEl = actGarcia.querySelector('.pill');
@@ -625,6 +628,12 @@ let voiceTimer = null;
 function openChat(mode, btnEl) {
   chatIsOpen = true;
   chatFloat.style.display = 'none';
+
+  // Advance voice demo step on first open
+  if (getStep() === 0) {
+    advanceStep(1);
+    showStepToast('✓ Step 1 done — Voice AI demo! Explore the home screen next');
+  }
 
   // Calculate expand origin relative to .phone
   const phone = document.querySelector('.phone');
@@ -797,7 +806,6 @@ function toggleActivity(el) {
 }
 
 /* ── Init ── */
-advanceStep(1);
 _renderStepBar();
 _onStepChange();
 </script>
