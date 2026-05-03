@@ -26,9 +26,9 @@ body {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  justify-content: center;
-  gap: 32px;
-  padding: 28px 16px 48px;
+  justify-content: flex-start;
+  gap: 24px;
+  padding: 28px 28px 48px;
   font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
 }
 @media (max-width: 900px) {
@@ -152,9 +152,9 @@ body {
    ═══════════════════════════════════════ */
 @keyframes cpIn  { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:translateY(0)} }
 @keyframes cpBlink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
-.console-stack { display:flex; flex-direction:column; gap:12px; align-self:flex-start; }
-.console-panel { width:380px; height:416px; flex-shrink:0; background:#030810; border:1px solid rgba(255,255,255,0.09); border-radius:18px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 16px 56px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.03),inset 0 1px 0 rgba(255,255,255,0.04); font-family:'SF Mono','Fira Code',ui-monospace,Consolas,monospace; }
-#consoleExt { border-top-color:rgba(96,165,250,0.2); }
+.console-stack { flex:1; min-width:0; height:844px; display:flex; flex-direction:column; gap:10px; align-self:flex-start; }
+.console-panel { width:100%; flex:1; min-height:0; flex-shrink:0; background:#030810; border:1px solid rgba(255,255,255,0.09); border-radius:18px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 16px 56px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.03),inset 0 1px 0 rgba(255,255,255,0.04); font-family:'SF Mono','Fira Code',ui-monospace,Consolas,monospace; }
+#consoleExt { border-top-color:rgba(96,165,250,0.2); display:none; }
 .cp-topbar { flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:12px 16px 11px; background:linear-gradient(180deg,rgba(255,255,255,0.03) 0%,transparent 100%); border-bottom:1px solid rgba(255,255,255,0.07); }
 .cp-title-group { display:flex; flex-direction:column; gap:2px; }
 .cp-title-row { display:flex; align-items:center; gap:8px; }
@@ -342,7 +342,7 @@ body {
           <span class="cp-flash">↙</span>
           <span class="cp-title" id="extConsoleTitle">Sarah's Home Agent 🏠</span>
         </div>
-        <div class="cp-subtitle">inbound responses · A2A highlighted</div>
+        <div class="cp-subtitle" id="extConsoleSub">inbound responses</div>
       </div>
       <div class="cp-live-pill cp-live-pill-ext"><span class="cp-live-dot"></span>ONLINE</div>
     </div>
@@ -646,6 +646,22 @@ function cpSys(ts, msg)                              { _cpLog('cpLog',  ts,'·',
 function cpChip() {}    /* agents bar removed */
 function cpActivate() {}/* agents bar removed */
 function cpLoadHistory(fns) { fns.forEach((fn, i) => setTimeout(fn, 20 + i * 55)); }
+function cpShowExt(title, subtitle) {
+  const ext = document.getElementById('consoleExt');
+  if (!ext) return;
+  ext.style.display = 'flex';
+  const t = document.getElementById('extConsoleTitle'); if (t) t.textContent = title;
+  const s = document.getElementById('extConsoleSub');   if (s && subtitle) s.textContent = subtitle;
+}
+function cpHideExt() { const e = document.getElementById('consoleExt'); if (e) e.style.display = 'none'; }
+function cpSwitchExt(title, subtitle) {
+  const log = document.getElementById('cpLog2');
+  if (log) {
+    const d = document.createElement('div'); d.className = 'cp-sec-label';
+    d.textContent = '── ' + title + ' ──'; log.appendChild(d); log.scrollTop = log.scrollHeight;
+  }
+  cpShowExt(title, subtitle);
+}
 
 /* ═══════════════════════════════════════════════════════
    AGENT CONSOLE — LEADS PAGE
@@ -668,6 +684,7 @@ function cpLoadHistory(fns) { fns.forEach((fn, i) => setTimeout(fn, 20 + i * 55)
     () => cpOut('8:32:04','b-marco','MARCO\'S AGENT','Quote delivered: $4,800 · valid 7 days',null,true),
     () => cpIn('8:32:05','b-marco','MARCO\'S AGENT','Received — reviewing with owner',null,true),
     () => cpSetPrompt('3 leads processed — awaiting owner review'),
+    () => cpShowExt('Sarah\'s Home Agent 🏠', 'A2A agent · overnight session'),
   ]);
 })();
 
@@ -677,8 +694,8 @@ handleLeadBtn = function(btn, action) {
   _origHandleLeadBtn.apply(this, arguments);
   const now = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
   if (action === 'transcript') {
+    cpSwitchExt('Sarah\'s Home Agent 🏠', 'A2A transcript replay');
     cpSec('A2A TRANSCRIPT — SARAH CHEN 🏠');
-    cpSetExtTitle('Sarah\'s Home Agent 🏠');
     const msgs = [
       [100,  ()=>cpIn('11:47:03','b-sarah','SARAH\'S AGENT','"My owner has no heat. Carrier ~12yr. 2 kids. ASAP."',null,true)],
       [500,  ()=>cpOut('11:47:04','b-hvac','MIKE\'S AGENT','"Confirmed service area. Share model number?"',null,true)],
@@ -692,7 +709,7 @@ handleLeadBtn = function(btn, action) {
     cpSetPrompt('replaying A2A transcript…');
   } else if (action === 'approve') {
     cpSec('QUOTE APPROVAL · ' + now);
-    cpSetExtTitle('Marco Garcia\'s Agent 👷');
+    cpSwitchExt('Marco Garcia\'s Agent 👷', 'A2A agent · prospective client');
     cpOut(now,'b-marco','MARCO\'S AGENT','"Approved. Schedule the install."',null,true);
     setTimeout(() => cpOut(now,'b-booking','BOOKING SYS','POST /appointments {type:"full-install",customer:"garcia"}'), 600);
     setTimeout(() => cpIn(now,'b-booking','BOOKING SYS','Next slot: Fri May 9 @ 11:00 AM ✓'), 1600);
@@ -703,7 +720,7 @@ handleLeadBtn = function(btn, action) {
     }, 2400);
   } else if (action === 'proposal') {
     cpSec('PROPOSAL DELIVERY · ' + now);
-    cpSetExtTitle('Riverside Mgmt Agent 🏢');
+    cpSwitchExt('Riverside Mgmt Agent 🏢', 'A2A agent · commercial client');
     cpOut(now,'b-email','EMAIL API','POST /send {to:"mgr@riverside.com", template:"commercial-proposal"}');
     setTimeout(() => cpIn(now,'b-email','EMAIL API','Delivered to mgr@riverside.com ✓'), 1200);
     setTimeout(() => {
