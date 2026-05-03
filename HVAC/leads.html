@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leads — Mike's HVAC &amp; Air Agent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:        #0d1f2d;
+      --slate:       #1a3148;
+      --orange:      #f97316;
+      --orange-dark: #ea580c;
+      --orange-light:#fff7ed;
+      --blue:        #0ea5e9;
+      --teal:        #14b8a6;
+      --green:       #22c55e;
+      --yellow:      #eab308;
+      --red:         #ef4444;
+      --purple:      #8b5cf6;
+      --white:       #ffffff;
+      --light-bg:    #f8fafc;
+      --text:        #1e293b;
+      --muted:       #64748b;
+      --border:      #e2e8f0;
+      --radius:      12px;
+      --shadow:      0 4px 24px rgba(13,31,45,0.10);
+      --app-bg:      #0a1628;
+      --app-card:    rgba(255,255,255,0.05);
+      --app-border:  rgba(255,255,255,0.09);
+      --app-muted:   rgba(255,255,255,0.38);
+      --app-text:    rgba(255,255,255,0.85);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,31,45,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 38px; height: 38px; background: linear-gradient(135deg, var(--orange), var(--orange-dark)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--orange); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--orange); color: var(--orange); }
+    .btn-outline:hover { background: var(--orange); color: white; }
+    .btn-primary { background: var(--orange); color: white; }
+    .btn-primary:hover { background: var(--orange-dark); }
+
+    /* PAGE HERO */
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2e45 100%); color: white; padding: 72px 24px 64px; }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.35); margin-bottom: 14px; }
+    .breadcrumb a { color: var(--orange); }
+    .page-label { display: inline-flex; align-items: center; gap: 6px; background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.3); border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 600; color: #fdba74; margin-bottom: 16px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; margin-bottom: 14px; line-height: 1.2; }
+    .page-hero p { font-size: 1rem; color: rgba(255,255,255,0.6); max-width: 620px; line-height: 1.75; }
+
+    /* SECTION LAYOUT */
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .light-bg { background: var(--light-bg); }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+    .section-sub { font-size: 0.95rem; color: var(--muted); max-width: 600px; line-height: 1.75; }
+
+    /* TWO-PHONE LAYOUT */
+    .phones-row { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    .phone-col {}
+    .phone-col-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .phone-col-label .dot-orange { width: 8px; height: 8px; background: var(--orange); border-radius: 50%; }
+    .phone-col-label .dot-blue { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; }
+
+    /* PHONE DEVICE */
+    .phone-device {
+      width: 100%; max-width: 320px; margin: 0 auto;
+      background: #0a1628;
+      border: 3px solid rgba(255,255,255,0.12); border-radius: 36px;
+      overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .phone-notch { background: #0a1628; height: 26px; display: flex; align-items: center; justify-content: center; }
+    .notch-pill { width: 90px; height: 13px; background: #000; border-radius: 7px; }
+    .phone-status { display: flex; justify-content: space-between; align-items: center; padding: 4px 20px 0; font-size: 0.68rem; color: rgba(255,255,255,0.4); }
+    .phone-screen { background: #0a1628; padding: 14px 16px 20px; }
+
+    /* SCREEN 2 — INCOMING LEAD */
+    .s2-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .s2-back { color: var(--orange); font-size: 0.75rem; font-weight: 600; }
+    .s2-title { font-size: 0.85rem; font-weight: 700; color: var(--app-text); }
+    .lead-notification { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.25); border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+    .ln-icon { font-size: 0.9rem; color: var(--orange); margin-bottom: 4px; }
+    .ln-text { font-size: 0.72rem; color: rgba(255,255,255,0.65); line-height: 1.5; }
+    .ln-time { font-size: 0.6rem; color: var(--app-muted); margin-top: 4px; }
+    .summary-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 13px; margin-bottom: 12px; }
+    .sc-header { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--app-muted); margin-bottom: 9px; }
+    .sc-row { display: flex; align-items: flex-start; gap: 7px; margin-bottom: 7px; font-size: 0.72rem; color: var(--app-text); }
+    .sc-row:last-child { margin-bottom: 0; }
+    .sc-bullet { color: var(--orange); font-weight: 700; flex-shrink: 0; }
+    .booked-card { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+    .bc-header { font-size: 0.65rem; font-weight: 700; color: #86efac; margin-bottom: 5px; }
+    .bc-date { font-size: 0.85rem; font-weight: 800; color: white; margin-bottom: 2px; }
+    .bc-sub { font-size: 0.65rem; color: rgba(255,255,255,0.45); }
+    .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .action-btn { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 9px 8px; font-size: 0.68rem; font-weight: 600; color: var(--app-text); text-align: center; cursor: pointer; }
+    .action-btn.primary { background: var(--orange); border-color: var(--orange); color: white; }
+    .urgency-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); border-radius: 5px; padding: 2px 8px; font-size: 0.6rem; font-weight: 700; color: #fca5a5; }
+    .urgency-dot { width: 5px; height: 5px; background: #ef4444; border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* SCREEN 3 — AGENT TRANSCRIPT */
+    .s3-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .s3-title { font-size: 0.82rem; font-weight: 700; color: var(--app-text); }
+    .transcript-msg { margin-bottom: 12px; }
+    .tm-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
+    .tm-label-home { color: #7dd3fc; }
+    .tm-label-hvac { color: #fdba74; justify-content: flex-end; }
+    .tm-avatar-home { width: 18px; height: 18px; background: rgba(14,165,233,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; }
+    .tm-avatar-hvac { width: 18px; height: 18px; background: rgba(249,115,22,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; }
+    .tm-bubble { border-radius: 12px; padding: 10px 12px; font-size: 0.72rem; line-height: 1.55; max-width: 88%; }
+    .bubble-home { background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.2); color: rgba(255,255,255,0.8); border-radius: 12px 12px 12px 2px; }
+    .bubble-hvac { background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.2); color: #fdba74; border-radius: 12px 12px 2px 12px; margin-left: auto; }
+    .tm-time { font-size: 0.58rem; color: var(--app-muted); margin-top: 4px; }
+    .tm-time-right { text-align: right; }
+    .photo-attach { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 7px 9px; margin-bottom: 6px; font-size: 0.65rem; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 6px; }
+    .transcript-booked { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 9px; font-size: 0.68rem; color: #86efac; line-height: 1.45; margin-top: 6px; }
+
+    /* DESCRIPTION BLOCK */
+    .desc-block { background: var(--light-bg); border-radius: var(--radius); border: 1px solid var(--border); padding: 28px; margin-top: 52px; }
+    .db-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+    .db-title { font-size: 1.15rem; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+    .db-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+    /* LEADS LIST SECTION */
+    .leads-table { margin-top: 32px; }
+    .leads-row { display: grid; grid-template-columns: 1fr 1fr 120px 100px 90px; gap: 16px; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+    .leads-row.header { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); background: var(--light-bg); border-radius: var(--radius) var(--radius) 0 0; border: 1px solid var(--border); }
+    .leads-row:not(.header) { background: white; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+    .leads-row:last-child { border-radius: 0 0 var(--radius) var(--radius); }
+    .lead-name { font-weight: 700; color: var(--navy); }
+    .lead-issue { color: var(--muted); font-size: 0.83rem; }
+    .lead-time { color: var(--muted); font-size: 0.82rem; }
+    .urgency-high { color: #ef4444; font-weight: 700; font-size: 0.78rem; }
+    .urgency-med { color: var(--yellow); font-weight: 700; font-size: 0.78rem; }
+    .urgency-low { color: var(--green); font-weight: 700; font-size: 0.78rem; }
+    .status-handled { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); border-radius: 5px; padding: 3px 9px; font-size: 0.72rem; font-weight: 600; color: #16a34a; display: inline-block; }
+    .status-pending { background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2); border-radius: 5px; padding: 3px 9px; font-size: 0.72rem; font-weight: 600; color: #ca8a04; display: inline-block; }
+    .status-new { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); border-radius: 5px; padding: 3px 9px; font-size: 0.72rem; font-weight: 600; color: var(--orange-dark); display: inline-block; }
+
+    .nav-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .nav-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+    .nav-pill.active { background: var(--orange-light); border-color: rgba(249,115,22,0.3); color: var(--orange-dark); }
+    .nav-pill a { color: inherit; }
+
+    /* FOOTER */
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 44px 24px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { color: white; font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .footer-links { display: flex; gap: 20px; font-size: 0.83rem; flex-wrap: wrap; }
+    .footer-links a:hover { color: var(--orange); }
+
+    @media (max-width: 780px) {
+      .phones-row { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .leads-row { grid-template-columns: 1fr 1fr; }
+      .leads-row .lead-time, .leads-row:not(.header) .urgency-high, .leads-row:not(.header) .urgency-med { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">🌬️</div>
+      Mike's HVAC &amp; Air
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="dashboard.html">Agent Dashboard</a>
+      <a href="leads.html" class="active">Leads</a>
+      <a href="field.html">Field Mode</a>
+      <a href="jobs.html">Jobs</a>
+    </div>
+    <div class="nav-actions">
+      <a href="dashboard.html" class="btn btn-outline">← Dashboard</a>
+      <a href="field.html" class="btn btn-primary">Field Mode →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> › <a href="dashboard.html">Agent App</a> › Leads</div>
+    <div class="page-label">📱 Screens 2 &amp; 3 of 7</div>
+    <h1>Incoming Lead &amp; Agent-to-Agent Transcript</h1>
+    <p>A homeowner's AI agent contacts Mike's HVAC agent at 11 PM. The owner doesn't have to do anything — the agent qualifies the lead, books the appointment, and leaves a summary card. Screen 3 is the "wow moment" — showing what the two AI systems said to each other.</p>
+  </div>
+</div>
+
+<!-- LEADS QUEUE -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="section-label">Today's Leads</div>
+    <h2 class="section-title">3 New Leads — All Handled by Agent</h2>
+    <p class="section-sub">Every lead captured, qualified, and actioned while Mike was on the road or asleep. No voicemail. No missed calls.</p>
+    <div class="leads-table">
+      <div class="leads-row header">
+        <span>Customer</span>
+        <span>Issue / Equipment</span>
+        <span>Time</span>
+        <span>Urgency</span>
+        <span>Status</span>
+      </div>
+      <div class="leads-row">
+        <div>
+          <div class="lead-name">Sarah Chen</div>
+          <div class="lead-issue">No heat · Carrier furnace 12yr · 142 Oak St</div>
+        </div>
+        <div class="lead-issue">Furnace — likely ignitor failure · Model 58STA090-16</div>
+        <div class="lead-time">11:47 PM</div>
+        <div class="urgency-high">🔴 HIGH — kids</div>
+        <div><span class="status-handled">Booked 7am</span></div>
+      </div>
+      <div class="leads-row">
+        <div>
+          <div class="lead-name">Marco Garcia</div>
+          <div class="lead-issue">Replace full AC + furnace · 2,400 sqft · Austin 78748</div>
+        </div>
+        <div class="lead-issue">New Install — 3-ton Carrier system · Quote $4,800</div>
+        <div class="lead-time">8:14 AM</div>
+        <div class="urgency-med">🟡 MEDIUM</div>
+        <div><span class="status-pending">Quote sent</span></div>
+      </div>
+      <div class="leads-row">
+        <div>
+          <div class="lead-name">Riverside Apts</div>
+          <div class="lead-issue">Maintenance contract · 14 units · Trane RTUs</div>
+        </div>
+        <div class="lead-issue">Commercial PM contract · Quarterly service · 14 units</div>
+        <div class="lead-time">9:22 AM</div>
+        <div class="urgency-low">🟢 LOW</div>
+        <div><span class="status-new">Follow-up 2pm</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENS 2 + 3 SIDE BY SIDE -->
+<section>
+  <div class="section-inner">
+    <div class="nav-pills" style="margin-bottom:40px;">
+      <span class="nav-pill"><a href="dashboard.html">📱 Screen 1 — Dashboard</a></span>
+      <span class="nav-pill active">📞 Screen 2–3 — Leads</span>
+      <span class="nav-pill"><a href="field.html">🎙️ Screen 4–5 — Field</a></span>
+      <span class="nav-pill"><a href="jobs.html">✅ Screen 6–7 — Jobs</a></span>
+    </div>
+
+    <div class="phones-row">
+
+      <!-- SCREEN 2: INCOMING LEAD CARD -->
+      <div class="phone-col">
+        <div class="phone-col-label">
+          <div class="dot-orange"></div>
+          Screen 2 — What the Owner Sees
+        </div>
+        <div class="phone-device">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-status"><span>11:51</span><span>●●●●◦ LTE 🔋</span></div>
+          <div class="phone-screen">
+            <div class="s2-header">
+              <span class="s2-back">←</span>
+              <span class="s2-title">Lead from: Sarah Chen</span>
+            </div>
+
+            <div class="lead-notification">
+              <div class="ln-icon">🤖 Customer's agent reached out</div>
+              <div class="ln-text">Her home agent contacted your agent at 11:47 PM. No action needed from you.</div>
+              <div class="ln-time">11:47 PM · Handled automatically</div>
+            </div>
+
+            <div class="summary-card">
+              <div class="sc-header">Conversation summary</div>
+              <div class="sc-row"><span class="sc-bullet">•</span><span>No heat · 2-story home</span></div>
+              <div class="sc-row"><span class="sc-bullet">•</span><span>Carrier furnace, ~12 years old</span></div>
+              <div class="sc-row"><span class="sc-bullet">•</span><span>Photos uploaded (3 photos)</span></div>
+              <div class="sc-row"><span class="sc-bullet">•</span><span>Address: 142 Oak St, Austin</span></div>
+              <div class="sc-row" style="margin-top:6px;">
+                <span class="sc-bullet">•</span>
+                <span>Urgency: <span class="urgency-badge"><div class="urgency-dot"></div>HIGH (kids)</span></span>
+              </div>
+            </div>
+
+            <div class="booked-card">
+              <div class="bc-header">✓ Agent qualified &amp; booked</div>
+              <div class="bc-date">📅 Tomorrow · 7:00 AM</div>
+              <div class="bc-sub">Confirmation sent to Sarah · Tech: you</div>
+            </div>
+
+            <div class="action-btns">
+              <div class="action-btn">View transcript</div>
+              <div class="action-btn">Reschedule</div>
+              <div class="action-btn">Reassign tech</div>
+              <div class="action-btn primary">View job →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: AGENT-TO-AGENT TRANSCRIPT -->
+      <div class="phone-col">
+        <div class="phone-col-label">
+          <div class="dot-blue"></div>
+          Screen 3 — Agent ↔ Agent Transcript
+        </div>
+        <div class="phone-device">
+          <div class="phone-notch"><div class="notch-pill"></div></div>
+          <div class="phone-status"><span>11:51</span><span>●●●●◦ LTE 🔋</span></div>
+          <div class="phone-screen">
+            <div class="s3-header">
+              <span class="s2-back">←</span>
+              <span class="s3-title">Agent ↔ Agent Transcript</span>
+            </div>
+
+            <div class="transcript-msg">
+              <div class="tm-label tm-label-home"><div class="tm-avatar-home">🏠</div> Sarah's Home Agent</div>
+              <div class="tm-bubble bubble-home">"My owner has no heat. 2-story, Carrier furnace ~12 yrs old. Two kids in house. Need help ASAP."</div>
+              <div class="tm-time">11:47 PM</div>
+            </div>
+
+            <div class="transcript-msg">
+              <div class="tm-label tm-label-hvac" style="justify-content:flex-end;">Mike's HVAC Agent <div class="tm-avatar-hvac">🔧</div></div>
+              <div class="tm-bubble bubble-hvac">"Confirmed service area. Can you share photos of the unit and model number plate?"</div>
+              <div class="tm-time tm-time-right">11:47 PM</div>
+            </div>
+
+            <div class="transcript-msg">
+              <div class="tm-label tm-label-home"><div class="tm-avatar-home">🏠</div> Sarah's Home Agent</div>
+              <div class="photo-attach">📎 3 photos attached — furnace, model plate, error code</div>
+              <div class="tm-bubble bubble-home">"Model: 58STA090-16"</div>
+              <div class="tm-time">11:48 PM</div>
+            </div>
+
+            <div class="transcript-msg">
+              <div class="tm-label tm-label-hvac" style="justify-content:flex-end;">Mike's HVAC Agent <div class="tm-avatar-hvac">🔧</div></div>
+              <div class="tm-bubble bubble-hvac">"Looked up service history — common ignitor failure on this model. Diagnostic $120, likely repair $280–$450. Earliest: 7am tomorrow."</div>
+              <div class="tm-time tm-time-right">11:48 PM</div>
+            </div>
+
+            <div class="transcript-msg">
+              <div class="tm-label tm-label-home"><div class="tm-avatar-home">🏠</div> Sarah's Home Agent</div>
+              <div class="tm-bubble bubble-home">"Booked. Owner approved."</div>
+              <div class="tm-time">11:49 PM</div>
+              <div class="transcript-booked">✓ Appointment confirmed · 7:00 AM · 142 Oak St · Carrier 58STA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DESCRIPTION BLOCKS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:52px;">
+      <div class="desc-block">
+        <div class="db-label">Screen 2 — Owner View</div>
+        <div class="db-title">What Mike Sees: The Handled Lead Card</div>
+        <div class="db-desc">
+          Mike gets a notification, but doesn't need to act. The card shows a clean summary: what's wrong, the equipment, photos uploaded, address, urgency level, and the appointment already booked. Three action buttons let him override if needed — reschedule, reassign, or view the full transcript.
+          <br><br>
+          This is trust through transparency: the agent did everything right, and Mike can see exactly what it did.
+        </div>
+      </div>
+      <div class="desc-block">
+        <div class="db-label">Screen 3 — The Wow Moment</div>
+        <div class="db-title">What the Agents Said to Each Other</div>
+        <div class="db-desc">
+          This is the key demo screen for the agentic economy. Two AI systems — Sarah's home agent and Mike's HVAC agent — negotiated a service call at 11:47 PM without either human being involved. Different colored bubbles, timestamps, photo attachments, model lookup results, pricing, and a confirmed booking — all in under 2 minutes.
+          <br><br>
+          This screen sells the whole product. It's not a chatbot. It's an economy of agents transacting on behalf of their owners.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW AGENTS CONNECT -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="section-label">The Agentic Economy</div>
+    <h2 class="section-title">How Customer Agents Find Our Business Agent</h2>
+    <p class="section-sub">Sarah's home agent knows to contact HVAC businesses in the area. It finds Mike's HVAC through a public agent directory, negotiates the service call, and reports back to Sarah — all without Sarah having to pick up the phone.</p>
+    <div style="margin-top:44px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);">
+        <div style="font-size:1.4rem;margin-bottom:10px;">🔍</div>
+        <h4 style="font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:6px;">Agent Discovery</h4>
+        <p style="font-size:0.82rem;color:var(--muted);line-height:1.55;">Sarah's agent searches a local HVAC agent directory filtered by service area, rating, and availability. It finds Mike's HVAC, confirms 24/7 availability, and initiates contact.</p>
+      </div>
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);">
+        <div style="font-size:1.4rem;margin-bottom:10px;">🤝</div>
+        <h4 style="font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:6px;">Capability Handshake</h4>
+        <p style="font-size:0.82rem;color:var(--muted);line-height:1.55;">The two agents exchange capability profiles: service area, brands covered, pricing structure, availability windows, and escalation contacts. This happens before the first customer message.</p>
+      </div>
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);">
+        <div style="font-size:1.4rem;margin-bottom:10px;">💬</div>
+        <h4 style="font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:6px;">Negotiation Loop</h4>
+        <p style="font-size:0.82rem;color:var(--muted);line-height:1.55;">Sarah's agent describes the problem. Mike's agent requests photos, looks up the model number, runs diagnostic probability scoring, and proposes pricing and timing. The loop ends with a confirmed booking.</p>
+      </div>
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);">
+        <div style="font-size:1.4rem;margin-bottom:10px;">📬</div>
+        <h4 style="font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:6px;">Human-in-the-Loop</h4>
+        <p style="font-size:0.82rem;color:var(--muted);line-height:1.55;">Both humans receive a notification. Sarah's agent sends her a summary: "Mike's HVAC is coming at 7am, $120 diagnostic fee, likely $280–$450 repair." Mike sees the lead card. Both can override before morning.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div style="width:30px;height:30px;background:linear-gradient(135deg,#f97316,#ea580c);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;">🌬️</div>
+      Mike's HVAC &amp; Air — Agent App
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">← Dashboard</a>
+      <a href="field.html">Field Mode →</a>
+      <a href="jobs.html">Jobs →</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
