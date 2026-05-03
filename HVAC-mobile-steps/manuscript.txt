@@ -1,0 +1,299 @@
+================================================================
+  MIKE'S HVAC — AI-AGENT APP DEMO
+  Operating Guide for HVAC-mobile-steps
+================================================================
+
+This is a step-by-step walkthrough of Mike's HVAC AI-agent
+app. The app demonstrates a complete working day: overnight
+AI-to-AI lead handling, field work, permit filing, and
+invoicing — all guided by an AI agent.
+
+A progress bar at the top of every screen shows your current
+step (e.g. "3/10") and tells you exactly what to do next.
+The next recommended button glows with an orange outline.
+Follow all 10 steps in order for the full experience.
+
+To restart the demo at any time, tap the small "↺" reset
+button in the top-right of the progress bar.
+
+================================================================
+  TIME-LINE OVERVIEW
+================================================================
+
+  11:47 PM (last night)  — Customer's AI agent contacts Mike's
+                           AI agent about no heat emergency.
+  11:49 PM               — Appointment booked automatically.
+   9:41 AM               — Mike opens the app, sees the summary.
+  10:14 AM               — Mike arrives at Sarah's house.
+                           Uses Field Mode voice dictation.
+  ~10:20 AM              — Agent prices parts, checks permit.
+                           Mike approves Ferguson order.
+   1:22 PM               — Job done. Mike opens Jobs tab.
+                           Files permit, sends invoice.
+  Afternoon              — Mike approves Marco's quote and
+                           sends the Riverside proposal.
+
+================================================================
+  STEP-BY-STEP INSTRUCTIONS
+================================================================
+
+STEP 1 — Home Dashboard  (index.html)
+--------------------------------------
+Page: Home (🏠)
+
+Open the app. You'll see today's summary:
+  • 3 New Leads — all handled by the AI agent overnight
+  • 2 Jobs Today — 7 AM + 11 AM
+  • 1 Part Arriving — Ferguson at 8 AM
+  • 1 Permit Pending — City of Austin
+
+Scroll down and read the "Recent Agent Activity" feed to see
+what your agent did while you slept (booked Sarah Chen,
+quoted Marco Garcia, ordered the condenser).
+
+You can also tap "Talk to Agent" or the ✏️ text button at the
+bottom to open the chat overlay and ask the agent any
+question (e.g. "What are my jobs today?").
+
+  ▶ NEXT: Tap the "📞 New Leads" stat card, or tap "Leads"
+    in the bottom navigation bar.
+
+
+STEP 2 — Leads: View Sarah Chen  (leads.html)
+----------------------------------------------
+Page: Leads (📞)
+
+You'll see today's 3 leads:
+  • Sarah Chen    — HIGH urgency, booked 7 AM ✓
+  • Marco Garcia  — MEDIUM, quote sent 💰
+  • Riverside Apts — LOW, follow-up 2 PM
+
+  ▶ NEXT: Tap the Sarah Chen card (it glows orange).
+
+
+STEP 3 — Leads: Read the AI Transcript  (leads.html)
+------------------------------------------------------
+Page: Lead Detail — Sarah Chen
+
+Read the notification: "Her home agent contacted your agent
+at 11:47 PM. No action needed from you." Review the
+conversation summary (furnace age, photos, urgency).
+
+Notice the green "✓ Agent qualified & booked" card showing
+the 7:00 AM appointment was scheduled without you lifting
+a finger.
+
+  ▶ NEXT: Tap "View transcript" (it glows orange) to see
+    the full AI-to-AI negotiation conversation.
+
+
+After reading the transcript (three-bubble exchange between
+Sarah's Home Agent and Mike's HVAC Agent), you can use the
+back button "← Lead" to return to Sarah's detail.
+
+From Sarah's detail, tapping "Go to Field →" will take you
+to Field Mode — the next stop in the workflow.
+
+
+STEP 4 — Field Mode: Voice Dictation  (field.html)
+---------------------------------------------------
+Page: Field Mode (🎙️)
+
+Navigate to Field Mode via the bottom nav or via "Go to
+Field →" from Sarah's lead detail.
+
+The screen shows the app is LIVE and listening. The
+transcript preview already shows what Mike dictated:
+
+  "Okay I'm at Sarah's place. The furnace is worse than I
+   thought. Heat exchanger is cracked. We need a full
+   replacement. Get me a quote on a Carrier 96K BTU from
+   Grainger and Ferguson, check if we need a permit, and
+   pull her service history…"
+
+You can tap "📷 Add photo" to simulate attaching a photo —
+a confirmation briefly appears.
+
+  ▶ NEXT: Tap "⏸ Release" (it glows orange) to stop voice
+    input and let the AI agent start working.
+
+
+STEP 5 — Field Mode: Approve Parts Order  (field.html)
+-------------------------------------------------------
+Page: Agent Working (Screen 2 of Field Mode)
+
+After releasing, the screen transitions to "Agent Working"
+showing 4 parallel tasks the agent is handling:
+  ⏳ → ✓  Pricing furnace         (Grainger + Ferguson)
+  ⏳ → ✓  Checking permit needs   (City of Austin)
+  ⏳ → ✓  Pulling service history (job history lookup)
+  ⏳        Drafting quote         (waiting on pricing)
+
+Watch the spinning indicators change to green dots as each
+task completes (takes about 3–4 seconds total).
+
+You can tap any completed task card to expand its details.
+
+  ▶ NEXT: Tap the "Pricing furnace" task card (→ arrow).
+
+
+Page: Pricing Comparison (Screen 3 of Field Mode)
+
+Two supplier quotes appear:
+  📦 Grainger  — $3,240  (pickup tomorrow 10 AM)
+  📦 Ferguson  — $3,180  (pickup tomorrow 8 AM ✓ — FASTER)
+
+The agent recommends Ferguson: $60 cheaper and 2 hours
+earlier pickup.
+
+  ▶ NEXT: Tap "✓ Approve Ferguson" (it glows orange).
+
+A confirmation banner appears: "Ferguson order placed · ETA
+tomorrow 8am · Quote updating automatically…"
+
+
+STEP 6 — Jobs: Open Sarah Chen's Job  (jobs.html)
+--------------------------------------------------
+Page: Jobs (✅)
+
+Navigate to Jobs via the bottom navigation bar.
+
+Today's two jobs are listed:
+  🟠 Sarah Chen    — 7:00 AM · $4,820  · In Progress
+  🟠 Marco Garcia  — 11:00 AM · $4,800 · In Progress
+
+(Sarah's card shows "In Progress" because the job close-out
+hasn't been completed yet. It turns green after Step 8.)
+
+  ▶ NEXT: Tap the Sarah Chen card (it glows orange).
+
+
+STEP 7 — Jobs: File the Permit  (jobs.html)
+--------------------------------------------
+Page: Permit Alert (Screen 2 of Jobs)
+
+The agent has proactively flagged a permit requirement and
+pre-filled all the details:
+  ✓ License # TACLB #104836  (on file)
+  ✓ Job address: 142 Oak St
+  ✓ Equipment: Carrier 96AFUE 96K BTU
+
+Permit fee: $145  |  Est. approval: 2–3 business days
+
+  ▶ NEXT: Tap "📋 File it" (it glows orange).
+
+Watch "Filing…" change to "✓ Filed" with a green
+confirmation banner:
+  "Permit filed — Reference #ATX-2025-04891 · City will
+   confirm in 2–3 business days."
+
+A "Continue to job close-out →" button appears.
+
+  ▶ NEXT: Tap "Continue to job close-out →".
+
+
+STEP 8 — Jobs: Send Invoice  (jobs.html)
+-----------------------------------------
+Page: Close Job — Sarah Chen (Screen 3 of Jobs)
+
+The job wrap-up screen shows everything the agent has
+already prepared for you:
+  ✓ Invoice ready to send          $4,820
+  ✓ Warranty registration filed    Carrier
+  ✓ Maintenance plan offer         $229/yr
+  ✓ Review request sent            Google
+  ✓ Photos archived to job file    6 photos
+
+Two items are still pending (insurance docs + sub invoice).
+
+Tap "Review all" to expand the full itemized invoice:
+  Carrier 96K BTU Furnace  $3,180
+  Labor                    $980
+  Materials & misc         $460
+  Permit fee               $145
+  Tax                      $55
+  ─────────────────────────────
+  Total                    $4,820
+
+  ▶ NEXT: Tap "💰 Send invoice" (it glows orange).
+
+"Sending…" → "✓ Sent" — and the banner appears:
+  "🎉 Job complete! Invoice sent.
+   Sarah paid via card on file — $4,820 ✓"
+
+Sarah Chen's job card on the list now turns GREEN with a
+"Complete" pill. ✓
+
+
+STEP 9 — Leads: Approve Marco Garcia Quote  (leads.html)
+---------------------------------------------------------
+Page: Leads (📞)
+
+Navigate back to Leads via the bottom navigation bar.
+
+Marco Garcia's card now glows orange — his $4,800 quote is
+waiting for approval.
+
+  ▶ NEXT: Tap the Marco Garcia card.
+
+In Marco's detail, you can see the quote:
+  ⏳ Quote sent — $4,800 · 3-ton Carrier system
+  Sent 8:32 AM · Valid 7 days
+
+  ▶ NEXT: Tap "Approve quote" (green button).
+
+The pending card updates to:
+  "✅ Quote approved — Agent will schedule install"
+
+
+STEP 10 — Leads: Send Riverside Proposal  (leads.html)
+-------------------------------------------------------
+Page: Leads (📞)
+
+Back on the Leads list, Riverside Apts now glows orange —
+the commercial inquiry is ready for a proposal.
+
+  ▶ NEXT: Tap the Riverside Apts card.
+
+In the detail, you can see:
+  🏢 Commercial inquiry — 14 Trane RTU units
+  📅 Follow-up scheduled · 2:00 PM
+  Agent will prepare contract draft (est. $6,800/yr value)
+
+  ▶ NEXT: Tap "Send proposal".
+
+The button confirms "✓ Sent" and the progress bar reaches
+10/10 with the banner:
+  "🎉 Full workflow complete!"
+
+================================================================
+  🎉 CONGRATULATIONS — FULL WORKFLOW COMPLETE
+================================================================
+
+You have just experienced a full working day for an
+AI-powered HVAC business:
+
+  ✓ 3 leads handled overnight (no manual work needed)
+  ✓ Emergency job booked by AI at 11:47 PM automatically
+  ✓ Parts priced and ordered from the field by voice
+  ✓ Mechanical permit filed with pre-filled details
+  ✓ Invoice sent — $4,820 collected
+  ✓ Commercial quote approved — $4,800 install scheduled
+  ✓ Maintenance contract proposal sent — $6,800/yr pipeline
+
+Total revenue initiated today: $14,620
+Time spent by Mike on admin: ~2 minutes of button taps
+
+================================================================
+  NAVIGATION REFERENCE
+================================================================
+
+  🏠 Home   — index.html  — Dashboard + chat agent
+  📞 Leads  — leads.html  — Lead list → detail → transcript
+  🎙️ Field  — field.html  — Voice mode → agent tasks → pricing
+  ✅ Jobs   — jobs.html   — Job list → permit alert → close-out
+
+All pages share state via browser localStorage (key: hvac_s).
+The "↺" button in the step bar resets the demo to step 0.
+
+================================================================
