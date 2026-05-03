@@ -305,9 +305,13 @@ function _onStepChange() {
   } else if (s === 8) {
     const el = document.getElementById('lead-marco');
     if (el) el.classList.add('next-action');
+    const ba = document.getElementById('btn-approve');
+    if (ba) ba.classList.add('next-action');
   } else if (s === 9) {
     const el = document.getElementById('lead-riverside');
     if (el) el.classList.add('next-action');
+    const bp = document.getElementById('btn-proposal');
+    if (bp) bp.classList.add('next-action');
   }
 }
 

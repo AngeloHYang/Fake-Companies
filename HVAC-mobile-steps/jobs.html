@@ -354,12 +354,13 @@ function _onStepChange() {
     const fb = document.getElementById('fileBtn');
     if (fb && !fb.className.includes('btn-disabled')) fb.classList.add('next-action');
   } else if (s === 7) {
-    const cb = document.getElementById('continueBtn');
-    if (cb && cb.style.display !== 'none') {
-      cb.classList.add('next-action');
-    } else {
+    const s3Active = document.getElementById('s3').classList.contains('active');
+    if (s3Active) {
       const si = document.getElementById('sendInvBtn');
       if (si && !si.className.includes('btn-disabled')) si.classList.add('next-action');
+    } else {
+      const cb = document.getElementById('continueBtn');
+      if (cb && cb.style.display !== 'none') cb.classList.add('next-action');
     }
   }
 }
