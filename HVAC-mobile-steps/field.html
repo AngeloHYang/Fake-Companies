@@ -105,7 +105,9 @@ body {
 .tc-top { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
 .spinner-sm { width: 10px; height: 10px; border: 1.5px solid rgba(249,115,22,0.25); border-top-color: var(--orange); border-radius: 50%; animation: spin .75s linear infinite; flex-shrink: 0; }
 .spinner-done { width: 10px; height: 10px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.spinner-pending { width: 10px; height: 10px; border-radius: 50%; background: var(--orange); flex-shrink: 0; animation: pulse 1.2s infinite; }
 .tc-title { font-size: 0.75rem; font-weight: 600; color: var(--app-text); flex: 1; }
+.tc-title-pending { color: #fdba74; }
 .tc-arrow { font-size: 0.65rem; color: var(--app-muted); }
 .tc-sub { font-size: 0.63rem; color: var(--app-muted); line-height: 1.4; padding-left: 19px; }
 .tc-expand { font-size: 0.72rem; color: rgba(255,255,255,0.6); line-height: 1.45; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.07); display: none; animation: fadeIn .15s ease; }
@@ -359,25 +361,50 @@ function releaseVoice() {
   advanceStep(4);
   showStepToast('✓ Step 4 done — Agent working! Tap "Pricing furnace"');
   showScreen('s2');
-  // Simulate tasks completing one by one
-  const tasks = [
-    { delay: 1200, spin: 'spin-permit', lbl: 'lbl-permit', text: '✓ Permit required — $145' },
+
+  // Tasks that the agent completes autonomously (no user action needed)
+  const autoTasks = [
+    { delay: 1200, spin: 'spin-permit',  lbl: 'lbl-permit',  text: '✓ Permit required — $145' },
     { delay: 1800, spin: 'spin-history', lbl: 'lbl-history', text: '✓ History pulled — prior visit 2022' },
-    { delay: 2600, spin: 'spin-quote', lbl: 'lbl-quote', text: '⏳ Drafting quote — waiting on pricing' },
-    { delay: 3400, spin: 'spin-price', lbl: 'lbl-price', text: '✓ Pricing ready — tap to compare' }
   ];
-  tasks.forEach(t => {
+  autoTasks.forEach(t => {
     setTimeout(() => {
       const s = document.getElementById(t.spin);
       const l = document.getElementById(t.lbl);
-      if (s) {
-        s.classList.remove('spinner-sm');
-        s.classList.add('spinner-done');
-      }
-      if (l && t.lbl !== 'lbl-quote') l.textContent = t.text;
-      if (t.lbl === 'lbl-price') _onStepChange(); // re-apply highlight once pricing done
+      if (s) { s.className = 'spinner-done'; }
+      if (l)  { l.textContent = t.text; }
     }, t.delay);
   });
+
+  // Pricing task: agent fetched quotes but NEEDS user approval → orange pending dot
+  setTimeout(() => {
+    const s = document.getElementById('spin-price');
+    const l = document.getElementById('lbl-price');
+    if (s) { s.className = 'spinner-pending'; }
+    if (l) { l.textContent = '⏰ Pricing ready — needs your approval'; l.classList.add('tc-title-pending'); }
+    // All tasks have now settled — update header
+    updateTasksHeader('needs-approval');
+    _onStepChange(); // apply orange glow to pricing card
+  }, 3400);
+}
+
+function updateTasksHeader(state) {
+  const spinnerEl = document.querySelector('.spinner-lg');
+  const titleEl   = document.querySelector('.tasks-title');
+  if (!spinnerEl || !titleEl) return;
+  if (state === 'working') {
+    spinnerEl.style.display = '';
+    titleEl.textContent = '🤖 Agent working on 4 tasks';
+    titleEl.style.color = '#fdba74';
+  } else if (state === 'needs-approval') {
+    spinnerEl.style.display = 'none';
+    titleEl.textContent = '⏰ 2 done · 1 needs your approval · 1 pending';
+    titleEl.style.color = '#fdba74';
+  } else if (state === 'complete') {
+    spinnerEl.style.display = 'none';
+    titleEl.textContent = '✓ All 4 tasks complete';
+    titleEl.style.color = '#86efac';
+  }
 }
 
 function toggleTask(card, key) {
@@ -392,10 +419,22 @@ function approveOrder() {
   document.getElementById('approveConfirm').style.display = 'block';
   advanceStep(5);
   showStepToast('✓ Step 5 done — Parts ordered! Head to ✅ Jobs');
-  const lbl = document.getElementById('lbl-price');
-  if (lbl) lbl.textContent = '✓ Pricing — Ferguson order placed';
+  _markPricingDone('Ferguson', '$3,180');
+}
+
+function _markPricingDone(supplier, price) {
+  // Pricing task → green done
   const spinP = document.getElementById('spin-price');
   if (spinP) { spinP.className = 'spinner-done'; }
+  const lblP = document.getElementById('lbl-price');
+  if (lblP) { lblP.textContent = '✓ Pricing — ' + supplier + ' order placed'; lblP.classList.remove('tc-title-pending'); }
+  // Quote task → agent can now finalise → green done
+  const spinQ = document.getElementById('spin-quote');
+  if (spinQ) { spinQ.className = 'spinner-done'; }
+  const lblQ = document.getElementById('lbl-quote');
+  if (lblQ) { lblQ.textContent = '✓ Quote drafted — ' + price + ' + labor + permit'; }
+  // Header → all complete
+  updateTasksHeader('complete');
 }
 
 function overrideOrder() {
@@ -416,6 +455,7 @@ function selectSupplier(name, price) {
   document.getElementById('approveConfirm').innerHTML = `✓ ${name} order placed · ETA confirmed · Quote updating automatically…`;
   advanceStep(5);
   showStepToast('✓ Step 5 done — Parts ordered! Head to ✅ Jobs');
+  _markPricingDone(name, price);
 }
 
 /* ── Init ── */
