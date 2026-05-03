@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mike's HVAC — Leads</title>
+<style>
+:root {
+  --orange: #f97316;
+  --orange-dark: #ea580c;
+  --green: #22c55e;
+  --blue: #0ea5e9;
+  --yellow: #eab308;
+  --red: #ef4444;
+  --app-bg: #0a1628;
+  --app-surface: #0f2035;
+  --app-card: rgba(255,255,255,0.05);
+  --app-border: rgba(255,255,255,0.09);
+  --app-muted: rgba(255,255,255,0.38);
+  --app-text: rgba(255,255,255,0.88);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #05101f;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px 48px;
+  font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+.phone {
+  width: 390px; max-width: 100%;
+  height: 844px;
+  display: flex; flex-direction: column;
+  background: var(--app-bg);
+  border-radius: 50px;
+  border: 3px solid rgba(255,255,255,0.13);
+  box-shadow: 0 52px 130px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.notch-bar { height: 34px; flex-shrink: 0; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 5px; background: var(--app-bg); }
+.notch-pill { width: 126px; height: 17px; background: #000; border-radius: 9px; }
+.status-bar { flex-shrink: 0; display: flex; justify-content: space-between; padding: 4px 22px 8px; font-size: 0.72rem; color: rgba(255,255,255,0.5); font-weight: 600; }
+.phone-body { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; }
+.phone-body::-webkit-scrollbar { display: none; }
+.bottom-nav { display: flex; flex-shrink: 0; background: var(--app-surface); border-top: 1px solid rgba(255,255,255,0.08); }
+.bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0 15px; text-decoration: none; color: var(--app-muted); font-size: 0.6rem; font-weight: 600; letter-spacing: .3px; transition: color .15s; }
+.bnav-item.active { color: var(--orange); }
+.bnav-icon { font-size: 1.25rem; margin-bottom: 3px; display: block; }
+
+.screen { display: none; padding: 16px 18px 22px; animation: fadeIn .18s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+
+.screen-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.back-btn { color: var(--orange); font-size: 0.78rem; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+.screen-title { font-size: 0.9rem; font-weight: 700; color: var(--app-text); }
+
+.card { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 13px; padding: 13px 14px; margin-bottom: 10px; }
+.tappable { cursor: pointer; transition: background .15s; }
+.tappable:active { background: rgba(255,255,255,0.09); }
+
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.btn { border-radius: 9px; padding: 11px 10px; font-size: 0.72rem; font-weight: 700; text-align: center; cursor: pointer; border: none; transition: all .15s; }
+.btn-orange { background: var(--orange); color: #fff; }
+.btn-orange:active { background: var(--orange-dark); }
+.btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.6); }
+.btn-ghost:active { background: rgba(255,255,255,0.06); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-disabled { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); cursor: default; border: 1px solid rgba(255,255,255,0.07); }
+
+.pill { display: inline-block; border-radius: 5px; padding: 3px 9px; font-size: 0.68rem; font-weight: 600; }
+.pill-green { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); color: var(--green); }
+.pill-orange { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); color: var(--orange); }
+.pill-yellow { background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2); color: var(--yellow); }
+.pill-blue { background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.2); color: var(--blue); }
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes popIn { from{transform:scale(.86);opacity:0} to{transform:scale(1);opacity:1} }
+
+.section-lbl { font-size: 0.7rem; font-weight: 700; color: var(--app-muted); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 3px; }
+.section-sub { font-size: 0.65rem; color: var(--app-muted); margin-bottom: 12px; }
+
+/* Leads list */
+.lead-card { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 13px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: background .15s; }
+.lead-card:active { background: rgba(255,255,255,0.09); }
+.lead-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
+.lead-name { font-size: 0.88rem; font-weight: 700; color: var(--app-text); }
+.lead-time { font-size: 0.64rem; color: var(--app-muted); }
+.lead-issue { font-size: 0.73rem; color: rgba(255,255,255,0.55); margin-bottom: 8px; line-height: 1.35; }
+.lead-footer { display: flex; align-items: center; justify-content: space-between; }
+
+.urgency-badge { display: inline-block; border-radius: 5px; padding: 3px 8px; font-size: 0.65rem; font-weight: 700; }
+.urg-high { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
+.urg-med { background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.25); color: var(--yellow); }
+.urg-low { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); color: var(--green); }
+
+/* Lead detail */
+.notif-card { border-radius: 12px; padding: 12px 13px; margin-bottom: 10px; }
+.notif-orange { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.25); }
+.notif-green { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); }
+.notif-icon { font-size: 0.88rem; margin-bottom: 4px; }
+.notif-title { font-size: 0.78rem; font-weight: 700; color: #fdba74; margin-bottom: 2px; }
+.notif-body { font-size: 0.71rem; color: rgba(255,255,255,0.6); line-height: 1.45; }
+.notif-time { font-size: 0.62rem; color: var(--app-muted); margin-top: 4px; }
+
+.summary-card { background: var(--app-card); border: 1px solid var(--app-border); border-radius: 12px; padding: 13px 14px; margin-bottom: 10px; }
+.sc-head { font-size: 0.63rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--app-muted); margin-bottom: 9px; }
+.sc-row { display: flex; align-items: flex-start; gap: 7px; margin-bottom: 6px; font-size: 0.73rem; color: var(--app-text); }
+.sc-bullet { color: var(--orange); font-weight: 700; flex-shrink: 0; }
+
+.booked-card { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+.booked-head { font-size: 0.66rem; font-weight: 700; color: #86efac; margin-bottom: 4px; }
+.booked-date { font-size: 0.88rem; font-weight: 800; color: #fff; margin-bottom: 2px; }
+.booked-sub { font-size: 0.65rem; color: rgba(255,255,255,0.45); }
+
+/* Transcript */
+.chat-wrap { margin-bottom: 12px; }
+.chat-meta { font-size: 0.62rem; color: var(--app-muted); margin-bottom: 3px; font-weight: 600; }
+.chat-meta.right { text-align: right; }
+.bubble { border-radius: 14px; padding: 10px 13px; font-size: 0.76rem; line-height: 1.45; color: var(--app-text); max-width: 87%; }
+.bubble-left { background: rgba(14,165,233,0.13); border: 1px solid rgba(14,165,233,0.25); border-top-left-radius: 4px; }
+.bubble-right { background: rgba(249,115,22,0.13); border: 1px solid rgba(249,115,22,0.25); border-top-right-radius: 4px; margin-left: auto; color: #fdba74; }
+.chat-time { font-size: 0.58rem; color: var(--app-muted); margin-top: 3px; }
+.chat-time.right { text-align: right; }
+.attach-line { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 7px 10px; margin-bottom: 5px; font-size: 0.67rem; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 6px; max-width: 87%; }
+.confirm-bar { background: rgba(34,197,94,0.13); border: 1px solid rgba(34,197,94,0.28); border-radius: 10px; padding: 11px 14px; font-size: 0.76rem; font-weight: 600; color: var(--green); text-align: center; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="notch-bar"><div class="notch-pill"></div></div>
+  <div class="status-bar"><span>9:41</span><span>●●●● LTE 🔋</span></div>
+  <div class="phone-body">
+
+    <!-- ── Screen 1: Leads List ── -->
+    <div class="screen active" id="s1">
+      <div class="screen-header">
+        <a class="back-btn" href="index.html">← Home</a>
+        <div class="screen-title">Leads</div>
+      </div>
+
+      <div class="section-lbl">Today's Leads</div>
+      <div class="section-sub">3 new — all handled by agent</div>
+
+      <div class="lead-card" onclick="showLead('sarah')">
+        <div class="lead-top">
+          <div class="lead-name">Sarah Chen</div>
+          <div class="lead-time">11:47 PM</div>
+        </div>
+        <div class="lead-issue">No heat · Carrier furnace ~12yr · 142 Oak St, Austin</div>
+        <div class="lead-footer">
+          <span class="urgency-badge urg-high">🔴 HIGH — kids</span>
+          <span class="pill pill-green">Booked 7am</span>
+        </div>
+      </div>
+
+      <div class="lead-card" onclick="showLead('marco')">
+        <div class="lead-top">
+          <div class="lead-name">Marco Garcia</div>
+          <div class="lead-time">8:14 AM</div>
+        </div>
+        <div class="lead-issue">Replace AC + furnace · 2,400 sqft · Austin 78748</div>
+        <div class="lead-footer">
+          <span class="urgency-badge urg-med">🟡 MEDIUM</span>
+          <span class="pill pill-yellow">Quote sent</span>
+        </div>
+      </div>
+
+      <div class="lead-card" onclick="showLead('riverside')">
+        <div class="lead-top">
+          <div class="lead-name">Riverside Apts</div>
+          <div class="lead-time">9:22 AM</div>
+        </div>
+        <div class="lead-issue">Maintenance contract · 14 units · Trane RTUs</div>
+        <div class="lead-footer">
+          <span class="urgency-badge urg-low">🟢 LOW</span>
+          <span class="pill pill-blue">Follow-up 2pm</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Screen 2: Lead Detail (populated by JS) ── -->
+    <div class="screen" id="s2">
+      <div class="screen-header">
+        <div class="back-btn" onclick="showScreen('s1')">← Leads</div>
+        <div class="screen-title" id="s2-title">Lead Detail</div>
+      </div>
+      <div id="s2-body"></div>
+    </div>
+
+    <!-- ── Screen 3: Transcript ── -->
+    <div class="screen" id="s3">
+      <div class="screen-header">
+        <div class="back-btn" onclick="showScreen('s2')">← Lead</div>
+        <div class="screen-title">Agent ↔ Agent Transcript</div>
+      </div>
+
+      <div class="chat-wrap">
+        <div class="chat-meta">🏠 Sarah's Home Agent</div>
+        <div class="bubble bubble-left">"My owner has no heat. 2-story, Carrier furnace ~12 yrs old. Two kids in house. Need help ASAP."</div>
+        <div class="chat-time">11:47 PM</div>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-meta right">Mike's HVAC Agent 🔧</div>
+        <div class="bubble bubble-right">"Confirmed service area. Can you share photos and the model number plate?"</div>
+        <div class="chat-time right">11:47 PM</div>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-meta">🏠 Sarah's Home Agent</div>
+        <div class="attach-line">📎 3 photos attached — furnace, model plate, error code</div>
+        <div class="bubble bubble-left">"Model: 58STA090-16"</div>
+        <div class="chat-time">11:48 PM</div>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-meta right">Mike's HVAC Agent 🔧</div>
+        <div class="bubble bubble-right">"Looked up service history — common ignitor failure on this model. Diagnostic $120, likely repair $280–$450. Earliest: 7am tomorrow."</div>
+        <div class="chat-time right">11:48 PM</div>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-meta">🏠 Sarah's Home Agent</div>
+        <div class="bubble bubble-left">"Booked. Owner approved."</div>
+        <div class="chat-time">11:49 PM</div>
+      </div>
+      <div class="confirm-bar">✓ Appointment confirmed · 7:00 AM · 142 Oak St · Carrier 58STA</div>
+    </div>
+
+  </div>
+  <div class="bottom-nav">
+    <a class="bnav-item" href="index.html"><span class="bnav-icon">🏠</span>Home</a>
+    <a class="bnav-item active" href="leads.html"><span class="bnav-icon">📞</span>Leads</a>
+    <a class="bnav-item" href="field.html"><span class="bnav-icon">🎙️</span>Field</a>
+    <a class="bnav-item" href="jobs.html"><span class="bnav-icon">✅</span>Jobs</a>
+  </div>
+</div>
+
+<script>
+const leads = {
+  sarah: {
+    title: 'Lead: Sarah Chen',
+    notifTitle: '🤖 Customer\'s agent reached out',
+    notifBody: 'Her home agent contacted your agent at 11:47 PM. No action needed from you.',
+    notifTime: '11:47 PM · Handled automatically',
+    summary: ['No heat · 2-story home', 'Carrier furnace, ~12 years old', 'Photos uploaded (3 photos)', 'Address: 142 Oak St, Austin', 'Urgency: HIGH — kids in the house'],
+    booked: { head: '✓ Agent qualified & booked', date: '📅 Tomorrow · 7:00 AM', sub: 'Confirmation sent to Sarah · Tech: Mike' },
+    btns: [
+      { label: 'View transcript', cls: 'btn-orange', action: 'transcript' },
+      { label: 'Reschedule', cls: 'btn-ghost', action: 'reschedule' },
+      { label: 'Reassign tech', cls: 'btn-ghost', action: 'reassign' },
+      { label: 'View job →', cls: 'btn-orange', action: 'job' }
+    ]
+  },
+  marco: {
+    title: 'Lead: Marco Garcia',
+    notifTitle: '💰 Quote sent by agent',
+    notifBody: 'Agent sent a $4,800 quote for full AC + furnace replacement at 2208 Barton Springs.',
+    notifTime: '8:32 AM · Awaiting customer approval',
+    summary: ['Replace AC + furnace · 2,400 sqft', '3-ton Carrier system · 96K BTU', 'Quote: $4,800 (labor + parts)', 'Address: 2208 Barton Springs, Austin', 'Urgency: MEDIUM'],
+    booked: null,
+    pending: { head: '⏳ Quote sent — awaiting approval', date: '$4,800 · 3-ton Carrier system', sub: 'Sent 8:32 AM · Valid 7 days' },
+    btns: [
+      { label: 'Approve quote', cls: 'btn-green', action: 'approve' },
+      { label: 'Modify quote', cls: 'btn-ghost', action: 'modify' },
+      { label: 'Call customer', cls: 'btn-ghost', action: 'call' },
+      { label: 'View details →', cls: 'btn-orange', action: 'details' }
+    ]
+  },
+  riverside: {
+    title: 'Lead: Riverside Apts',
+    notifTitle: '🏢 Commercial inquiry',
+    notifBody: 'Property manager reached out about a quarterly maintenance contract for 14 Trane RTU units.',
+    notifTime: '9:22 AM · Follow-up scheduled 2pm',
+    summary: ['14 Trane RTU units', 'Quarterly PM contract request', 'Potential value: ~$6,800/yr', 'Contact: Dave Morales, PM', 'Urgency: LOW'],
+    booked: null,
+    pending: { head: '📅 Follow-up scheduled · 2:00 PM', date: 'Proposal to be sent after call', sub: 'Agent will prepare contract draft' },
+    btns: [
+      { label: 'Send proposal', cls: 'btn-orange', action: 'proposal' },
+      { label: 'View past jobs', cls: 'btn-ghost', action: 'history' },
+      { label: 'Schedule visit', cls: 'btn-ghost', action: 'visit' },
+      { label: 'Assign team →', cls: 'btn-ghost', action: 'team' }
+    ]
+  }
+};
+
+let currentLead = null;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector('.phone-body').scrollTop = 0;
+}
+
+function showLead(key) {
+  currentLead = key;
+  const d = leads[key];
+  document.getElementById('s2-title').textContent = d.title;
+
+  let html = '';
+
+  // Notification card
+  const notifCls = d.notifTitle.startsWith('🤖') ? 'notif-orange' : 'notif-orange';
+  html += `<div class="notif-card ${notifCls}">
+    <div class="notif-title">${d.notifTitle}</div>
+    <div class="notif-body">${d.notifBody}</div>
+    <div class="notif-time">${d.notifTime}</div>
+  </div>`;
+
+  // Summary
+  html += `<div class="summary-card">
+    <div class="sc-head">Conversation summary</div>`;
+  d.summary.forEach(item => {
+    html += `<div class="sc-row"><span class="sc-bullet">•</span><span>${item}</span></div>`;
+  });
+  html += '</div>';
+
+  // Booked or pending card
+  if (d.booked) {
+    html += `<div class="booked-card">
+      <div class="booked-head">${d.booked.head}</div>
+      <div class="booked-date">${d.booked.date}</div>
+      <div class="booked-sub">${d.booked.sub}</div>
+    </div>`;
+  } else if (d.pending) {
+    html += `<div class="notif-card notif-orange">
+      <div class="notif-title">${d.pending.head}</div>
+      <div class="notif-body">${d.pending.date}</div>
+      <div class="notif-time">${d.pending.sub}</div>
+    </div>`;
+  }
+
+  // Action buttons
+  html += '<div class="btn-row" id="s2-btns">';
+  d.btns.forEach((b, i) => {
+    html += `<button class="btn ${b.cls}" data-action="${b.action}" onclick="handleLeadBtn(this, '${b.action}')">${b.label}</button>`;
+  });
+  html += '</div>';
+
+  document.getElementById('s2-body').innerHTML = html;
+  showScreen('s2');
+}
+
+function handleLeadBtn(btn, action) {
+  if (action === 'transcript') {
+    showScreen('s3');
+  } else if (action === 'reschedule') {
+    btn.textContent = '✓ Rescheduled';
+    btn.className = 'btn btn-disabled';
+  } else if (action === 'reassign') {
+    btn.textContent = '→ Jake ✓';
+    btn.className = 'btn btn-disabled';
+  } else if (action === 'job') {
+    location.href = 'jobs.html';
+  } else if (action === 'approve') {
+    btn.textContent = '✓ Approved';
+    btn.className = 'btn btn-disabled';
+    // Update the pending card
+    const notif = document.querySelector('#s2-body .notif-card');
+    if (notif) {
+      notif.style.background = 'rgba(34,197,94,0.1)';
+      notif.style.borderColor = 'rgba(34,197,94,0.25)';
+      notif.querySelector('.notif-title').textContent = '✅ Quote approved — Agent will schedule install';
+    }
+  } else if (action === 'call') {
+    btn.textContent = '📞 Calling...';
+    btn.className = 'btn btn-disabled';
+    setTimeout(() => { btn.textContent = '📞 Called'; }, 1200);
+  } else if (action === 'proposal') {
+    btn.textContent = '✓ Sent';
+    btn.className = 'btn btn-disabled';
+  } else if (action === 'visit') {
+    btn.textContent = '✓ Scheduled';
+    btn.className = 'btn btn-disabled';
+  } else if (action === 'modify') {
+    btn.textContent = '✏️ Editing...';
+    btn.className = 'btn btn-disabled';
+    setTimeout(() => { btn.textContent = '✓ Saved'; }, 1400);
+  } else {
+    btn.textContent = '✓ Done';
+    btn.className = 'btn btn-disabled';
+  }
+}
+</script>
+</body>
+</html>
