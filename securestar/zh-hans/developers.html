@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>开发者 — SecureStar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--navy); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2044 100%); color: white; padding: 80px 24px 70px; }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 18px; }
+    .breadcrumb a { color: var(--cyan); }
+    .page-hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 18px; line-height: 1.2; }
+    .page-hero p { font-size: 1rem; color: rgba(255,255,255,0.65); max-width: 520px; line-height: 1.75; }
+    .hero-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+    .hero-badge { background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.3); border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 600; color: var(--cyan); }
+
+    /* DOCS LAYOUT */
+    .docs-layout { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 240px 1fr; gap: 0; }
+    .docs-sidebar { padding: 40px 24px; border-right: 1px solid var(--border); position: sticky; top: 68px; height: calc(100vh - 68px); overflow-y: auto; }
+    .docs-sidebar h6 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 20px 0 8px; }
+    .docs-sidebar h6:first-child { margin-top: 0; }
+    .docs-sidebar ul { list-style: none; }
+    .docs-sidebar ul li a { display: block; padding: 6px 10px; font-size: 0.88rem; color: var(--muted); border-radius: 6px; transition: all .15s; }
+    .docs-sidebar ul li a:hover { background: var(--light-bg); color: var(--blue); }
+    .docs-sidebar ul li a.active { background: #eff6ff; color: var(--blue); font-weight: 600; }
+    .docs-content { padding: 40px 48px; min-height: 80vh; }
+
+    /* CODE BLOCKS */
+    .code-block {
+      background: #0d1b2a; border: 1px solid rgba(6,182,212,0.2);
+      border-radius: 12px; overflow: hidden; margin: 20px 0;
+    }
+    .code-header {
+      background: #162032; padding: 10px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .code-lang { font-size: 0.75rem; font-weight: 600; color: var(--cyan); font-family: monospace; }
+    .code-copy { font-size: 0.72rem; color: rgba(255,255,255,0.35); cursor: pointer; }
+    .code-body { padding: 20px; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.85; color: rgba(255,255,255,0.75); overflow-x: auto; }
+    .hl { color: var(--cyan); }
+    .hg { color: #86efac; }
+    .hy { color: #fbbf24; }
+    .hp { color: #c084fc; }
+    .hm { color: #f87171; }
+
+    /* ENDPOINT CARDS */
+    .endpoint { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
+    .endpoint-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--light-bg); cursor: pointer; }
+    .method { font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; font-family: monospace; }
+    .method-post { background: #ecfdf5; color: #059669; }
+    .method-get { background: #eff6ff; color: #2563eb; }
+    .endpoint-path { font-family: monospace; font-size: 0.88rem; font-weight: 600; color: var(--navy); }
+    .endpoint-desc { font-size: 0.85rem; color: var(--muted); margin-left: auto; }
+    .endpoint-body { padding: 20px; border-top: 1px solid var(--border); }
+    .param-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .param-table th { text-align: left; padding: 8px 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .param-table tr:last-child td { border-bottom: none; }
+    .param-name { font-family: monospace; font-weight: 600; color: var(--navy); }
+    .param-type { font-size: 0.75rem; background: var(--light-bg); color: var(--blue); border-radius: 4px; padding: 2px 6px; font-family: monospace; }
+    .param-req { font-size: 0.72rem; color: #dc2626; font-weight: 600; }
+    .param-opt { font-size: 0.72rem; color: var(--muted); }
+
+    /* SECTION HEADING */
+    .doc-h2 { font-size: 1.4rem; font-weight: 800; color: var(--navy); margin: 40px 0 12px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .doc-h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+    .doc-h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin: 28px 0 10px; }
+    .doc-p { font-size: 0.95rem; color: var(--muted); line-height: 1.75; margin-bottom: 14px; }
+    .doc-note { background: #ecfeff; border-left: 3px solid var(--cyan); padding: 14px 16px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 0.88rem; color: var(--text); line-height: 1.65; }
+    .doc-warn { background: #fff7ed; border-left: 3px solid #f59e0b; padding: 14px 16px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 0.88rem; color: var(--text); line-height: 1.65; }
+    .inline-code { background: var(--light-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-family: monospace; font-size: 0.85em; color: var(--blue); }
+
+    /* QUICKSTART STEPS */
+    .qs-steps { counter-reset: qs; }
+    .qs-step { counter-increment: qs; margin-bottom: 28px; padding-left: 52px; position: relative; }
+    .qs-step::before { content: counter(qs); position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--cyan)); color: white; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
+    .qs-step h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .qs-step p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; margin-bottom: 10px; }
+
+    /* SDK TABLE */
+    .sdk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
+    .sdk-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; transition: all .2s; }
+    .sdk-card:hover { border-color: var(--cyan); box-shadow: var(--shadow); }
+    .sdk-icon { font-size: 2rem; margin-bottom: 10px; }
+    .sdk-name { font-weight: 700; color: var(--navy); margin-bottom: 4px; font-size: 0.95rem; }
+    .sdk-ver { font-size: 0.78rem; color: var(--muted); }
+    .sdk-badge { display: inline-block; margin-top: 10px; background: #ecfdf5; color: #059669; border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 700; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+    .footer-inner a { color: rgba(255,255,255,0.4); transition: color .2s; }
+    .footer-inner a:hover { color: var(--cyan); }
+
+    @media (max-width: 900px) {
+      .docs-layout { grid-template-columns: 1fr; }
+      .docs-sidebar { display: none; }
+      .docs-content { padding: 28px 24px; }
+      .page-hero-inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">SS</div><span>SecureStar</span></a>
+    <div class="nav-links">
+      <a href="platform.html">平台</a>
+      <a href="solutions.html">解决方案</a>
+      <a href="developers.html" class="active">开发者</a>
+      <a href="company.html">公司</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">文档</a>
+      <a href="index.html#contact" class="btn btn-primary">请求演示</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../developers.html">English</option>
+            <option value="../zh-hans/developers.html" selected>简体中文</option>
+            <option value="../zh-hant/developers.html">繁體中文</option>
+            <option value="../es/developers.html">Español</option>
+            <option value="../fr/developers.html">Français</option>
+            <option value="../ja/developers.html">日本語</option>
+            <option value="../ko/developers.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div>
+      <div class="breadcrumb"><a href="index.html">首页</a> / 开发者</div>
+      <h1>几分钟内开始评分交易</h1>
+      <p>一个简洁的REST API，一个Kafka原生连接器，以及一个Python SDK。无需样板代码，无需繁重设置——只需将SecureStar集成到您现有的技术栈中。</p>
+      <div class="hero-badges">
+        <span class="hero-badge">REST API</span>
+        <span class="hero-badge">Python SDK</span>
+        <span class="hero-badge">Kafka连接器</span>
+        <span class="hero-badge">AWS Lambda</span>
+        <span class="hero-badge">Webhooks</span>
+      </div>
+    </div>
+    <div>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">bash</span></div>
+        <div class="code-body">
+          <div><span class="hl">$</span> pip install securestar-sdk</div>
+          <br>
+          <div><span class="hl">$</span> securestar init</div>
+          <div>&nbsp;&nbsp;✓ API密钥已配置</div>
+          <div>&nbsp;&nbsp;✓ 环境：生产</div>
+          <div>&nbsp;&nbsp;✓ 区域：us-east-1</div>
+          <br>
+          <div><span class="hl">$</span> securestar test-score</div>
+          <div>&nbsp;&nbsp;✓ 连接正常</div>
+          <div>&nbsp;&nbsp;✓ 延迟：38ms</div>
+          <div>&nbsp;&nbsp;<span class="hg">准备好评分交易。</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DOCS LAYOUT -->
+<div style="padding: 0;">
+  <div class="docs-layout">
+
+    <!-- SIDEBAR -->
+    <div class="docs-sidebar">
+      <h6>入门指南</h6>
+      <ul>
+        <li><a href="#quickstart" class="active">快速开始</a></li>
+        <li><a href="#authentication">认证</a></li>
+        <li><a href="#sdks">SDK和库</a></li>
+      </ul>
+      <h6>核心API</h6>
+      <ul>
+        <li><a href="#score-endpoint">POST /score</a></li>
+        <li><a href="#batch-endpoint">POST /score/batch</a></li>
+        <li><a href="#decision-object">决策对象</a></li>
+        <li><a href="#explanation">解释对象</a></li>
+      </ul>
+      <h6>集成</h6>
+      <ul>
+        <li><a href="#kafka">Kafka连接器</a></li>
+        <li><a href="#aws-lambda">AWS Lambda</a></li>
+        <li><a href="#webhooks">Webhooks</a></li>
+      </ul>
+      <h6>模型管理</h6>
+      <ul>
+        <li><a href="#tuning">阈值调整</a></li>
+        <li><a href="#training">自定义训练</a></li>
+      </ul>
+      <h6>合规性</h6>
+      <ul>
+        <li><a href="#audit-logs">审计日志</a></li>
+        <li><a href="#exports">法规导出</a></li>
+      </ul>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="docs-content">
+
+      <h2 class="doc-h2" id="quickstart">快速开始</h2>
+      <p class="doc-p">在5分钟内获得您的第一个风险评分。您需要从您的SecureStar仪表板获取API密钥。</p>
+
+      <div class="qs-steps">
+        <div class="qs-step">
+          <h4>安装SDK</h4>
+          <p>使用pip安装Python SDK。Node.js和Java SDK也可用。</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">bash</span></div>
+            <div class="code-body">pip install securestar-sdk</div>
+          </div>
+        </div>
+        <div class="qs-step">
+          <h4>配置您的API密钥</h4>
+          <p>将您的API密钥设置为环境变量或直接传递给客户端。</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">python</span></div>
+            <div class="code-body">
+              <div><span class="hp">import</span> securestar</div>
+              <br>
+              <div><span class="hl">client</span> = securestar.Client(</div>
+              <div>&nbsp;&nbsp;api_key=<span class="hg">"ss_live_..."</span></div>
+              <div>)</div>
+            </div>
+          </div>
+        </div>
+        <div class="qs-step">
+          <h4>评分您的第一个交易</h4>
+          <p>使用交易数据调用<span class="inline-code">score()</span>方法。响应包括风险评分、决策和解释。</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">python</span></div>
+            <div class="code-body">
+              <div>result = client.score({</div>
+              <div>&nbsp;&nbsp;<span class="hg">"transaction_id"</span>: <span class="hg">"txn_9x2q8a"</span>,</div>
+              <div>&nbsp;&nbsp;<span class="hg">"amount"</span>: <span class="hy">4820.00</span>,</div>
+              <div>&nbsp;&nbsp;<span class="hg">"currency"</span>: <span class="hg">"USD"</span>,</div>
+              <div>&nbsp;&nbsp;<span class="hg">"account_id"</span>: <span class="hg">"acct_h82jk"</span>,</div>
+              <div>&nbsp;&nbsp;<span class="hg">"merchant_id"</span>: <span class="hg">"merch_4x9m"</span>,</div>
+              <div>&nbsp;&nbsp;<span class="hg">"ip_address"</span>: <span class="hg">"104.22.1.84"</span>,</div>
+              <div>&nbsp;&nbsp;<span class="hg">"device_id"</span>: <span class="hg">"dev_8k2l"</span>,</div>
+              <div>})</div>
+              <br>
+              <div><span class="hg">print</span>(result.risk_score)  <span class="hl"># 0.08</span></div>
+              <div><span class="hg">print</span>(result.decision)    <span class="hl"># "approve"</span></div>
+              <div><span class="hg">print</span>(result.latency_ms)  <span class="hl"># 43</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="doc-h2" id="score-endpoint">POST /v2/score</h2>
+      <p class="doc-p">实时评分单笔交易。返回风险评分、决策建议、解释和审计ID。</p>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method method-post">POST</span>
+          <span class="endpoint-path">https://api.securestar.io/v2/score</span>
+          <span class="endpoint-desc">实时交易评分</span>
+        </div>
+        <div class="endpoint-body">
+          <h4 style="font-size:0.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">请求参数</h4>
+          <table class="param-table">
+            <thead><tr><th>参数</th><th>类型</th><th>必需</th><th>描述</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="param-name">transaction_id</span></td>
+                <td><span class="param-type">string</span></td>
+                <td><span class="param-req">必需</span></td>
+                <td>您的唯一交易标识符</td>
+              </tr>
+              <tr>
+                <td><span class="param-name">amount</span></td>
+                <td><span class="param-type">number</span></td>
+                <td><span class="param-req">必需</span></td>
+                <td>指定货币的交易金额</td>
+              </tr>
+              <tr>
+                <td><span class="param-name">currency</span></td>
+                <td><span class="param-type">string</span></td>
+                <td><span class="param-req">必需</span></td>
+                <td>ISO 4217货币代码（例如<span class="inline-code">USD</span>）</td>
+              </tr>
+              <tr>
+                <td><span class="param-name">account_id</span></td>
+                <td><span class="param-type">string</span></td>
+                <td><span class="param-req">必需</span></td>
+                <td>您的内部账户或用户标识符</td>
+              </tr>
+              <tr>
+                <td><span class="param-name">merchant_id</span></td>
+                <td><span class="param-type">string</span></td>
+                <td><span class="param-opt">可选</span></td>
+                <td>商户风险信号的商户标识符</td>
+              </tr>
+              <tr>
+                <td><span class="param-name">ip_address</span></td>
+                <td><span class="param-type">string</span></td>
+                <td><span class="param-opt">可选</span></td>
+                <td>用于地理和代理信号的客户端IP地址</td>
+              </tr>
+              <tr>
+                <td><span class="param-name">device_id</span></td>
+                <td><span class="param-type">string</span></td>
+                <td><span class="param-opt">可选</span></td>
+                <td>用于新设备信号的设备指纹</td>
+              </tr>
+              <tr>
+                <td><span class="param-name">metadata</span></td>
+                <td><span class="param-type">object</span></td>
+                <td><span class="param-opt">可选</span></td>
+                <td>包含在审计日志中的任意键值对</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="doc-note">
+        💡 <strong>延迟提示：</strong>传递所有可用的可选字段。每个额外的信号都能减少模型的不确定性，并能提高高达8%的准确性。额外字段的延迟开销低于2ms。
+      </div>
+
+      <h3 class="doc-h3">响应</h3>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">json</span></div>
+        <div class="code-body">
+          <div>{</div>
+          <div>&nbsp;&nbsp;<span class="hl">"transaction_id"</span>: <span class="hg">"txn_9x2q8a"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="hl">"risk_score"</span>: <span class="hy">0.08</span>,</div>
+          <div>&nbsp;&nbsp;<span class="hl">"decision"</span>: <span class="hg">"approve"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="hl">"confidence"</span>: <span class="hy">0.97</span>,</div>
+          <div>&nbsp;&nbsp;<span class="hl">"latency_ms"</span>: <span class="hy">43</span>,</div>
+          <div>&nbsp;&nbsp;<span class="hl">"explanation"</span>: {</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"top_factors"</span>: [<span class="hg">"known_merchant"</span>, <span class="hg">"consistent_geo"</span>, <span class="hg">"low_velocity"</span>],</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"rule_hits"</span>: [],</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"feature_attribution"</span>: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"feature"</span>: <span class="hg">"merchant_trust_score"</span>, <span class="hl">"weight"</span>: <span class="hy">-0.14</span> },</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"feature"</span>: <span class="hg">"account_age_days"</span>, <span class="hl">"weight"</span>: <span class="hy">-0.09</span> }</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;],</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"human_summary"</span>: <span class="hg">"来自已知商户的低风险交易，地理位置符合预期"</span>,</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"model_version"</span>: <span class="hg">"v3.2.1"</span></div>
+          <div>&nbsp;&nbsp;},</div>
+          <div>&nbsp;&nbsp;<span class="hl">"audit_id"</span>: <span class="hg">"aud_7gk2p1"</span></div>
+          <div>}</div>
+        </div>
+      </div>
+
+      <h2 class="doc-h2" id="kafka">Kafka连接器</h2>
+      <p class="doc-p">SecureStar Kafka连接器订阅您的交易主题，并将评分事件发布到结果主题——无需修改您现有的生产者。</p>
+
+      <div class="doc-note">
+        ⚡ <strong>延迟：</strong>Kafka连接器在Kafka消费者到消费者路径中增加了<strong>8ms</strong>的中位数。这通常比REST API更快，因为消除了HTTP开销。
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">yaml — securestar-kafka.yaml</span></div>
+        <div class="code-body">
+          <div><span class="hl">connector</span>:</div>
+          <div>&nbsp;&nbsp;<span class="hl">input_topic</span>: <span class="hg">payments.transactions.raw</span></div>
+          <div>&nbsp;&nbsp;<span class="hl">output_topic</span>: <span class="hg">payments.transactions.scored</span></div>
+          <div>&nbsp;&nbsp;<span class="hl">error_topic</span>: <span class="hg">payments.transactions.errors</span></div>
+          <div>&nbsp;&nbsp;<span class="hl">consumer_group</span>: <span class="hg">securestar-scorer</span></div>
+          <div>&nbsp;&nbsp;<span class="hl">parallelism</span>: <span class="hy">8</span></div>
+          <br>
+          <div><span class="hl">mapping</span>:</div>
+          <div>&nbsp;&nbsp;<span class="hl">transaction_id</span>: <span class="hg">$.id</span></div>
+          <div>&nbsp;&nbsp;<span class="hl">amount</span>: <span class="hg">$.amount_usd</span></div>
+          <div>&nbsp;&nbsp;<span class="hl">account_id</span>: <span class="hg">$.user_id</span></div>
+          <br>
+          <div><span class="hl">performance</span>:</div>
+          <div>&nbsp;&nbsp;<span class="hl">timeout_ms</span>: <span class="hy">150</span></div>
+          <div>&nbsp;&nbsp;<span class="hl">fallback_score</span>: <span class="hy">0.5</span></div>
+          <div>&nbsp;&nbsp;<span class="hl">fallback_decision</span>: <span class="hg">flag</span></div>
+        </div>
+      </div>
+
+      <h2 class="doc-h2" id="audit-logs">审计日志</h2>
+      <p class="doc-p">每个评分决策都会自动写入不可变的、加密签名的审计日志。日志可通过API查询，可导出到您的SIEM，并默认保留7年。</p>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method method-get">GET</span>
+          <span class="endpoint-path">/v2/audit/events</span>
+          <span class="endpoint-desc">查询审计事件日志</span>
+        </div>
+        <div class="endpoint-body">
+          <table class="param-table">
+            <thead><tr><th>参数</th><th>类型</th><th>描述</th></tr></thead>
+            <tbody>
+              <tr><td><span class="param-name">from</span></td><td><span class="param-type">date</span></td><td>日期范围的开始（ISO 8601）</td></tr>
+              <tr><td><span class="param-name">to</span></td><td><span class="param-type">date</span></td><td>日期范围的结束（ISO 8601）</td></tr>
+              <tr><td><span class="param-name">decision</span></td><td><span class="param-type">string</span></td><td>按<span class="inline-code">approve</span>、<span class="inline-code">flag</span>或<span class="inline-code">decline</span>过滤</td></tr>
+              <tr><td><span class="param-name">account_id</span></td><td><span class="param-type">string</span></td><td>按账户过滤</td></tr>
+              <tr><td><span class="param-name">rule_hit</span></td><td><span class="param-type">string</span></td><td>过滤触发特定规则的事件</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h2 class="doc-h2" id="sdks">SDK和库</h2>
+      <p class="doc-p">官方SDK可用于金融基础设施中最常用的服务器端语言。</p>
+      <div class="sdk-grid">
+        <div class="sdk-card">
+          <div class="sdk-icon">🐍</div>
+          <div class="sdk-name">Python</div>
+          <div class="sdk-ver">securestar-sdk 2.4.1</div>
+          <div class="sdk-badge">✓ 官方</div>
+        </div>
+        <div class="sdk-card">
+          <div class="sdk-icon">☕</div>
+          <div class="sdk-name">Java / Kotlin</div>
+          <div class="sdk-ver">securestar-java 1.9.0</div>
+          <div class="sdk-badge">✓ 官方</div>
+        </div>
+        <div class="sdk-card">
+          <div class="sdk-icon">🟢</div>
+          <div class="sdk-name">Node.js</div>
+          <div class="sdk-ver">@securestar/sdk 3.1.2</div>
+          <div class="sdk-badge">✓ 官方</div>
+        </div>
+        <div class="sdk-card">
+          <div class="sdk-icon">🦫</div>
+          <div class="sdk-name">Go</div>
+          <div class="sdk-ver">securestar-go 1.3.0</div>
+          <div class="sdk-badge">✓ 官方</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo"><div class="logo-icon">SS</div><span style="color:white">SecureStar</span></div>
+    <span>© 2025 SecureStar Labs, Inc.</span>
+    <div style="display:flex;gap:20px;"><a href="#">隐私</a><a href="#">条款</a><a href="#">安全</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

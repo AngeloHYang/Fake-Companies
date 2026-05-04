@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>플랫폼 — SecureStar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --slate:   #1e2d4a;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--navy); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2044 100%); color: white; padding: 80px 24px 70px; }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 18px; }
+    .breadcrumb a { color: var(--cyan); }
+    .page-hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 18px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.65); max-width: 580px; line-height: 1.75; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 600px; }
+
+    .feature-bg { background: var(--light-bg); }
+
+    /* TWO-COL FEATURE ROWS */
+    .feat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-bottom: 80px; }
+    .feat-row:last-child { margin-bottom: 0; }
+    .feat-row.reverse { direction: rtl; }
+    .feat-row.reverse > * { direction: ltr; }
+    .feat-visual {
+      background: var(--navy); border-radius: 16px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .feat-visual-bar {
+      background: rgba(255,255,255,0.05); padding: 12px 16px;
+      display: flex; gap: 7px; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dr { background: #ff5f56; } .dy { background: #ffbd2e; } .dg { background: #27c93f; }
+    .feat-visual-body { padding: 24px; font-family: 'Courier New', monospace; font-size: 0.8rem; line-height: 1.85; color: rgba(255,255,255,0.7); }
+    .hl { color: var(--cyan); }
+    .hg { color: #86efac; }
+    .hy { color: #fbbf24; }
+    .hp { color: #c084fc; }
+
+    .feat-list { list-style: none; margin-top: 20px; }
+    .feat-list li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; font-size: 0.95rem; color: var(--text); line-height: 1.6; }
+    .feat-list li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* PERF TABLE */
+    .perf-table { width: 100%; border-collapse: collapse; margin-top: 32px; }
+    .perf-table th { background: var(--navy); color: rgba(255,255,255,0.7); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 14px 18px; text-align: left; }
+    .perf-table td { padding: 14px 18px; font-size: 0.92rem; border-bottom: 1px solid var(--border); }
+    .perf-table tr:last-child td { border-bottom: none; }
+    .perf-table tr:nth-child(even) td { background: var(--light-bg); }
+    .perf-val { font-weight: 700; color: var(--blue); }
+    .badge { display: inline-block; border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 700; }
+    .badge-green { background: #ecfdf5; color: #059669; }
+    .badge-blue { background: #eff6ff; color: #2563eb; }
+
+    /* SCORE PANEL */
+    .score-panel {
+      background: var(--navy); border-radius: 14px; padding: 28px;
+      color: white; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.9;
+    }
+
+    /* TABS */
+    .tab-row { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 28px; }
+    .tab { padding: 12px 22px; font-size: 0.9rem; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
+    .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* CTA BAND */
+    .cta-band { background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%); color: white; padding: 72px 24px; text-align: center; }
+    .cta-band h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-band p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; }
+    .btn-white:hover { background: #e0e7ff; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+    .footer-inner a { color: rgba(255,255,255,0.4); transition: color .2s; }
+    .footer-inner a:hover { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .feat-row { grid-template-columns: 1fr; }
+      .feat-row.reverse { direction: ltr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">SS</div><span>SecureStar</span></a>
+    <div class="nav-links">
+      <a href="platform.html" class="active">플랫폼</a>
+      <a href="solutions.html">솔루션</a>
+      <a href="developers.html">개발자</a>
+      <a href="company.html">회사</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">문서</a>
+      <a href="index.html#contact" class="btn btn-primary">데모 요청</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../platform.html">English</option>
+            <option value="../zh-hans/platform.html">简体中文</option>
+            <option value="../zh-hant/platform.html">繁體中文</option>
+            <option value="../es/platform.html">Español</option>
+            <option value="../fr/platform.html">Français</option>
+            <option value="../ja/platform.html">日本語</option>
+            <option value="../ko/platform.html" selected>한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">홈</a> / 플랫폼</div>
+    <h1>SecureStar 플랫폼</h1>
+    <p>SecureStar를 현대 금융 시스템의 사기 탐지 인프라로 만드는 다섯 가지 기둥을 깊이 있게 살펴봅니다.</p>
+  </div>
+</div>
+
+<!-- PILLAR 1: LATENCY -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">기둥 1</div>
+        <h2 class="section-title">초저지연 추론</h2>
+        <p class="section-sub">사기는 멈추지 않습니다. 탐지 계층도 멈추지 않아야 합니다. SecureStar의 추론 파이프라인은 하나의 제약 조건을 중심으로 설계되었습니다: 트래픽 급증 시에도 99번째 백분위수에서 80ms 이하를 유지합니다.</p>
+        <ul class="feat-list">
+          <li>최적화된 ONNX 추론 런타임 — 모델은 직렬화 오버헤드 없이 제공됩니다</li>
+          <li>엣지 배포 옵션으로 스코어링 로직을 데이터 소스에 더 가깝게 배치</li>
+          <li>Kafka 소비자 그룹을 통한 스트리밍 우선 설계로 10ms 이하의 이벤트 픽업</li>
+          <li>수평 자동 확장으로 10배 트래픽 급증 시 SLA 유지</li>
+          <li>기업 테넌트별 전용 인프라 — 소음이 없는 이웃 효과 없음</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// 지연 분포 (지난 1시간)</div>
+            <br>
+            <div>p50 &nbsp;&nbsp;&nbsp; <span class="hg">21ms</span> &nbsp;██████████░░░░░░░░░░</div>
+            <div>p75 &nbsp;&nbsp;&nbsp; <span class="hg">34ms</span> &nbsp;████████████████░░░░</div>
+            <div>p90 &nbsp;&nbsp;&nbsp; <span class="hg">51ms</span> &nbsp;██████████████████░░</div>
+            <div>p95 &nbsp;&nbsp;&nbsp; <span class="hy">62ms</span> &nbsp;███████████████████░</div>
+            <div>p99 &nbsp;&nbsp;&nbsp; <span class="hy">74ms</span> &nbsp;████████████████████</div>
+            <div>p999 &nbsp;&nbsp; <span class="hy">79ms</span> &nbsp;████████████████████</div>
+            <br>
+            <div class="hl">// SLA 목표: &lt;80ms p99 ✓</div>
+            <div>처리량: <span class="hg">14,830 req/s</span></div>
+            <div>오류율: <span class="hg">0.003%</span></div>
+          </div>
+        </div>
+        <table class="perf-table" style="margin-top:16px;">
+          <thead><tr><th>시나리오</th><th>지연</th><th>상태</th></tr></thead>
+          <tbody>
+            <tr><td>표준 REST 호출</td><td class="perf-val">&lt;50ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>Kafka 스트림 소비자</td><td class="perf-val">&lt;30ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>엣지 배포</td><td class="perf-val">&lt;15ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>p99 보장</td><td class="perf-val">&lt;80ms</td><td><span class="badge badge-blue">계약적</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 2: EXPLAINABLE AI -->
+<section class="feature-bg">
+  <div class="section-inner">
+    <div class="feat-row reverse">
+      <div>
+        <div class="section-label">기둥 2</div>
+        <h2 class="section-title">설명 가능한 AI — 모든 결정, 매번</h2>
+        <p class="section-sub">대부분의 ML 사기 벤더는 점수를 제공합니다. SecureStar는 이유를 제공합니다. 모든 위험 평가에는 기능 속성, 규칙 속성 및 실제로 사용할 수 있는 인간이 읽을 수 있는 설명이 포함됩니다.</p>
+        <ul class="feat-list">
+          <li>SHAP 기반 기능 속성은 각 점수를 주도하는 주요 요소를 식별합니다</li>
+          <li>규칙 엔진 결정은 코드가 아닌 평문으로 표시됩니다</li>
+          <li>전체 모델 설명 가능성은 AML Directive 6 및 FinCEN 감사 요구 사항을 충족합니다</li>
+          <li>설명 페이로드는 지연 프리미엄 없이 모든 API 응답에 포함됩니다</li>
+          <li>사후 사건 포렌식 분석을 위한 검색 가능한 설명 기록</li>
+        </ul>
+      </div>
+      <div>
+        <div class="score-panel">
+          <div class="hl">// 설명 객체 (txn_4h1k9b)</div>
+          <br>
+          <div><span class="hp">"explanation"</span>: {</div>
+          <div>&nbsp;&nbsp;<span class="hl">"decision"</span>: <span class="hg">"flag"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="hl">"risk_score"</span>: <span class="hy">0.71</span>,</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"feature_attribution"</span>: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"feature"</span>: <span class="hg">"velocity_1h"</span>, <span class="hl">"weight"</span>: <span class="hy">+0.38</span> },</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"feature"</span>: <span class="hg">"new_device"</span>, <span class="hl">"weight"</span>: <span class="hy">+0.21</span> },</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"feature"</span>: <span class="hg">"merchant_risk"</span>, <span class="hl">"weight"</span>: <span class="hy">+0.12</span> }</div>
+          <div>&nbsp;&nbsp;],</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"rule_hits"</span>: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"vel_1h_exceeded: 4 txns in 38 min"</span>,</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"new_device_high_amount: $1,200+"</span></div>
+          <div>&nbsp;&nbsp;],</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"human_summary"</span>: <span class="hg">"새로운 장치에서 1시간 내 높은 거래</span></div>
+          <div>&nbsp;&nbsp;&nbsp;<span class="hg">속도"</span>,</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"audit_id"</span>: <span class="hg">"aud_7gk2p1"</span></div>
+          <div>}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 3: HYBRID ENGINE -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">기둥 3</div>
+        <h2 class="section-title">하이브리드 결정 엔진</h2>
+        <p class="section-sub">순수 ML은 준수를 위해 너무 불투명합니다. 순수 규칙은 사기에 대해 너무 취약합니다. SecureStar는 두 가지를 병렬로 실행하고 이를 단일 결정으로 조정하여 동시에 제어와 지능을 제공합니다.</p>
+        <ul class="feat-list">
+          <li>규칙 엔진 레이어: 준수 팀이 코드 없는 인터페이스에서 하드 규칙 정의</li>
+          <li>ML 모델 레이어: 그라디언트 부스팅 앙상블이 규칙이 놓치는 새로운 패턴을 포착</li>
+          <li>결정 조정: 규칙 결과와 모델 점수 간의 가중치 조정 가능</li>
+          <li>규칙 재정의: 준수는 ML 점수와 상관없이 승인/거부 강제 가능</li>
+          <li>완전한 투명성: 두 레이어의 출력이 모든 API 응답에 포함됨</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// 결정 파이프라인</div>
+            <br>
+            <div>거래 이벤트</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>┌─────────────────────────────┐</div>
+            <div>│ &nbsp;<span class="hp">규칙 엔진</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">ML 모델</span> &nbsp;&nbsp;│</div>
+            <div>│ &nbsp;AML 규칙 &nbsp;&nbsp;&nbsp;&nbsp; XGBoost v3 │</div>
+            <div>│ &nbsp;속도 제한 &nbsp;SHAP 설명자│</div>
+            <div>│ &nbsp;KYC 검사 &nbsp;&nbsp;&nbsp; 드리프트 모니터│</div>
+            <div>└──────────┬──────────┬──────────┘</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">결정 조정자</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>&nbsp;&nbsp;점수 + 결정 + 설명</div>
+            <br>
+            <div class="hg">규칙 재정의: HARD_DECLINE → 최종</div>
+            <div class="hy">그 외: 가중치(규칙, ml)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 4: CUSTOM TUNING -->
+<section class="feature-bg">
+  <div class="section-inner">
+    <div class="feat-row reverse">
+      <div>
+        <div class="section-label">기둥 4</div>
+        <h2 class="section-title">맞춤형 모델 튜닝</h2>
+        <p class="section-sub">모든 것을 아우르는 사기 모델은 작동하지 않습니다. SecureStar는 자체 거래 데이터로 학습하고, 위험 수용도에 맞게 정밀도/재현율 임계값을 조정하며, 엔지니어링 팀을 기다리지 않고 동적 규칙 업데이트를 푸시할 수 있게 합니다.</p>
+        <ul class="feat-list">
+          <li>API 또는 UI를 통해 자체 레이블이 지정된 과거 거래 데이터로 미세 조정</li>
+          <li>조정 가능한 결정 임계값: 거짓 긍정과 거짓 부정 간의 균형 조정</li>
+          <li>동적 규칙 업데이트는 60초 이내에 프로덕션에 푸시됨</li>
+          <li>A/B 섀도 모드: 전환 전에 라이브 트래픽에서 모델 변경 테스트</li>
+          <li>모델 성능 대시보드는 드리프트, 정밀도, 재현율 및 F1을 실시간으로 표시</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl"># 파이썬 SDK — 임계값 튜닝</div>
+            <br>
+            <div><span class="hp">from</span> securestar <span class="hp">import</span> ModelConfig</div>
+            <br>
+            <div>config = ModelConfig(</div>
+            <div>&nbsp;&nbsp;base_model=<span class="hg">"ss-fintech-v3"</span>,</div>
+            <div>&nbsp;&nbsp;training_data=<span class="hg">"s3://your-bucket/txns/"</span>,</div>
+            <div>&nbsp;&nbsp;label_column=<span class="hg">"is_fraud"</span>,</div>
+            <div>&nbsp;&nbsp;thresholds={</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"approve"</span>: <span class="hy">0.30</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"flag"</span>: &nbsp;&nbsp;<span class="hy">0.65</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"decline"</span>: <span class="hy">0.88</span>,</div>
+            <div>&nbsp;&nbsp;}</div>
+            <div>)</div>
+            <br>
+            <div>job = config.train() &nbsp;<span class="hl"># 비동기</span></div>
+            <div>job.wait()</div>
+            <div><span class="hg">print</span>(job.metrics)</div>
+            <div><span class="hl"># 정밀도: 0.943 &nbsp;재현율: 0.917</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 5: COMPLIANCE -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">기둥 5</div>
+        <h2 class="section-title">준수 우선 아키텍처</h2>
+        <p class="section-sub">SecureStar는 규제 금융 기관의 준수 및 법무 팀과 긴밀히 협력하여 설계되었습니다. 준수는 추가 기능이 아니라 데이터 모델에 내장되어 있습니다.</p>
+        <ul class="feat-list">
+          <li>변경 불가능한 암호화 서명된 감사 로그는 기본적으로 7년 동안 저장됩니다</li>
+          <li>SOC 2 Type II 인증; PCI-DSS 레벨 1 준수 인프라</li>
+          <li>FinCEN SAR, FATF, EBA 형식의 원클릭 규제 내보내기</li>
+          <li>AML 규칙 라이브러리: 구조화, 스머핑, 레이어링 패턴에 대한 사전 구축된 규칙</li>
+          <li>KYC 통합 훅: 원하는 신원 확인 제공업체를 연결</li>
+          <li>GDPR / CCPA 데이터 거주지 제어: EU 또는 미국 저장 지역 선택</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// 준수 내보내기 (FinCEN SAR)</div>
+            <br>
+            <div><span class="hp">POST</span> /v2/compliance/export</div>
+            <div>{</div>
+            <div>&nbsp;&nbsp;<span class="hl">"format"</span>: <span class="hg">"fincen_sar"</span>,</div>
+            <div>&nbsp;&nbsp;<span class="hl">"date_range"</span>: {</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"from"</span>: <span class="hg">"2025-01-01"</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"to"</span>: &nbsp;<span class="hg">"2025-03-31"</span></div>
+            <div>&nbsp;&nbsp;},</div>
+            <div>&nbsp;&nbsp;<span class="hl">"filter"</span>: <span class="hg">"declined_or_flagged"</span></div>
+            <div>}</div>
+            <br>
+            <div class="hg">// ✓ 147 이벤트 내보내기 완료</div>
+            <div class="hg">// ✓ 서명됨: SHA-256</div>
+            <div class="hg">// ✓ 감사 추적 첨부됨</div>
+            <div class="hy">// FinCEN 제출 준비 완료</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2>30분 안에 전체 플랫폼 보기</h2>
+  <p>저희 팀이 실시간 지연 벤치마크를 데모하고, 설명 가능성 예제를 살펴보며, 하이브리드 엔진이 정밀도와 재현율 목표를 어떻게 균형 잡는지 보여드립니다.</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn btn-white btn-lg">데모 예약</a>
+    <a href="developers.html" class="btn btn-ghost btn-lg" style="color:white;border-color:rgba(255,255,255,0.4);">문서 읽기</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo"><div class="logo-icon">SS</div><span style="color:white">SecureStar</span></div>
+    <span>© 2025 SecureStar Labs, Inc.</span>
+    <div style="display:flex;gap:20px;"><a href="#">개인정보</a><a href="#">이용약관</a><a href="#">보안</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

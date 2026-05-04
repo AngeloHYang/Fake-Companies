@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Empresa — SecureStar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--navy); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-cyan { background: var(--cyan); color: var(--navy); font-weight: 700; }
+    .btn-cyan:hover { background: #0891b2; color: white; }
+
+    /* HERO */
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2044 100%); color: white; padding: 100px 24px 80px; text-align: center; }
+    .page-hero-inner { max-width: 860px; margin: 0 auto; }
+    .hero-eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 18px; }
+    .page-hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; margin-bottom: 22px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.65); max-width: 640px; margin: 0 auto; line-height: 1.8; }
+
+    section { padding: 80px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 640px; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* MISSION */
+    .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 40px; }
+    .mission-text p { font-size: 1rem; color: var(--muted); line-height: 1.8; margin-bottom: 18px; }
+    .mission-text strong { color: var(--text); }
+    .mission-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .mission-stat { background: var(--light-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .mission-stat .value { font-size: 1.8rem; font-weight: 800; color: var(--blue); }
+    .mission-stat .label { font-size: 0.85rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+    /* STORY / TIMELINE */
+    .story-bg { background: var(--light-bg); }
+    .timeline { margin-top: 40px; position: relative; }
+    .timeline::before { content: ''; position: absolute; left: 22px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--blue), var(--cyan)); }
+    .tl-item { display: flex; gap: 28px; margin-bottom: 36px; position: relative; }
+    .tl-dot { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--cyan)); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1rem; flex-shrink: 0; z-index: 1; }
+    .tl-content { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow); flex: 1; }
+    .tl-year { font-size: 0.78rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .tl-event { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .tl-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* TEAM */
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 48px; }
+    .team-card {
+      background: white; border: 1px solid var(--border); border-radius: 16px; padding: 28px;
+      box-shadow: var(--shadow); text-align: center;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .team-card:hover { transform: translateY(-4px); box-shadow: 0 14px 44px rgba(10,22,40,0.12); }
+    .team-photo {
+      width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 16px;
+      object-fit: cover; border: 3px solid var(--border);
+      display: block;
+    }
+    .team-name { font-size: 1rem; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .team-role { font-size: 0.85rem; color: var(--blue); font-weight: 600; margin-bottom: 8px; }
+    .team-bio { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+    .team-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+    .tag { background: var(--light-bg); color: var(--muted); border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 600; }
+
+    /* OFFICE PHOTO */
+    .office-section { padding: 0; }
+    .office-photo { width: 100%; height: 400px; object-fit: cover; display: block; }
+
+    /* VALUES */
+    .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 48px; }
+    .value-card { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius); background: white; box-shadow: var(--shadow); }
+    .value-icon { font-size: 1.8rem; margin-bottom: 14px; }
+    .value-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .value-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* PRESS LOGOS */
+    .press-bg { background: var(--navy); color: white; padding: 60px 24px; text-align: center; }
+    .press-inner { max-width: 1000px; margin: 0 auto; }
+    .press-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 28px; }
+    .press-logos { display: flex; gap: 36px; justify-content: center; flex-wrap: wrap; align-items: center; }
+    .press-name { font-size: 0.9rem; font-weight: 800; color: rgba(255,255,255,0.3); letter-spacing: 0.5px; transition: color .2s; }
+    .press-name:hover { color: var(--cyan); }
+
+    /* CTA */
+    .cta-band { background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%); color: white; padding: 80px 24px; text-align: center; }
+    .cta-band h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-band p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; padding: 14px 32px; font-size: 1rem; }
+    .btn-white:hover { background: #e0e7ff; }
+    .btn-outline-white { border: 2px solid rgba(255,255,255,0.5); color: white; background: transparent; font-weight: 600; padding: 14px 32px; font-size: 1rem; }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+    .footer-inner a { color: rgba(255,255,255,0.4); transition: color .2s; }
+    .footer-inner a:hover { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .mission-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">SS</div><span>SecureStar</span></a>
+    <div class="nav-links">
+      <a href="platform.html">Plataforma</a>
+      <a href="solutions.html">Soluciones</a>
+      <a href="developers.html">Desarrolladores</a>
+      <a href="company.html" class="active">Empresa</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">Documentación</a>
+      <a href="index.html#contact" class="btn btn-primary">Solicitar Demostración</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../company.html">English</option>
+            <option value="../zh-hans/company.html">简体中文</option>
+            <option value="../zh-hant/company.html">繁體中文</option>
+            <option value="../es/company.html" selected>Español</option>
+            <option value="../fr/company.html">Français</option>
+            <option value="../ja/company.html">日本語</option>
+            <option value="../ko/company.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-eyebrow">Acerca de SecureStar</div>
+    <h1>Construimos la infraestructura antifraude que los bancos realmente pueden explicar</h1>
+    <p>SecureStar fue fundada por ingenieros que pasaron años dentro de plataformas fintech y de ML observando el mismo problema repetirse: empresas con riesgo real de fraude y proveedores con soluciones reales, incapaces de encontrarse — o confiar el uno en el otro una vez encontrados.</p>
+  </div>
+</div>
+
+<!-- MISSION -->
+<section>
+  <div class="section-inner">
+    <div class="mission-grid">
+      <div class="mission-text">
+        <div class="section-label">Nuestra Misión</div>
+        <h2 class="section-title">Detección de fraude que es rápida, honesta y auditable</h2>
+        <p>La mayoría de las plataformas antifraude son construidas por científicos de datos que piensan en métricas de rendimiento del modelo. SecureStar fue construida por ingenieros que también tuvieron que sentarse frente a reguladores y explicar por qué se rechazó una transacción.</p>
+        <p>Esa experiencia dio forma a cada decisión de producto que hemos tomado. <strong>La velocidad importa.</strong> Una verificación de fraude que añade 200ms a tu autorización es una verificación de fraude que tus usuarios sentirán. <strong>La explicabilidad importa.</strong> Un modelo que no puede justificar sus decisiones a un oficial de cumplimiento es una responsabilidad, no un activo. <strong>El control importa.</strong> Los modelos antifraude de talla única no se ajustan a nadie.</p>
+        <p>Construimos SecureStar para ser la plataforma que deseábamos existiera cuando estábamos del otro lado de la mesa.</p>
+      </div>
+      <div>
+        <div class="mission-stat-grid">
+          <div class="mission-stat">
+            <div class="value">~50</div>
+            <div class="label">Miembros del equipo en ingeniería, investigación y éxito del cliente</div>
+          </div>
+          <div class="mission-stat">
+            <div class="value">2020</div>
+            <div class="label">Fundada en San Francisco, CA por veteranos de fintech + ML</div>
+          </div>
+          <div class="mission-stat">
+            <div class="value">3B+</div>
+            <div class="label">Transacciones evaluadas en todos los clientes desde el lanzamiento</div>
+          </div>
+          <div class="mission-stat">
+            <div class="value">$42M</div>
+            <div class="label">Serie B recaudada para acelerar la infraestructura y las herramientas de cumplimiento</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story-bg">
+  <div class="section-inner">
+    <div class="section-label">Nuestra Historia</div>
+    <h2 class="section-title">De un punto de dolor a una plataforma</h2>
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot">💡</div>
+        <div class="tl-content">
+          <div class="tl-year">2019 — El Problema</div>
+          <div class="tl-event">La realización</div>
+          <div class="tl-desc">Los cofundadores Priya Nair y James Kowalski trabajan en empresas fintech separadas. Ambos experimentan la misma frustración: proveedores de fraude con presentaciones impresionantes que se desmoronan cuando es hora de explicar una decisión a un examinador de cumplimiento — o cumplir con un presupuesto de latencia inferior a 100ms.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🛠️</div>
+        <div class="tl-content">
+          <div class="tl-year">2020 — Fundación</div>
+          <div class="tl-event">SecureStar Labs incorporada</div>
+          <div class="tl-desc">Priya y James incorporan SecureStar Labs en San Francisco. Ronda semilla de $4.8M liderada por Emergence Capital. Primeros 8 ingenieros contratados de Stripe, Palantir y Two Sigma. Misión principal: construir una plataforma antifraude que satisfaga simultáneamente a ingenieros y equipos de cumplimiento.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🚀</div>
+        <div class="tl-content">
+          <div class="tl-year">2021 — Producto</div>
+          <div class="tl-event">v1 lanza con motor híbrido y explicabilidad</div>
+          <div class="tl-desc">La primera versión de producción se envía con el motor híbrido ML + reglas. El cliente temprano Nexo Payments realiza pruebas paralelas contra su proveedor actual — SecureStar entrega 31% menos falsos positivos y latencia sub-60ms p99 en su pila Kafka. La Serie A cierra en $18M.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">📈</div>
+        <div class="tl-content">
+          <div class="tl-year">2022 — Escala</div>
+          <div class="tl-event">Conector nativo de Kafka y SDK de Python lanzados</div>
+          <div class="tl-desc">El equipo de ingeniería lanza el conector de Kafka y el SDK de Python, reduciendo el tiempo típico de integración de 3–4 semanas a menos de 2 semanas. El número de clientes alcanza 40. Primer despliegue de cumplimiento AML empresarial con canal de exportación regulatoria completo.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🔬</div>
+        <div class="tl-content">
+          <div class="tl-year">2023 — Investigación</div>
+          <div class="tl-event">API de ajuste de modelo personalizado y beta de implementación en el borde</div>
+          <div class="tl-desc">El ajuste fino de modelos personalizados en datos de clientes se lanza, eliminando el problema de talla única. La beta de implementación en el borde logra sub-20ms p50 para clientes empresariales selectos. Certificación SOC 2 Tipo II completada.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🌍</div>
+        <div class="tl-content">
+          <div class="tl-year">2024–2025 — Expansión</div>
+          <div class="tl-event">Serie B y expansión internacional</div>
+          <div class="tl-desc">La Serie B cierra en $42M. Residencia de datos en la UE lanzada para cumplimiento con GDPR. El equipo crece a ~50 personas. La plataforma procesa más de 3 mil millones de transacciones. Nuevas características: actualizaciones dinámicas de reglas, modo sombra A/B y exportación SAR de FinCEN para clientes de EE.UU.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Liderazgo</div>
+      <h2 class="section-title">Construido por personas que han estado en ambos lados</h2>
+      <p class="section-sub">Nuestro equipo fundador aporta experiencia en ingeniería fintech, investigación de ML y cumplimiento financiero — la combinación exacta necesaria para construir este producto correctamente.</p>
+    </div>
+    <div class="team-grid">
+
+      <div class="team-card">
+        <img src="../images/priya-nair.png" alt="Priya Nair" class="team-photo" />
+        <div class="team-name">Priya Nair</div>
+        <div class="team-role">Cofundadora y CEO</div>
+        <div class="team-bio">Ex Jefa de Ingeniería de Riesgos en Stripe. Construyó sistemas antifraude que procesan más de $80B anualmente. Sabe exactamente qué falla a escala y por qué los presupuestos de latencia no son negociables.</div>
+        <div class="team-tags"><span class="tag">Fintech</span><span class="tag">Riesgo</span><span class="tag">Sistemas</span></div>
+      </div>
+
+      <div class="team-card">
+        <img src="../images/james-kowalski.png" alt="James Kowalski" class="team-photo" />
+        <div class="team-name">James Kowalski</div>
+        <div class="team-role">Cofundador y CTO</div>
+        <div class="team-bio">Ex Líder de Investigación de ML en Two Sigma. Especialista en inferencia de ML de baja latencia y métodos de explicabilidad. Posee 4 patentes en detección de anomalías financieras. Doctorado en ML Aplicado del MIT.</div>
+        <div class="team-tags"><span class="tag">Investigación de ML</span><span class="tag">Inferencia</span><span class="tag">XAI</span></div>
+      </div>
+
+      <div class="team-card">
+        <img src="../images/amara-reeves.png" alt="Amara Reeves" class="team-photo" />
+        <div class="team-name">Amara Reeves</div>
+        <div class="team-role">VP de Ingeniería</div>
+        <div class="team-bio">Anteriormente Ingeniera de Personal en la unidad de delitos financieros de Palantir. Experta en canalizaciones de datos en streaming y Kafka a escala. Lideró la arquitectura de la infraestructura central de inferencia de SecureStar.</div>
+        <div class="team-tags"><span class="tag">Kafka</span><span class="tag">AWS</span><span class="tag">Infraestructura</span></div>
+      </div>
+
+      <div class="team-card">
+        <img src="../images/david-marchetti.png" alt="David Marchetti" class="team-photo" />
+        <div class="team-name">David Marchetti</div>
+        <div class="team-role">Director de Cumplimiento</div>
+        <div class="team-bio">Ex oficial de BSA/AML en JPMorgan Chase. Pasó 12 años trabajando directamente con examinadores de FinCEN y OCC. Diseñó el registro de auditoría y la arquitectura de exportación regulatoria de SecureStar.</div>
+        <div class="team-tags"><span class="tag">AML</span><span class="tag">KYC</span><span class="tag">FinCEN</span></div>
+      </div>
+
+      <div class="team-card">
+        <img src="../images/sophia-liu.png" alt="Sophia Liu" class="team-photo" />
+        <div class="team-name">Sophia Liu</div>
+        <div class="team-role">Jefa de Investigación de ML</div>
+        <div class="team-bio">Doctorado en Estadística de Stanford. Anteriormente en DeepMind y el laboratorio de investigación de fraude de Capital One. Lidera el desarrollo de la capa de explicabilidad de SecureStar y métodos de atribución basados en SHAP.</div>
+        <div class="team-tags"><span class="tag">SHAP</span><span class="tag">XGBoost</span><span class="tag">Investigación</span></div>
+      </div>
+
+      <div class="team-card">
+        <img src="../images/marcus-torres.png" alt="Marcus Torres" class="team-photo" />
+        <div class="team-name">Marcus Torres</div>
+        <div class="team-role">VP de Ingeniería de Clientes</div>
+        <div class="team-bio">Ex arquitecto de soluciones en Confluent (Kafka). Ha integrado personalmente SecureStar en más de 25 entornos de producción en pilas de banca digital y pagos.</div>
+        <div class="team-tags"><span class="tag">Integraciones</span><span class="tag">Éxito del Cliente</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- OFFICE PHOTO -->
+<div class="office-section">
+  <img src="../images/sf-office.png" alt="Sede de SecureStar — San Francisco" class="office-photo" />
+</div>
+
+<!-- VALUES -->
+<section style="background:var(--light-bg);padding:80px 24px;">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Valores</div>
+      <h2 class="section-title">En qué creemos</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">⚡</div>
+        <h3>La velocidad es una característica</h3>
+        <p>La latencia no es una nota técnica al pie. En la autorización de pagos, cada milisegundo es una decisión de UX. Tratamos nuestro SLA de latencia como un compromiso de producto, no una aspiración.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🔍</div>
+        <h3>La opacidad es una responsabilidad</h3>
+        <p>Un sistema de IA que no puede explicarse a sí mismo no es confiable — es un riesgo regulatorio. Creemos que cada decisión financiera automatizada debería ser explicable para la persona a la que afectó.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🎛️</div>
+        <h3>El control pertenece al cliente</h3>
+        <p>Conoces a tus clientes mejor que nosotros. Tu equipo de cumplimiento debería poseer las reglas. Tus científicos de datos deberían ajustar el modelo. Nosotros proporcionamos la infraestructura; tú tomas las decisiones.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <h3>La integración debería ser aburrida</h3>
+        <p>La mejor integración de proveedores es aquella que toma días, no meses, y no requiere un proyecto de migración. Nos obsesionamos con la ergonomía de nuestro SDK, la simplicidad del conector y las implementaciones sin retrabajo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESS -->
+<div class="press-bg">
+  <div class="press-inner">
+    <div class="press-label">Como se presenta en</div>
+    <div class="press-logos">
+      <span class="press-name">TechCrunch</span>
+      <span class="press-name">The Information</span>
+      <span class="press-name">Finextra</span>
+      <span class="press-name">American Banker</span>
+      <span class="press-name">Forbes Fintech 50</span>
+      <span class="press-name">MIT Technology Review</span>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2>Trabaja con nosotros, o únete a nosotros</h2>
+  <p>Estamos contratando ingenieros, investigadores de ML y especialistas en cumplimiento. Y si eres una plataforma financiera evaluando infraestructura antifraude — hablemos.</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn btn-white">Reservar una Demostración</a>
+    <a href="#" class="btn btn-outline-white">Ver Puestos Abiertos</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo"><div class="logo-icon">SS</div><span style="color:white">SecureStar</span></div>
+    <span>© 2025 SecureStar Labs, Inc.</span>
+    <div style="display:flex;gap:20px;"><a href="#">Privacidad</a><a href="#">Términos</a><a href="#">Seguridad</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

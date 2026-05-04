@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harrison Financial – リアルライフのためのデジタルバンキング</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d;
+      --blue: #1a4fad;
+      --accent: #2db4a0;
+      --light-bg: #f4f7fb;
+      --white: #ffffff;
+      --text: #1e2a3b;
+      --muted: #5a6a7e;
+      --border: #d5dce8;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(13,30,61,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 8px rgba(13,30,61,0.06);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 68px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon {
+      width: 36px; height: 36px; background: var(--blue); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.1rem; font-weight: 800; letter-spacing: -1px;
+    }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; }
+    .btn-accent:hover { background: #229988; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #1a3570 60%, #1a4fad 100%);
+      color: white; padding: 90px 24px 80px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px; padding: 5px 16px; font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.5px; margin-bottom: 24px; color: #a8c8ff;
+    }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 800; line-height: 1.15; margin-bottom: 22px; max-width: 780px; margin-left: auto; margin-right: auto; }
+    .hero h1 span { color: #5bd4c4; }
+    .hero p { font-size: 1.15rem; color: #b8ccec; max-width: 580px; margin: 0 auto 36px; line-height: 1.7; }
+    .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .hero-stats {
+      display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;
+      margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 40px;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .value { font-size: 2rem; font-weight: 800; color: white; }
+    .hero-stat .label { font-size: 0.85rem; color: #8aadda; margin-top: 4px; }
+
+    /* SECTION */
+    section { padding: 80px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-title { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1.05rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* PRODUCTS GRID */
+    .products-bg { background: var(--light-bg); }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 48px; }
+    .product-card {
+      background: white; border-radius: var(--radius); border: 1px solid var(--border);
+      padding: 32px 28px; box-shadow: var(--shadow); transition: transform .2s, box-shadow .2s;
+    }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 40px rgba(13,30,61,0.14); }
+    .product-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 18px;
+    }
+    .icon-blue { background: #e8f0fd; }
+    .icon-green { background: #e6f7f5; }
+    .icon-purple { background: #f0ebfa; }
+    .icon-orange { background: #fff4e6; }
+    .product-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+    .product-card p { font-size: 0.93rem; color: var(--muted); line-height: 1.65; margin-bottom: 18px; }
+    .learn-more { font-size: 0.9rem; font-weight: 600; color: var(--blue); display: flex; align-items: center; gap: 5px; }
+    .learn-more:hover { gap: 9px; }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-top: 56px; }
+    .feature-item { text-align: center; }
+    .feature-item .f-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .feature-item h4 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .feature-item p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+    /* APP PROMO */
+    .app-section { background: var(--navy); color: white; }
+    .app-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; max-width: 1100px; margin: 0 auto; }
+    .app-inner .section-title { color: white; }
+    .app-inner .section-sub { color: #8aadda; }
+    .app-list { list-style: none; margin: 28px 0; display: flex; flex-direction: column; gap: 12px; }
+    .app-list li { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; color: #c0d4f0; }
+    .app-list li::before { content: "✓"; color: var(--accent); font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+    .app-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+    .store-btn {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.2);
+      color: white; border-radius: 10px; padding: 10px 18px; font-size: 0.85rem;
+      font-weight: 600; transition: background .2s;
+    }
+    .store-btn:hover { background: rgba(255,255,255,0.16); }
+    .store-btn .store-icon { font-size: 1.6rem; }
+    .app-visual { display: flex; justify-content: center; align-items: center; }
+    .phone-mockup {
+      width: 220px; height: 420px; background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.15); border-radius: 40px;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      padding: 24px 18px; box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+    }
+    .phone-notch { width: 80px; height: 20px; background: rgba(255,255,255,0.12); border-radius: 10px; margin-bottom: 20px; }
+    .phone-screen { width: 100%; background: rgba(255,255,255,0.05); border-radius: 16px; padding: 14px; flex: 1; }
+    .phone-balance { font-size: 0.72rem; color: #6a90c4; margin-bottom: 4px; }
+    .phone-amount { font-size: 1.8rem; font-weight: 800; color: white; margin-bottom: 16px; }
+    .phone-card-chip { width: 100%; height: 80px; background: linear-gradient(135deg,#2db4a0,#1a4fad); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 14px; }
+    .chip-row { display: flex; justify-content: space-between; align-items: center; }
+    .chip-dot { width: 22px; height: 16px; background: rgba(255,255,255,0.4); border-radius: 3px; }
+    .chip-brand { font-size: 0.65rem; color: rgba(255,255,255,0.7); font-weight: 700; letter-spacing: 1px; }
+    .chip-num { font-size: 0.68rem; color: rgba(255,255,255,0.6); letter-spacing: 2px; }
+    .phone-txn-list { display: flex; flex-direction: column; gap: 8px; }
+    .phone-txn { display: flex; justify-content: space-between; align-items: center; }
+    .txn-icon { width: 24px; height: 24px; background: rgba(255,255,255,0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+    .txn-info { flex: 1; margin: 0 8px; }
+    .txn-name { font-size: 0.68rem; color: rgba(255,255,255,0.8); font-weight: 600; }
+    .txn-date { font-size: 0.58rem; color: rgba(255,255,255,0.4); }
+    .txn-amount { font-size: 0.68rem; font-weight: 700; }
+    .txn-neg { color: #ff8a8a; }
+    .txn-pos { color: #5bd4c4; }
+
+    /* TESTIMONIALS */
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 48px; }
+    .review-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 28px; box-shadow: var(--shadow); }
+    .stars { color: #f5a623; font-size: 1rem; margin-bottom: 12px; letter-spacing: 2px; }
+    .review-text { font-size: 0.94rem; color: var(--text); line-height: 1.65; margin-bottom: 16px; font-style: italic; }
+    .reviewer { display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .reviewer-name { font-size: 0.9rem; font-weight: 700; color: var(--navy); }
+    .reviewer-meta { font-size: 0.8rem; color: var(--muted); }
+
+    /* SECURITY STRIP */
+    .security-strip { background: var(--light-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .security-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; align-items: center; padding: 28px 24px; }
+    .sec-badge { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; font-weight: 600; color: var(--navy); }
+    .sec-badge .icon { font-size: 1.2rem; color: var(--accent); }
+    .sec-sep { width: 1px; height: 30px; background: var(--border); }
+
+    /* CTA BANNER */
+    .cta-banner { background: linear-gradient(135deg, var(--accent) 0%, #1a9e8c 100%); color: white; text-align: center; padding: 72px 24px; }
+    .cta-banner h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-banner p { font-size: 1.05rem; color: rgba(255,255,255,0.85); max-width: 520px; margin: 0 auto 32px; line-height: 1.7; }
+    .btn-white { background: white; color: var(--accent); border: none; font-size: 1rem; padding: 14px 36px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .btn-white:hover { background: #e8f7f5; }
+
+    /* FOOTER */
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-main { max-width: 1200px; margin: 0 auto; padding: 60px 24px 40px; display: grid; grid-template-columns: 2fr repeat(4, 1fr); gap: 40px; }
+    .footer-brand .logo { margin-bottom: 14px; }
+    .footer-brand p { line-height: 1.65; max-width: 240px; }
+    .footer-col h5 { color: white; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 16px; text-transform: uppercase; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul li a { color: #8aadda; transition: color .2s; }
+    .footer-col ul li a:hover { color: white; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+    .footer-bottom a:hover { color: white; }
+    .fdic-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 4px 10px; font-size: 0.78rem; font-weight: 700; color: #a8c8ff; letter-spacing: 0.5px; }
+
+    @media (max-width: 900px) {
+      .app-inner { grid-template-columns: 1fr; }
+      .app-visual { display: none; }
+      .footer-main { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .footer-main { grid-template-columns: 1fr; }
+      .footer-brand p { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">HF</div>
+      Harrison Financial
+    </a>
+    <div class="nav-links">
+      <a href="banking.html">バンキング</a>
+      <a href="cards.html">カード</a>
+      <a href="lending.html">融資</a>
+      <a href="security.html">セキュリティ</a>
+      <a href="about.html">会社情報</a>
+      <a href="support.html">サポート</a>
+    </div>
+    <div class="nav-actions">
+      <a href="support.html" class="btn btn-outline">ログイン</a>
+      <a href="banking.html" class="btn btn-primary">口座開設</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../index.html">English</option>
+            <option value="../zh-hans/index.html">简体中文</option>
+            <option value="../zh-hant/index.html">繁體中文</option>
+            <option value="../es/index.html">Español</option>
+            <option value="../fr/index.html">Français</option>
+            <option value="../ja/index.html" selected>日本語</option>
+            <option value="../ko/index.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🏦 FDIC 保険付き · 隠れた手数料なし · 300万人のメンバー</div>
+  <h1>あなたと同じくらい頑張るバンキング</h1>
+  <p>Harrison Financialは、現代の生活のために構築されたデジタルファーストの銀行です。スマートな口座、即時支払い、リアルタイム保護—すべてが一つの場所に。</p>
+  <div class="hero-cta">
+    <a href="banking.html" class="btn btn-accent">無料口座を開設</a>
+    <a href="about.html" class="btn btn-outline" style="border-color:rgba(255,255,255,0.4);color:white;">詳細を見る</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="value">3M+</div><div class="label">アクティブメンバー</div></div>
+    <div class="hero-stat"><div class="value">$0</div><div class="label">月額手数料</div></div>
+    <div class="hero-stat"><div class="value">4.85%</div><div class="label">貯蓄のAPY</div></div>
+    <div class="hero-stat"><div class="value">99.99%</div><div class="label">プラットフォーム稼働率</div></div>
+    <div class="hero-stat"><div class="value">&lt;100ms</div><div class="label">取引速度</div></div>
+  </div>
+</section>
+
+<!-- SECURITY STRIP -->
+<div class="security-strip">
+  <div class="security-inner">
+    <span class="sec-badge"><span class="icon">🏛️</span> $250,000までFDIC保険付き</span>
+    <span class="sec-sep"></span>
+    <span class="sec-badge"><span class="icon">🔒</span> 256ビット暗号化</span>
+    <span class="sec-sep"></span>
+    <span class="sec-badge"><span class="icon">🛡️</span> リアルタイム詐欺検出</span>
+    <span class="sec-sep"></span>
+    <span class="sec-badge"><span class="icon">✅</span> KYC &amp; AML 準拠</span>
+    <span class="sec-sep"></span>
+    <span class="sec-badge"><span class="icon">⚡</span> 即時送金</span>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">私たちの製品</div>
+      <h2 class="section-title">必要なものすべて、不要なものはなし</h2>
+      <p class="section-sub">日常の支出からクレジット構築、貯蓄の成長まで—Harrison Financialはあなたの金融生活に合ったツールを提供します。</p>
+    </div>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-icon icon-blue">🏦</div>
+        <h3>当座預金 &amp; 貯蓄</h3>
+        <p>手数料なしの当座預金、4.85% APYの高利回り貯蓄、カップルや家族向けの共同口座。</p>
+        <a href="banking.html" class="learn-more">バンキングを探る →</a>
+      </div>
+      <div class="product-card">
+        <div class="product-icon icon-green">💳</div>
+        <h3>デビット &amp; バーチャルカード</h3>
+        <p>海外取引手数料ゼロのVisaデビット、オンライン安全のための即時バーチャルカード、アプリ内での完全なカード管理。</p>
+        <a href="cards.html" class="learn-more">カードを探る →</a>
+      </div>
+      <div class="product-card">
+        <div class="product-icon icon-purple">📈</div>
+        <h3>融資 &amp; クレジット</h3>
+        <p>個人ローン、クレジットビルダープログラム、クレジットカード—競争力のある金利と迅速な承認。</p>
+        <a href="lending.html" class="learn-more">融資を探る →</a>
+      </div>
+      <div class="product-card">
+        <div class="product-icon icon-orange">🛡️</div>
+        <h3>セキュリティ &amp; 詐欺保護</h3>
+        <p>リアルタイム取引監視、行動異常検出、MFA、24/7の詐欺対応チーム。</p>
+        <a href="security.html" class="learn-more">セキュリティについて学ぶ →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Harrison Financialを選ぶ理由</div>
+      <h2 class="section-title">異なる構築、より良い構築</h2>
+      <p class="section-sub">銀行をゼロから再構築し、列に並ぶ必要も、驚きの手数料を支払う必要も、あなたのお金が安全かどうかを心配する必要もありません。</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="f-icon">⚡</div>
+        <h4>すべてが即時</h4>
+        <p>送金、通知、カードの凍結—毎回100ms未満。</p>
+      </div>
+      <div class="feature-item">
+        <div class="f-icon">📱</div>
+        <h4>モバイルファースト</h4>
+        <p>iOSとAndroid向けの受賞歴のあるアプリ。あなたのポケットの中の銀行。</p>
+      </div>
+      <div class="feature-item">
+        <div class="f-icon">🚫</div>
+        <h4>隠れた手数料なし</h4>
+        <p>月額手数料なし、透支手数料なし、最低残高要件なし。</p>
+      </div>
+      <div class="feature-item">
+        <div class="f-icon">🔔</div>
+        <h4>リアルタイムアラート</h4>
+        <p>お金が口座に入ったり出たりする瞬間に通知を受け取ります。</p>
+      </div>
+      <div class="feature-item">
+        <div class="f-icon">📊</div>
+        <h4>支出分析</h4>
+        <p>自動分類された取引と実際に役立つスマートな予算。</p>
+      </div>
+      <div class="feature-item">
+        <div class="f-icon">🤝</div>
+        <h4>リアルな人間のサポート</h4>
+        <p>アプリ内チャット、メール、電話—ボットではなく、実際の人々によって対応。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP PROMO -->
+<section class="app-section">
+  <div class="app-inner section-inner">
+    <div>
+      <div class="section-label">モバイルアプリ</div>
+      <h2 class="section-title">手のひらの中のフルバンク</h2>
+      <p class="section-sub">Harrison Financialアプリは、アカウント概要、即時送金、カード管理、予算など、すべての機能を指先で操作できます。</p>
+      <ul class="app-list">
+        <li>リアルタイムで残高と取引履歴を確認</li>
+        <li>P2P送金で即時にお金を送受信</li>
+        <li>ワンタップでカードを凍結または解除</li>
+        <li>オンラインショッピングをより安全にするためのバーチャルカードを作成</li>
+        <li>支出制限と予算目標を設定</li>
+        <li>Face ID / 指紋ログインを有効化</li>
+      </ul>
+      <div class="app-buttons">
+        <a href="#" class="store-btn"><span class="store-icon">🍎</span><div><div style="font-size:0.7rem;opacity:0.7">ダウンロード</div><div>App Store</div></div></a>
+        <a href="#" class="store-btn"><span class="store-icon">▶️</span><div><div style="font-size:0.7rem;opacity:0.7">入手</div><div>Google Play</div></div></a>
+      </div>
+    </div>
+    <div class="app-visual">
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-balance">総残高</div>
+          <div class="phone-amount">$6,248.50</div>
+          <div class="phone-card-chip">
+            <div class="chip-row"><div class="chip-dot"></div><div class="chip-brand">VISA</div></div>
+            <div class="chip-num">•••• •••• •••• 4821</div>
+          </div>
+          <div class="phone-txn-list">
+            <div class="phone-txn">
+              <div class="txn-icon">☕</div>
+              <div class="txn-info"><div class="txn-name">Blue Bottle Coffee</div><div class="txn-date">今日, 8:14 AM</div></div>
+              <div class="txn-amount txn-neg">−$6.40</div>
+            </div>
+            <div class="phone-txn">
+              <div class="txn-icon">💰</div>
+              <div class="txn-info"><div class="txn-name">直接入金</div><div class="txn-date">昨日</div></div>
+              <div class="txn-amount txn-pos">+$2,400.00</div>
+            </div>
+            <div class="phone-txn">
+              <div class="txn-icon">🛒</div>
+              <div class="txn-info"><div class="txn-name">Whole Foods</div><div class="txn-date">4月29日</div></div>
+              <div class="txn-amount txn-neg">−$84.12</div>
+            </div>
+            <div class="phone-txn">
+              <div class="txn-icon">📡</div>
+              <div class="txn-info"><div class="txn-name">Netflix</div><div class="txn-date">4月28日</div></div>
+              <div class="txn-amount txn-neg">−$15.99</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">メンバーレビュー</div>
+      <h2 class="section-title">300万人のメンバーに信頼されています</h2>
+      <p class="section-sub">私たちの言葉を信じるだけでなく、実際のHarrison Financialメンバーの声をご覧ください。</p>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"12年間使っていた古い銀行から切り替えましたが、もっと早く切り替えればよかったと思います。アプリは素晴らしく、貯蓄に利息がつくのは初めてです。"</p>
+        <div class="reviewer">
+          <div class="avatar"><img src="../images/member-marcus-j.png" alt="Marcus J." /></div>
+          <div>
+            <div class="reviewer-name">Marcus J.</div>
+            <div class="reviewer-meta">2022年からのメンバー · シカゴ, IL</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"詐欺警告が怪しい請求を私が気づく前にキャッチしました。Harrisonは自動的に私のカードを凍結し、2日後には新しいカードが届きました。ストレスゼロです。"</p>
+        <div class="reviewer">
+          <div class="avatar"><img src="../images/member-sarah-r.png" alt="Sarah R." /></div>
+          <div>
+            <div class="reviewer-name">Sarah R.</div>
+            <div class="reviewer-meta">2021年からのメンバー · オースティン, TX</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Harrisonでの個人ローン取得は、これまでで最もスムーズな金融体験でした。24時間以内に承認され、翌朝には口座に資金がありました。"</p>
+        <div class="reviewer">
+          <div class="avatar"><img src="../images/member-david-k.png" alt="David K." /></div>
+          <div>
+            <div class="reviewer-name">David K.</div>
+            <div class="reviewer-meta">2023年からのメンバー · シアトル, WA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <h2>よりスマートにバンキングする準備はできましたか？</h2>
+  <p>すでに切り替えた300万人以上のメンバーに参加しましょう。口座開設は5分以内で完了します。</p>
+  <a href="banking.html" class="btn-white btn">無料口座を開設 →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="logo" style="margin-bottom:14px">
+        <div class="logo-icon">HF</div>
+        <span style="color:white">Harrison Financial</span>
+      </div>
+      <p>リアルな人々のために構築されたデジタルバンキング。支店なし、手間なし—ただ賢いお金の管理、24/7。</p>
+      <div style="margin-top:16px"><span class="fdic-badge">🏛️ FDIC 保険付き</span></div>
+    </div>
+    <div class="footer-col">
+      <h5>バンキング</h5>
+      <ul>
+        <li><a href="banking.html">当座預金口座</a></li>
+        <li><a href="banking.html">貯蓄口座</a></li>
+        <li><a href="banking.html">共同口座</a></li>
+        <li><a href="banking.html">直接入金</a></li>
+        <li><a href="banking.html">ACH送金</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>製品</h5>
+      <ul>
+        <li><a href="cards.html">デビットカード</a></li>
+        <li><a href="cards.html">バーチャルカード</a></li>
+        <li><a href="lending.html">個人ローン</a></li>
+        <li><a href="lending.html">クレジットビルダー</a></li>
+        <li><a href="lending.html">クレジットカード</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>会社</h5>
+      <ul>
+        <li><a href="about.html">私たちについて</a></li>
+        <li><a href="careers.html">キャリア</a></li>
+        <li><a href="about.html">プレス</a></li>
+        <li><a href="about.html">投資家</a></li>
+        <li><a href="about.html">ブログ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>サポート</h5>
+      <ul>
+        <li><a href="support.html">ヘルプセンター</a></li>
+        <li><a href="support.html">お問い合わせ</a></li>
+        <li><a href="security.html">セキュリティ</a></li>
+        <li><a href="support.html">請求を争う</a></li>
+        <li><a href="support.html">詐欺を報告</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc. All rights reserved.</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">利用規約</a>
+      <a href="#">クッキーポリシー</a>
+      <a href="#">アクセシビリティ</a>
+    </div>
+    <span>銀行サービスはMeridian Bank, N.A., Member FDICによって提供されます。</span>
+  </div>
+</footer>
+
+</body>
+</html>

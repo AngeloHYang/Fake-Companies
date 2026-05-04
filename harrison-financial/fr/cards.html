@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cartes – Harrison Financial</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d; --blue: #1a4fad; --accent: #2db4a0; --light-bg: #f4f7fb;
+      --white: #ffffff; --text: #1e2a3b; --muted: #5a6a7e; --border: #d5dce8;
+      --radius: 12px; --shadow: 0 4px 24px rgba(13,30,61,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,30,61,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; font-weight: 700; }
+    .btn-accent:hover { background: #229988; }
+
+    .page-hero { background: linear-gradient(135deg, #1a3570 0%, var(--blue) 100%); color: white; padding: 72px 24px 64px; }
+    .page-hero-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .page-label { display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 5px 16px; font-size: 0.8rem; font-weight: 600; color: #a8c8ff; letter-spacing: 0.5px; margin-bottom: 20px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+    .page-hero p { font-size: 1.1rem; color: #b8ccec; line-height: 1.7; max-width: 600px; margin: 0 auto 32px; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .light-bg { background: var(--light-bg); }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* CARD VISUAL */
+    .card-showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .card-visual-wrap { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+    .hf-card {
+      width: 320px; height: 200px; border-radius: 18px; padding: 24px 28px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; overflow: hidden;
+    }
+    .hf-card.dark { background: linear-gradient(135deg, #0d1e3d 0%, #1a4fad 100%); color: white; }
+    .hf-card.teal { background: linear-gradient(135deg, #1a9e8c 0%, #1a4fad 100%); color: white; }
+    .hf-card::after { content: ""; position: absolute; top: -40px; right: -40px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .card-logo-text { font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; opacity: 0.8; }
+    .card-chip { width: 30px; height: 22px; background: rgba(255,220,80,0.85); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+    .card-chip-lines { display: flex; flex-direction: column; gap: 4px; padding: 4px; width: 100%; }
+    .chip-line { height: 2px; background: rgba(0,0,0,0.3); border-radius: 1px; }
+    .card-number { font-size: 0.88rem; letter-spacing: 3px; opacity: 0.85; font-family: monospace; }
+    .card-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+    .card-name { font-size: 0.78rem; font-weight: 600; letter-spacing: 1px; opacity: 0.85; }
+    .card-exp { font-size: 0.7rem; opacity: 0.65; }
+    .card-network { font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; }
+
+    .card-detail { }
+    .feature-list { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .feature-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: var(--text); line-height: 1.55; }
+    .bullet { width: 24px; height: 24px; background: #e8f7f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* CONTROLS GRID */
+    .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 48px; }
+    .control-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 24px 20px; text-align: center; box-shadow: var(--shadow); }
+    .control-icon { font-size: 2rem; margin-bottom: 12px; }
+    .control-card h4 { font-size: 0.97rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .control-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.55; }
+
+    /* VIRTUAL CARD */
+    .virtual-section { background: var(--navy); color: white; }
+    .virtual-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .virtual-inner .section-title { color: white; }
+    .virtual-inner .section-sub { color: #8aadda; }
+    .virtual-inner .feature-list li { color: #c0d4f0; }
+    .virtual-list { list-style: none; margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+    .virtual-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; color: #c0d4f0; line-height: 1.55; }
+    .virtual-list li::before { content: "🔒"; flex-shrink: 0; }
+
+    .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; margin-top: 48px; }
+    .how-step { text-align: center; }
+    .step-num { width: 48px; height: 48px; background: var(--blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; margin: 0 auto 16px; }
+    .how-step h4 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .how-step p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+    .footer-bottom a:hover { color: white; }
+
+    @media (max-width: 860px) {
+      .card-showcase, .virtual-inner { grid-template-columns: 1fr; }
+      .card-visual-wrap { margin-bottom: 20px; }
+    }
+    @media (max-width: 600px) { .nav-links { display: none; } .hf-card { width: 100%; max-width: 320px; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">HF</div>Harrison Financial</a>
+    <div class="nav-links">
+      <a href="banking.html">Banque</a>
+      <a href="cards.html" class="active">Cartes</a>
+      <a href="lending.html">Prêts</a>
+      <a href="security.html">Sécurité</a>
+      <a href="about.html">À propos</a>
+      <a href="support.html">Assistance</a>
+    </div>
+    <div class="nav-actions">
+      <a href="support.html" class="btn btn-outline">Connexion</a>
+      <a href="banking.html" class="btn btn-primary">Ouvrir un compte</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../cards.html">English</option>
+            <option value="../zh-hans/cards.html">简体中文</option>
+            <option value="../zh-hant/cards.html">繁體中文</option>
+            <option value="../es/cards.html">Español</option>
+            <option value="../fr/cards.html" selected>Français</option>
+            <option value="../ja/cards.html">日本語</option>
+            <option value="../ko/cards.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-label">💳 Cartes</div>
+    <h1>Des cartes conçues pour chaque transaction</h1>
+    <p>Une carte de débit Visa pour les dépenses quotidiennes et des cartes virtuelles instantanées pour des achats en ligne sécurisés — avec des contrôles complets directement dans l'application.</p>
+    <a href="banking.html" class="btn btn-accent">Obtenez votre carte</a>
+  </div>
+</div>
+
+<!-- DEBIT CARD -->
+<section>
+  <div class="section-inner">
+    <div class="card-showcase">
+      <div class="card-visual-wrap">
+        <div class="hf-card dark">
+          <div class="card-top">
+            <div class="card-logo-text">HARRISON FINANCIAL</div>
+            <div class="card-chip"><div class="card-chip-lines"><div class="chip-line"></div><div class="chip-line"></div><div class="chip-line"></div></div></div>
+          </div>
+          <div class="card-number">4821 •••• •••• 7364</div>
+          <div class="card-bottom">
+            <div>
+              <div class="card-name">NOM DU TITULAIRE</div>
+              <div class="card-exp">EXP 09/28</div>
+            </div>
+            <div class="card-network">VISA</div>
+          </div>
+        </div>
+        <p style="font-size:0.82rem;color:var(--muted);text-align:center;max-width:320px">Disponible en designs standard, sombre et édition limitée. Personnalisez dans l'application.</p>
+      </div>
+      <div class="card-detail">
+        <div class="section-label">Carte de débit</div>
+        <h2 class="section-title">La carte de débit Harrison Visa®</h2>
+        <p class="section-sub">Acceptée partout où Visa est acceptée — en ligne, en magasin ou à l'étranger. Dépensez directement depuis votre compte courant Harrison sans surprises.</p>
+        <ul class="feature-list">
+          <li><span class="bullet">✓</span><span><strong>Pas de frais de transaction à l'étranger</strong> – Utilisez-la à l'étranger sans frais supplémentaires.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Paiement sans contact</strong> – Compatible NFC pour les terminaux POS et les portefeuilles mobiles.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Apple Pay &amp; Google Pay</strong> – Ajoutez votre carte instantanément sans attendre la carte physique.</span></li>
+          <li><span class="bullet">✓</span><span><strong>55 000+ distributeurs automatiques gratuits</strong> – Réseaux Allpoint® et MoneyPass® à l'échelle nationale.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Émission instantanée de carte</strong> – Une carte virtuelle est disponible dans l'application dès l'ouverture de votre compte.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Visa Zero Liability</strong> – Vous n'êtes pas responsable des frais non autorisés.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIRTUAL CARD -->
+<section class="virtual-section">
+  <div class="virtual-inner section-inner">
+    <div>
+      <div class="section-label">Cartes virtuelles</div>
+      <h2 class="section-title">Achats en ligne plus sûrs, instantanément</h2>
+      <p class="section-sub">Générez un numéro de carte virtuelle unique pour tout achat en ligne. S'il est compromis, supprimez-le et créez-en un nouveau — votre compte réel n'est jamais exposé.</p>
+      <ul class="virtual-list">
+        <li>Créez des cartes virtuelles illimitées, chacune avec un numéro unique</li>
+        <li>Définissez des limites de dépenses et des restrictions de commerçant par carte</li>
+        <li>Suspendez ou supprimez toute carte virtuelle en un seul clic</li>
+        <li>Idéal pour les abonnements, les essais gratuits et les achats ponctuels</li>
+        <li>Fonctionne avec tous les principaux commerçants en ligne et processeurs de paiement</li>
+        <li>Lié directement à votre solde courant — aucun financement séparé nécessaire</li>
+      </ul>
+    </div>
+    <div style="display:flex;justify-content:center">
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:32px;max-width:340px;width:100%">
+        <div style="font-size:0.8rem;font-weight:700;color:#a8c8ff;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px">Gestionnaire de cartes virtuelles</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:0.82rem;color:white;font-weight:600">Abonnement Netflix</div>
+              <div style="font-size:0.72rem;color:#6a90c4;margin-top:2px">•••• 4421 · $20/mo limite</div>
+            </div>
+            <span style="background:#1a9e8c;color:white;font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:12px">Actif</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:0.82rem;color:white;font-weight:600">Amazon Achat Unique</div>
+              <div style="font-size:0.72rem;color:#6a90c4;margin-top:2px">•••• 8817 · $150 limite</div>
+            </div>
+            <span style="background:rgba(255,255,255,0.15);color:#c0d4f0;font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:12px">Utilisé</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:0.82rem;color:white;font-weight:600">Adobe Creative</div>
+              <div style="font-size:0.72rem;color:#6a90c4;margin-top:2px">•••• 3305 · $60/mo limite</div>
+            </div>
+            <span style="background:#1a9e8c;color:white;font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:12px">Actif</span>
+          </div>
+          <div style="margin-top:8px;text-align:center">
+            <a href="#" class="btn btn-accent" style="font-size:0.85rem;padding:10px 20px;display:inline-flex">+ Créer une nouvelle carte virtuelle</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CARD CONTROLS -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Contrôles de carte</div>
+      <h2 class="section-title">Votre carte, vos règles</h2>
+      <p class="section-sub">Gestion complète de la carte directement depuis l'application Harrison. Geler votre carte en un clic, définir des limites de dépenses, et ne jamais vous inquiéter des frais surprises.</p>
+    </div>
+    <div class="controls-grid">
+      <div class="control-card">
+        <div class="control-icon">🔒</div>
+        <h4>Gel / Dégel instantané</h4>
+        <p>Vous avez égaré votre carte ? Bloquez-la instantanément dans l'application. Pas besoin d'annuler — il suffit de dégeler lorsque vous la retrouvez.</p>
+      </div>
+      <div class="control-card">
+        <div class="control-icon">💰</div>
+        <h4>Limites de dépenses</h4>
+        <p>Définissez des limites quotidiennes, hebdomadaires ou par transaction sur votre carte de débit ou toute carte virtuelle.</p>
+      </div>
+      <div class="control-card">
+        <div class="control-icon">📍</div>
+        <h4>Contrôles de commerçant</h4>
+        <p>Bloquez des catégories de commerçants spécifiques (par ex., jeux d'argent, contenu adulte) ou restreignez l'utilisation à des commerçants spécifiques.</p>
+      </div>
+      <div class="control-card">
+        <div class="control-icon">🌐</div>
+        <h4>Interrupteur international</h4>
+        <p>Activez ou désactivez les transactions internationales d'un simple clic — ajoutez de la sécurité lorsque vous ne voyagez pas.</p>
+      </div>
+      <div class="control-card">
+        <div class="control-icon">🔔</div>
+        <h4>Alertes de transaction</h4>
+        <p>Recevez une notification push chaque fois que votre carte est utilisée — n'importe où, n'importe quand.</p>
+      </div>
+      <div class="control-card">
+        <div class="control-icon">🔄</div>
+        <h4>Interrupteur sans contact</h4>
+        <p>Activez ou désactivez le paiement sans contact et les transactions en ligne indépendamment des transactions en magasin par puce.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO GET YOUR CARD -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Commencer</div>
+      <h2 class="section-title">Votre carte en 3 étapes faciles</h2>
+    </div>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="step-num">1</div>
+        <h4>Ouvrir un compte</h4>
+        <p>Inscrivez-vous en moins de 5 minutes avec votre pièce d'identité et votre SSN. Aucun contrôle de crédit requis pour la carte de débit.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-num">2</div>
+        <h4>Obtenez votre carte virtuelle instantanément</h4>
+        <p>Dès que votre compte est approuvé, une carte virtuelle est prête pour Apple Pay, Google Pay et une utilisation en ligne.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-num">3</div>
+        <h4>Recevez votre carte physique</h4>
+        <p>Votre carte de débit Visa arrive par courrier en 5 à 7 jours ouvrables. Livraison accélérée disponible pour $12.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;padding:32px 24px 0">
+    <div class="logo" style="margin-bottom:12px"><div class="logo-icon">HF</div><span style="color:white;font-size:1.1rem">Harrison Financial</span></div>
+    <p style="color:#8aadda;font-size:0.85rem;max-width:500px;line-height:1.6;margin-bottom:24px">Visa® est une marque déposée de Visa International Service Association. Les cartes Harrison Financial sont émises par Meridian Bank, N.A., sous licence de Visa U.S.A. Inc.</p>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc.</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap"><a href="#">Confidentialité</a><a href="#">Conditions</a><a href="#">Accessibilité</a></div>
+    <span>Membre FDIC · Prêteur Égalité de Logement</span>
+  </div>
+</footer>
+
+</body>
+</html>

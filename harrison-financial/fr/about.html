@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>À Propos – Harrison Financial</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d; --blue: #1a4fad; --accent: #2db4a0; --light-bg: #f4f7fb;
+      --white: #ffffff; --text: #1e2a3b; --muted: #5a6a7e; --border: #d5dce8;
+      --radius: 12px; --shadow: 0 4px 24px rgba(13,30,61,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,30,61,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; font-weight: 700; }
+    .btn-accent:hover { background: #229988; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #1a3570 100%); color: white; padding: 80px 24px 72px; text-align: center; }
+    .page-label { display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 5px 16px; font-size: 0.8rem; font-weight: 600; color: #a8c8ff; letter-spacing: 0.5px; margin-bottom: 20px; }
+    .page-hero h1 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; margin-bottom: 16px; max-width: 700px; margin-left: auto; margin-right: auto; }
+    .page-hero p { font-size: 1.1rem; color: #b8ccec; line-height: 1.7; max-width: 600px; margin: 0 auto; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 620px; line-height: 1.75; }
+    .light-bg { background: var(--light-bg); }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* MISSION STATS */
+    .stats-row { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; margin-top: 48px; }
+    .stat-box { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 28px 36px; text-align: center; box-shadow: var(--shadow); min-width: 160px; }
+    .stat-val { font-size: 2.2rem; font-weight: 800; color: var(--blue); margin-bottom: 4px; }
+    .stat-label { font-size: 0.85rem; color: var(--muted); }
+
+    /* MISSION */
+    .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .mission-copy p { font-size: 1rem; color: var(--muted); line-height: 1.8; margin-bottom: 18px; }
+    .mission-visual { background: var(--navy); border-radius: 20px; overflow: hidden; }
+    .mission-lifestyle { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .mission-visual-text { padding: 28px 36px; }
+    .mission-visual .quote { font-size: 1.05rem; color: white; line-height: 1.75; font-style: italic; margin-bottom: 16px; }
+    .mission-visual .attr { font-size: 0.88rem; color: #8aadda; font-weight: 600; }
+
+    /* VALUES */
+    .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 48px; }
+    .value-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 28px 24px; box-shadow: var(--shadow); }
+    .value-icon { font-size: 2rem; margin-bottom: 14px; }
+    .value-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .value-card p { font-size: 0.87rem; color: var(--muted); line-height: 1.6; }
+
+    /* LEADERSHIP */
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 48px; }
+    .team-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
+    .team-photo { width: 100%; height: 180px; object-fit: cover; object-position: top; display: block; }
+    .team-info { padding: 18px 20px; }
+    .team-name { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .team-title { font-size: 0.83rem; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+    .team-bio { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+
+    /* OFFICE PHOTO */
+    .office-banner { width: 100%; max-height: 420px; object-fit: cover; display: block; }
+
+    /* TIMELINE */
+    .timeline { position: relative; margin-top: 48px; padding-left: 32px; border-left: 2px solid var(--border); display: flex; flex-direction: column; gap: 0; }
+    .tl-item { position: relative; padding: 0 0 36px 28px; }
+    .tl-item::before { content: ""; position: absolute; left: -7px; top: 6px; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 2px var(--accent); }
+    .tl-year { font-size: 0.8rem; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+    .tl-event { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .tl-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; max-width: 540px; }
+
+    /* INVESTORS */
+    .investors-grid { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+    .investor-badge { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 16px 28px; font-weight: 700; font-size: 1rem; color: var(--navy); box-shadow: var(--shadow); }
+
+    /* PRESS */
+    .press-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
+    .press-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; box-shadow: var(--shadow); }
+    .press-source { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .press-headline { font-size: 0.97rem; font-weight: 700; color: var(--navy); line-height: 1.45; margin-bottom: 12px; }
+    .press-date { font-size: 0.8rem; color: var(--muted); }
+    .press-link { font-size: 0.85rem; font-weight: 600; color: var(--blue); margin-top: 12px; display: inline-flex; align-items: center; gap: 4px; }
+
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+
+    @media (max-width: 860px) { .mission-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">HF</div>Harrison Financial</a>
+    <div class="nav-links">
+      <a href="banking.html">Services Bancaires</a>
+      <a href="cards.html">Cartes</a>
+      <a href="lending.html">Prêts</a>
+      <a href="security.html">Sécurité</a>
+      <a href="about.html" class="active">À Propos</a>
+      <a href="support.html">Support</a>
+    </div>
+    <div class="nav-actions">
+      <a href="support.html" class="btn btn-outline">Connexion</a>
+      <a href="banking.html" class="btn btn-primary">Ouvrir un Compte</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../about.html">English</option>
+            <option value="../zh-hans/about.html">简体中文</option>
+            <option value="../zh-hant/about.html">繁體中文</option>
+            <option value="../es/about.html">Español</option>
+            <option value="../fr/about.html" selected>Français</option>
+            <option value="../ja/about.html">日本語</option>
+            <option value="../ko/about.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-label">🏦 À Propos de Harrison Financial</div>
+  <h1>Repensons la Banque pour 3 Millions d'Américains</h1>
+  <p>Nous avons créé Harrison Financial parce que nous croyions que la banque pouvait être radicalement meilleure—plus transparente, plus accessible, et réellement du côté du client.</p>
+</div>
+
+<!-- STATS -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">En Chiffres</div>
+      <h2 class="section-title">Une Plateforme Construite à Grande Échelle</h2>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-val">3M+</div><div class="stat-label">Membres Actifs</div></div>
+      <div class="stat-box"><div class="stat-val">2018</div><div class="stat-label">Fondée</div></div>
+      <div class="stat-box"><div class="stat-val">$2.4B</div><div class="stat-label">Dépôts Sous Gestion</div></div>
+      <div class="stat-box"><div class="stat-val">850+</div><div class="stat-label">Employés</div></div>
+      <div class="stat-box"><div class="stat-val">50</div><div class="stat-label">États Américains Desservis</div></div>
+      <div class="stat-box"><div class="stat-val">99.99%</div><div class="stat-label">Disponibilité de la Plateforme (2024)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section>
+  <div class="section-inner">
+    <div class="mission-grid">
+      <div class="mission-copy">
+        <div class="section-label">Notre Mission</div>
+        <h2 class="section-title">Une Banque Pour Tous</h2>
+        <p>Harrison Financial a été fondée sur une idée simple : les 47 millions d'Américains sous-bancarisés méritent mieux que ce que leur offre la banque traditionnelle. Trop de gens paient des centaines de dollars par an en frais de maintenance, frais de découvert, et pénalités de distributeur automatique—à des banques qui réalisent des milliards de profits.</p>
+        <p>Nous avons construit une plateforme bancaire numérique qui élimine entièrement ces frais, combine les meilleurs taux d'épargne avec des outils de gestion des dépenses puissants, et enveloppe le tout dans une infrastructure de sécurité que les institutions financières deux fois plus grandes que nous peuvent à peine égaler.</p>
+        <p>Nous ne sommes pas seulement une startup technologique qui joue à la banque. Nous sommes une entreprise de services financiers réglementée avec une véritable banque partenaire, une assurance FDIC, et un programme de conformité construit selon les mêmes normes que les plus grands noms de Wall Street.</p>
+        <a href="careers.html" class="btn btn-primary" style="margin-top:20px;display:inline-flex">Rejoignez Notre Équipe</a>
+      </div>
+      <div class="mission-visual">
+        <img src="../images/app-lifestyle.png" alt="Membre de Harrison Financial utilisant l'application mobile" class="mission-lifestyle" />
+        <div class="mission-visual-text">
+          <div class="quote">"Nous mesurons le succès non pas par le revenu que nous extrayons des clients, mais par la richesse qu'ils accumulent en bancarisant avec nous. C'est le seul indicateur qui compte à long terme."</div>
+          <div class="attr">— Eleanor Harrison, Co-Fondatrice &amp; PDG</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Nos Valeurs</div>
+      <h2 class="section-title">Ce Que Nous Défendons</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">🔍</div>
+        <h3>Transparence Radicale</h3>
+        <p>Aucun frais caché. Aucun terme confus. Chaque coût, taux, et politique est rédigé en français clair et disponible pour tous.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🛡️</div>
+        <h3>Sécurité Avant Tout</h3>
+        <p>Chaque décision produit, choix d'architecture, et partenariat fournisseur est évalué d'abord sous l'angle de la sécurité.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">⚡</div>
+        <h3>Fiabilité Avant Tout</h3>
+        <p>L'argent ne dort pas. Notre infrastructure non plus. Nous investissons de manière disproportionnée dans la disponibilité, la latence, et la résilience.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🌍</div>
+        <h3>Inclusion Financière</h3>
+        <p>Nous concevons des produits qui fonctionnent pour les personnes laissées pour compte par la banque traditionnelle—pas seulement pour les plus aisés.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">📊</div>
+        <h3>Décisions Basées sur les Données</h3>
+        <p>Chaque fonctionnalité, changement de taux, et décision commerciale est soutenu par une analyse de données rigoureuse, des tests A/B, et des recherches utilisateurs.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <h3>Culture Axée sur les Membres</h3>
+        <p>Nos incitations sont alignées avec nos membres. Nous réussissons seulement lorsque la santé financière de nos membres s'améliore.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">Équipe de Direction</div>
+    <h2 class="section-title">L'Équipe Derrière Harrison Financial</h2>
+    <p class="section-sub">Une équipe de direction avec des racines profondes dans la banque, la technologie, et la conformité réglementaire.</p>
+    <div class="team-grid">
+      <div class="team-card">
+        <img src="../images/eleanor-harrison.png" alt="Eleanor Harrison" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">Eleanor Harrison</div>
+          <div class="team-title">Co-Fondatrice &amp; PDG</div>
+          <div class="team-bio">Ancienne VP chez JPMorgan Chase. MBA de Wharton. Reconnue dans Forbes 30 Under 30 Finance (2020).</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="../images/marcus-reid.png" alt="Marcus Reid" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">Marcus Reid</div>
+          <div class="team-title">Co-Fondateur &amp; CTO</div>
+          <div class="team-bio">Ancien responsable ingénierie chez Stripe. A construit l'infrastructure de paiement qui traite 40M de transactions/jour.</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="../images/priya-nair.png" alt="Priya Nair" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">Priya Nair</div>
+          <div class="team-title">Directrice des Risques</div>
+          <div class="team-bio">Plus de 20 ans dans la conformité aux crimes financiers. Ancienne responsable de l'AML chez Citibank North America.</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="../images/james-okafor.png" alt="James Okafor" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">James Okafor</div>
+          <div class="team-title">Directeur des Produits</div>
+          <div class="team-bio">Ancien responsable PM chez Chime et PayPal. A dirigé des équipes produits qui ont lancé 12 fonctionnalités bancaires grand public majeures.</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="../images/sarah-kwan.png" alt="Sarah Kwan" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">Sarah Kwan</div>
+          <div class="team-title">Conseillère Juridique Générale</div>
+          <div class="team-bio">Ancienne avocate de la Federal Reserve Bank. Experte en droit bancaire, réglementation de la finance de consommation, et licences FinTech.</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="../images/david-castellano.png" alt="David Castellano" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">David Castellano</div>
+          <div class="team-title">Directeur Financier</div>
+          <div class="team-bio">Ancien CFO chez SoFi. A dirigé deux levées de fonds réussies totalisant $480M et préparé l'entreprise pour les marchés publics.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFICE PHOTO -->
+<img src="../images/hf-office.png" alt="Siège de Harrison Financial" class="office-banner" />
+
+<!-- TIMELINE -->
+<section class="light-bg">
+  <div class="section-inner" style="max-width:700px">
+    <div class="section-label">Notre Histoire</div>
+    <h2 class="section-title">De l'Idée à 3 Millions de Membres</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">2018</div>
+        <div class="tl-event">Fondation de Harrison Financial</div>
+        <div class="tl-desc">Eleanor Harrison et Marcus Reid incorporent l'entreprise dans le Delaware. Financement initial de $4.2M de Sequoia et Andreessen Horowitz.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2019</div>
+        <div class="tl-event">Lancement Bêta &amp; Série A</div>
+        <div class="tl-desc">Bêta privée ouverte à 10,000 utilisateurs. Partenariat bancaire finalisé avec Meridian Bank, N.A. Série A clôturée à $28M.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2020</div>
+        <div class="tl-event">Lancement Public &amp; 250K Membres</div>
+        <div class="tl-desc">Lancement public dans les 50 états. Atteint 250,000 membres en 8 mois. Lancement d'un compte épargne à haut rendement à 1.5% APY.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2021</div>
+        <div class="tl-event">1 Million de Membres &amp; Série B</div>
+        <div class="tl-desc">Dépassement de 1M de membres. Lancement de prêts personnels. Série B : $120M dirigée par Tiger Global. Équipe élargie à 300 employés.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2022</div>
+        <div class="tl-event">Prêts &amp; Cartes de Crédit</div>
+        <div class="tl-desc">Lancement de la Carte de Crédit Harrison et du Prêt Constructeur de Crédit. Atteint $800M en dépôts sous gestion.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2023</div>
+        <div class="tl-event">Série C &amp; 2M Membres</div>
+        <div class="tl-desc">Série C : $250M à une valorisation de $1.8B. Dépassement de 2M de membres. Nommé dans la liste des entreprises les plus innovantes de Fast Company.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2024</div>
+        <div class="tl-event">3M Membres &amp; $2.4B en Dépôts</div>
+        <div class="tl-desc">Atteint 3 millions de membres actifs et $2.4B en dépôts. Augmentation du taux d'épargne APY à 4.85%. Équipe élargie à 850+ à l'échelle mondiale.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2025</div>
+        <div class="tl-event">Préparation à l'IPO &amp; Expansion de la Plateforme</div>
+        <div class="tl-desc">Exploration active du calendrier d'IPO. Lancement du programme API d'entreprise et expansion dans la bêta de la banque d'affaires.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">Presse &amp; Médias</div>
+    <h2 class="section-title">Harrison Financial dans les Médias</h2>
+    <div class="press-grid">
+      <div class="press-card">
+        <div class="press-source">TechCrunch</div>
+        <div class="press-headline">"Harrison Financial atteint 3M d'utilisateurs, prouvant que le modèle de néobanque a encore de la place pour croître"</div>
+        <div class="press-date">Mars 2025</div>
+        <a href="#" class="press-link">Lire l'Article →</a>
+      </div>
+      <div class="press-card">
+        <div class="press-source">Forbes</div>
+        <div class="press-headline">"Les 10 entreprises FinTech les plus innovantes de 2024 — Harrison Financial prend la 3ème place"</div>
+        <div class="press-date">Janvier 2025</div>
+        <a href="#" class="press-link">Lire l'Article →</a>
+      </div>
+      <div class="press-card">
+        <div class="press-source">Wall Street Journal</div>
+        <div class="press-headline">"Les néobanques mangent le déjeuner des banques traditionnelles — et Harrison Financial pourrait être la plus affamée"</div>
+        <div class="press-date">Octobre 2024</div>
+        <a href="#" class="press-link">Lire l'Article →</a>
+      </div>
+    </div>
+    <div style="margin-top:32px;text-align:center">
+      <p style="font-size:0.9rem;color:var(--muted);margin-bottom:16px">Demandes de presse : <a href="mailto:press@harrisonfinancial.com" style="color:var(--blue);font-weight:600">press@harrisonfinancial.com</a></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;padding:28px 24px 0">
+    <div class="logo" style="margin-bottom:10px"><div class="logo-icon">HF</div><span style="color:white;font-size:1.1rem">Harrison Financial</span></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc. Tous droits réservés.</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap"><a href="#">Confidentialité</a><a href="#">Conditions</a><a href="careers.html">Carrières</a></div>
+    <span>Membre FDIC · Prêteur Égalité de Logement</span>
+  </div>
+</footer>
+
+</body>
+</html>
