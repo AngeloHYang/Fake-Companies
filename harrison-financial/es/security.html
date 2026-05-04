@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seguridad y Protección contra Fraude – Harrison Financial</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d; --blue: #1a4fad; --accent: #2db4a0; --light-bg: #f4f7fb;
+      --white: #ffffff; --text: #1e2a3b; --muted: #5a6a7e; --border: #d5dce8;
+      --radius: 12px; --shadow: 0 4px 24px rgba(13,30,61,0.10);
+      --red: #d63031; --green: #00b894;
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,30,61,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; font-weight: 700; }
+    .btn-accent:hover { background: #229988; }
+
+    .page-hero { background: linear-gradient(135deg, #0a1628 0%, #0d1e3d 60%, #153060 100%); color: white; padding: 72px 24px 64px; }
+    .page-hero-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .page-label { display: inline-block; background: rgba(45,180,160,0.2); border: 1px solid rgba(45,180,160,0.4); border-radius: 20px; padding: 5px 16px; font-size: 0.8rem; font-weight: 600; color: #5bd4c4; letter-spacing: 0.5px; margin-bottom: 20px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+    .page-hero p { font-size: 1.1rem; color: #b8ccec; line-height: 1.7; max-width: 600px; margin: 0 auto; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .light-bg { background: var(--light-bg); }
+    .dark-bg { background: var(--navy); }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* TRUST BADGES */
+    .trust-bar { background: var(--accent); padding: 16px 24px; }
+    .trust-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; align-items: center; }
+    .trust-item { display: flex; align-items: center; gap: 8px; color: white; font-size: 0.88rem; font-weight: 600; }
+    .trust-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.3); }
+
+    /* LAYERS GRID */
+    .layers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 48px; }
+    .layer-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 28px 24px; box-shadow: var(--shadow); }
+    .layer-icon { font-size: 2rem; margin-bottom: 14px; }
+    .layer-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .layer-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+    .layer-tag { display: inline-block; margin-top: 12px; background: var(--light-bg); border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: 600; color: var(--blue); }
+
+    /* FRAUD DETECTION */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .risk-dashboard { background: #0d1e3d; border-radius: 20px; padding: 28px; }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .dash-title { font-size: 0.82rem; font-weight: 700; color: #a8c8ff; letter-spacing: 1px; text-transform: uppercase; }
+    .dash-status { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: #5bd4c4; font-weight: 600; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .risk-score-row { display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .rs-icon { font-size: 1.2rem; width: 36px; flex-shrink: 0; text-align: center; }
+    .rs-info { flex: 1; }
+    .rs-merchant { font-size: 0.83rem; font-weight: 600; color: white; }
+    .rs-meta { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
+    .rs-badge { font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; flex-shrink: 0; }
+    .badge-ok { background: rgba(0,184,148,0.2); color: #5bd4c4; }
+    .badge-warn { background: rgba(255,190,0,0.2); color: #ffd060; }
+    .badge-block { background: rgba(214,48,49,0.2); color: #ff8080; }
+    .dash-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+    .metric-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; text-align: center; }
+    .metric-val { font-size: 1.3rem; font-weight: 800; color: white; }
+    .metric-label { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+    .feature-list { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .feature-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: var(--text); line-height: 1.55; }
+    .bullet { width: 24px; height: 24px; background: #e8f7f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* MFA */
+    .mfa-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 48px; }
+    .mfa-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; text-align: center; box-shadow: var(--shadow); }
+    .mfa-icon { font-size: 2.2rem; margin-bottom: 12px; }
+    .mfa-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .mfa-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
+
+    /* COMPLIANCE */
+    .compliance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 48px; }
+    .compliance-card { background: white; border-radius: var(--radius); border-left: 4px solid var(--blue); padding: 28px 24px; box-shadow: var(--shadow); }
+    .compliance-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .compliance-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+    .compliance-tag { margin-top: 12px; font-size: 0.75rem; font-weight: 700; color: var(--blue); letter-spacing: 0.5px; }
+
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+
+    @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .nav-links { display: none; } .trust-sep { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">HF</div>Harrison Financial</a>
+    <div class="nav-links">
+      <a href="banking.html">Banca</a>
+      <a href="cards.html">Tarjetas</a>
+      <a href="lending.html">Préstamos</a>
+      <a href="security.html" class="active">Seguridad</a>
+      <a href="about.html">Acerca de</a>
+      <a href="support.html">Soporte</a>
+    </div>
+    <div class="nav-actions">
+      <a href="support.html" class="btn btn-outline">Iniciar Sesión</a>
+      <a href="banking.html" class="btn btn-primary">Abrir Cuenta</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../security.html">English</option>
+            <option value="../zh-hans/security.html">简体中文</option>
+            <option value="../zh-hant/security.html">繁體中文</option>
+            <option value="../es/security.html" selected>Español</option>
+            <option value="../fr/security.html">Français</option>
+            <option value="../ja/security.html">日本語</option>
+            <option value="../ko/security.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-label">🛡️ Seguridad y Protección contra Fraude</div>
+    <h1>Tu Dinero Está Seguro. Nos Aseguramos de Ello.</h1>
+    <p>Harrison Financial opera un sistema de seguridad de múltiples capas: detección de fraude en tiempo real, IA de comportamiento, MFA y cumplimiento total de KYC/AML, porque la seguridad nunca es opcional a gran escala.</p>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <span class="trust-item">🏛️ Asegurado por FDIC</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item">🔐 Cifrado AES de 256 bits</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item">✅ Certificado SOC 2 Tipo II</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item">📋 Cumple con KYC &amp; AML</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item">🌐 PCI-DSS Nivel 1</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item">⚖️ Registrado en FinCEN</span>
+  </div>
+</div>
+
+<!-- SECURITY LAYERS -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Defensa en Profundidad</div>
+      <h2 class="section-title">Siete Capas de Protección</h2>
+      <p class="section-sub">No confiamos en una sola medida de seguridad. Cada transacción, inicio de sesión y acción de cuenta pasa por múltiples sistemas de seguridad independientes.</p>
+    </div>
+    <div class="layers-grid">
+      <div class="layer-card">
+        <div class="layer-icon">🤖</div>
+        <h3>Detección de Fraude con IA</h3>
+        <p>Modelos de aprendizaje automático evalúan cada transacción en tiempo real, señalando anomalías antes de que un pago se complete. Entrenado con miles de millones de puntos de datos.</p>
+        <span class="layer-tag">Tiempo real · &lt;50ms de latencia</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">📊</div>
+        <h3>Analítica de Comportamiento</h3>
+        <p>Modelamos cómo usas típicamente tu cuenta. Ubicaciones de inicio de sesión inusuales, cambios de dispositivo o patrones de gasto desencadenan una revisión instantánea.</p>
+        <span class="layer-tag">Pasivo · Siempre Activo</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">📱</div>
+        <h3>Huella Digital del Dispositivo</h3>
+        <p>Cada dispositivo que usas es registrado y autenticado. Los dispositivos nuevos o no reconocidos requieren verificación adicional antes de que se otorgue acceso.</p>
+        <span class="layer-tag">Autorización por Dispositivo</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">🔑</div>
+        <h3>Autenticación Multifactor (MFA)</h3>
+        <p>Biométrico, autenticador TOTP y códigos SMS/email superpuestos a las contraseñas, configurables por el usuario para acciones de alto riesgo.</p>
+        <span class="layer-tag">Requerido para Acciones Sensibles</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">🆔</div>
+        <h3>Verificación de Identidad (KYC)</h3>
+        <p>Cada nuevo miembro pasa por verificación de documentos, controles de vida y revisión de listas de vigilancia/OFAC al abrir una cuenta.</p>
+        <span class="layer-tag">Impulsado por Alloy &amp; Jumio</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">🔒</div>
+        <h3>Cifrado de Extremo a Extremo</h3>
+        <p>Todos los datos en tránsito están protegidos por TLS 1.3. Los datos en reposo utilizan cifrado AES-256. Los datos de tarjetas se manejan bajo estándares PCI-DSS Nivel 1.</p>
+        <span class="layer-tag">TLS 1.3 · AES-256</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">🚨</div>
+        <h3>Equipo de Respuesta a Fraude 24/7</h3>
+        <p>Analistas de fraude humanos revisan casos señalados las 24 horas. Cuando los sistemas automáticos no son suficientes, una persona real investiga.</p>
+        <span class="layer-tag">Cobertura 24/7</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">📋</div>
+        <h3>Monitoreo de Transacciones AML</h3>
+        <p>Monitoreo automatizado de patrones de transacciones para detectar señales de lavado de dinero. Las actividades sospechosas se reportan a FinCEN según los requisitos de BSA.</p>
+        <span class="layer-tag">Cumple con BSA / FinCEN</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FRAUD DETECTION DETAIL -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="two-col">
+      <div>
+        <div class="section-label">Motor de Detección de Fraude</div>
+        <h2 class="section-title">Evaluación de Transacciones en Tiempo Real a Gran Escala</h2>
+        <p class="section-sub">Cada deslizamiento de tarjeta, pago en línea y transferencia es evaluado por nuestro motor de fraude en menos de 50 milisegundos, antes de que el comerciante vea una aprobación.</p>
+        <ul class="feature-list">
+          <li><span class="bullet">✓</span><span><strong>Perfilado de riesgo de comerciantes:</strong> Comerciantes fraudulentos conocidos son bloqueados automáticamente basados en datos de toda la red.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Análisis de geolocalización:</strong> Transacciones desde ubicaciones físicamente imposibles (tarjeta presente en NY y LA en minutos) activan una retención.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Verificaciones de velocidad:</strong> Aumentos repentinos en la frecuencia o cantidad de transacciones son señalados para revisión.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Protección de tarjeta no presente:</strong> Verificación mejorada para transacciones en línea, incluyendo 3D Secure 2.0.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Consorcio de red:</strong> Compartimos señales de fraude anonimizadas con instituciones asociadas para proteger contra ataques en toda la red.</span></li>
+        </ul>
+      </div>
+      <div class="risk-dashboard">
+        <div class="dash-header">
+          <span class="dash-title">Monitor de Fraude</span>
+          <span class="dash-status"><span class="status-dot"></span>En Vivo</span>
+        </div>
+        <div class="risk-score-row">
+          <span class="rs-icon">🛒</span>
+          <div class="rs-info">
+            <div class="rs-merchant">Target – $47.82</div>
+            <div class="rs-meta">Nueva York, NY · Chip &amp; PIN</div>
+          </div>
+          <span class="rs-badge badge-ok">APROBADO</span>
+        </div>
+        <div class="risk-score-row">
+          <span class="rs-icon">⛽</span>
+          <div class="rs-info">
+            <div class="rs-merchant">Shell Gas – $89.00</div>
+            <div class="rs-meta">Miami, FL · Banda Magnética</div>
+          </div>
+          <span class="rs-badge badge-warn">REVISIÓN</span>
+        </div>
+        <div class="risk-score-row">
+          <span class="rs-icon">🌐</span>
+          <div class="rs-info">
+            <div class="rs-merchant">Comerciante Desconocido – $1,240.00</div>
+            <div class="rs-meta">Lagos, NG · Tarjeta No Presente</div>
+          </div>
+          <span class="rs-badge badge-block">BLOQUEADO</span>
+        </div>
+        <div class="risk-score-row">
+          <span class="rs-icon">☕</span>
+          <div class="rs-info">
+            <div class="rs-merchant">Starbucks – $6.75</div>
+            <div class="rs-meta">Nueva York, NY · Tap to Pay</div>
+          </div>
+          <span class="rs-badge badge-ok">APROBADO</span>
+        </div>
+        <div class="dash-metrics">
+          <div class="metric-box">
+            <div class="metric-val">48ms</div>
+            <div class="metric-label">Tiempo Promedio de Decisión</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">99.97%</div>
+            <div class="metric-label">Tasa de Precisión</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">2.4M</div>
+            <div class="metric-label">Transacciones Evaluadas Hoy</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">$0</div>
+            <div class="metric-label">Pérdida del Cliente (YTD)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MFA -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Seguridad de la Cuenta</div>
+      <h2 class="section-title">Múltiples Formas de Verificar que Eres Tú</h2>
+      <p class="section-sub">Harrison Financial admite una variedad de métodos de autenticación. Configúralos en la aplicación y requiere una autenticación más fuerte para acciones de alto valor.</p>
+    </div>
+    <div class="mfa-grid">
+      <div class="mfa-card">
+        <div class="mfa-icon">👤</div>
+        <h4>Face ID / Touch ID</h4>
+        <p>Autenticación biométrica utilizando el hardware seguro de tu dispositivo. La opción más rápida y segura para inicios de sesión diarios.</p>
+      </div>
+      <div class="mfa-card">
+        <div class="mfa-icon">🔐</div>
+        <h4>Aplicación Autenticadora (TOTP)</h4>
+        <p>Usa Google Authenticator, Authy o cualquier aplicación compatible con TOTP para códigos de un solo uso basados en tiempo. Altamente resistente al phishing.</p>
+      </div>
+      <div class="mfa-card">
+        <div class="mfa-icon">📲</div>
+        <h4>SMS / Email OTP</h4>
+        <p>Códigos de un solo uso enviados por texto o correo electrónico para usuarios sin una aplicación autenticadora. Requerido para inicios de sesión en nuevos dispositivos.</p>
+      </div>
+      <div class="mfa-card">
+        <div class="mfa-icon">🔑</div>
+        <h4>Llaves de Seguridad de Hardware</h4>
+        <p>Llaves de hardware FIDO2/WebAuthn (YubiKey, etc.) para el nivel más alto de autenticación resistente al phishing.</p>
+      </div>
+      <div class="mfa-card">
+        <div class="mfa-icon">📞</div>
+        <h4>Verificación por Llamada de Voz</h4>
+        <p>Verificación por llamada telefónica automatizada disponible para recuperación de cuenta y transferencias de alto valor.</p>
+      </div>
+      <div class="mfa-card">
+        <div class="mfa-icon">🏦</div>
+        <h4>Autenticación Basada en Conocimiento</h4>
+        <p>Preguntas de seguridad y desafíos de datos financieros personales para recuperación de cuenta como última opción.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KYC / AML COMPLIANCE -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">Cumplimiento Regulatorio</div>
+      <h2 class="section-title">KYC &amp; AML: Estándares No Negociables</h2>
+      <p class="section-sub">El cumplimiento contra el crimen financiero no es opcional, es fundamental. Harrison Financial mantiene rigurosos programas de KYC y AML que superan los requisitos regulatorios.</p>
+    </div>
+    <div class="compliance-grid">
+      <div class="compliance-card">
+        <h3>🆔 Conoce a Tu Cliente (KYC)</h3>
+        <p>Cada solicitante de cuenta pasa por verificación de documentos (ID emitido por el gobierno), control de vida y revisión de bases de datos de identidad antes de abrir una cuenta. Usamos Jumio y Alloy para verificación en tiempo real.</p>
+        <div class="compliance-tag">BSA § 326 · Regla CIP · Revisión OFAC</div>
+      </div>
+      <div class="compliance-card">
+        <h3>🔍 Monitoreo de Transacciones (AML)</h3>
+        <p>Nuestro motor AML monitorea patrones de transacciones contra señales tipológicas: estructuración, smurfing, transacciones de redondeo y flujos transfronterizos. Los Reportes de Actividad Sospechosa (SAR) se presentan a FinCEN según sea necesario.</p>
+        <div class="compliance-tag">BSA / FinCEN · Presentación de SAR · FinCEN 314(a)</div>
+      </div>
+      <div class="compliance-card">
+        <h3>📋 Diligencia Debida Mejorada (EDD)</h3>
+        <p>Clientes de mayor riesgo, incluidos PEPs (personas políticamente expuestas), cuentas comerciales de alto volumen y usuarios en geografías de alto riesgo, reciben monitoreo mejorado y re-verificación periódica.</p>
+        <div class="compliance-tag">Recomendaciones FATF · Revisión de PEP</div>
+      </div>
+      <div class="compliance-card">
+        <h3>⚖️ Reporte Regulatorio</h3>
+        <p>Los Reportes de Transacciones en Efectivo (CTR) se presentan automáticamente para transacciones en efectivo superiores a $10,000. Nuestro equipo de cumplimiento trabaja directamente con reguladores federales y responde a solicitudes 314(a) dentro del plazo requerido.</p>
+        <div class="compliance-tag">Presentación de CTR · 314(a) / 314(b) · FinCEN</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;padding:28px 24px 0">
+    <div class="logo" style="margin-bottom:10px"><div class="logo-icon">HF</div><span style="color:white;font-size:1.1rem">Harrison Financial</span></div>
+    <p style="color:#8aadda;font-size:0.85rem;max-width:600px;line-height:1.6;margin-bottom:24px">Harrison Financial toma en serio la seguridad y privacidad de tu información financiera. Si crees que tu cuenta ha sido comprometida, contacta a nuestro equipo de fraude inmediatamente al 1-800-555-HARR.</p>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc.</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap"><a href="#">Política de Privacidad</a><a href="#">Centro de Seguridad</a><a href="support.html">Reportar Fraude</a></div>
+    <span>SOC 2 Tipo II · PCI-DSS Nivel 1 · FDIC</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>支援與聯絡 – Harrison Financial</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d; --blue: #1a4fad; --accent: #2db4a0; --light-bg: #f4f7fb;
+      --white: #ffffff; --text: #1e2a3b; --muted: #5a6a7e; --border: #d5dce8;
+      --radius: 12px; --shadow: 0 4px 24px rgba(13,30,61,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,30,61,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; font-weight: 700; }
+    .btn-accent:hover { background: #229988; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #1a3570 100%); color: white; padding: 72px 24px 64px; text-align: center; }
+    .page-label { display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 5px 16px; font-size: 0.8rem; font-weight: 600; color: #a8c8ff; letter-spacing: 0.5px; margin-bottom: 20px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+    .page-hero p { font-size: 1.1rem; color: #b8ccec; line-height: 1.7; max-width: 560px; margin: 0 auto; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .light-bg { background: var(--light-bg); }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* SEARCH BAR */
+    .search-wrap { max-width: 580px; margin: 32px auto 0; }
+    .search-bar { display: flex; background: white; border: 2px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+    .search-bar input { flex: 1; padding: 14px 20px; font-size: 1rem; border: none; outline: none; color: var(--text); }
+    .search-bar button { background: var(--blue); color: white; border: none; padding: 14px 24px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+    .search-bar button:hover { background: #153d8a; }
+
+    /* CONTACT CHANNELS */
+    .channels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 48px; }
+    .channel-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 28px 24px; box-shadow: var(--shadow); text-align: center; }
+    .channel-icon { font-size: 2.4rem; margin-bottom: 14px; }
+    .channel-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .channel-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .channel-avail { font-size: 0.8rem; font-weight: 600; color: var(--accent); }
+    .channel-card .btn { display: inline-flex; justify-content: center; margin-top: 12px; }
+    .btn-channel { background: var(--light-bg); border: 1.5px solid var(--border); color: var(--navy); }
+    .btn-channel:hover { border-color: var(--blue); color: var(--blue); background: white; }
+
+    /* URGENT */
+    .urgent-bar { background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius); padding: 18px 24px; display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+    .urgent-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .urgent-text h4 { font-size: 0.97rem; font-weight: 700; color: #664d00; margin-bottom: 4px; }
+    .urgent-text p { font-size: 0.87rem; color: #7a5c00; line-height: 1.5; }
+    .urgent-text a { color: #1a4fad; font-weight: 700; }
+
+    /* TOPICS */
+    .topics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 40px; }
+    .topic-item { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 18px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(13,30,61,0.06); transition: border-color .2s; cursor: pointer; }
+    .topic-item:hover { border-color: var(--blue); }
+    .topic-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .topic-name { font-size: 0.9rem; font-weight: 600; color: var(--navy); }
+
+    /* CONTACT FORM */
+    .form-section { background: var(--light-bg); }
+    .form-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; max-width: 1000px; margin: 0 auto; }
+    .contact-form { background: white; border-radius: 16px; padding: 36px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .form-field label { font-size: 0.85rem; font-weight: 600; color: var(--navy); }
+    .form-field input, .form-field select, .form-field textarea {
+      border: 1.5px solid var(--border); border-radius: 8px; padding: 11px 14px;
+      font-size: 0.93rem; color: var(--text); outline: none; font-family: inherit;
+      transition: border-color .2s; background: white;
+    }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--blue); }
+    .form-field textarea { resize: vertical; min-height: 100px; }
+    .form-submit { background: var(--blue); color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .form-submit:hover { background: #153d8a; }
+    .info-block { margin-bottom: 28px; }
+    .info-block h4 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .info-block p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+    .info-block a { color: var(--blue); font-weight: 600; }
+
+    /* FAQ */
+    .faq-list { margin-top: 40px; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { padding: 18px 24px; font-weight: 600; font-size: 0.97rem; color: var(--navy); background: white; display: flex; justify-content: space-between; align-items: center; cursor: default; }
+    .faq-a { padding: 0 24px 18px; font-size: 0.91rem; color: var(--muted); line-height: 1.7; background: white; }
+
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+
+    @media (max-width: 860px) { .form-wrap { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">HF</div>Harrison Financial</a>
+    <div class="nav-links">
+      <a href="banking.html">銀行業務</a>
+      <a href="cards.html">卡片</a>
+      <a href="lending.html">貸款</a>
+      <a href="security.html">安全性</a>
+      <a href="about.html">關於我們</a>
+      <a href="support.html" class="active">支援</a>
+    </div>
+    <div class="nav-actions">
+      <a href="#" class="btn btn-outline">登入</a>
+      <a href="banking.html" class="btn btn-primary">開設帳戶</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../support.html">English</option>
+            <option value="../zh-hans/support.html">简体中文</option>
+            <option value="../zh-hant/support.html" selected>繁體中文</option>
+            <option value="../es/support.html">Español</option>
+            <option value="../fr/support.html">Français</option>
+            <option value="../ja/support.html">日本語</option>
+            <option value="../ko/support.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-label">💬 幫助中心</div>
+  <h1>今天我們能如何幫助您？</h1>
+  <p>搜尋我們的幫助文章、與真人聊天或直接致電我們——我們全天候提供服務。</p>
+  <div class="search-wrap">
+    <div class="search-bar">
+      <input type="text" placeholder="搜尋幫助文章… 例如，'爭議一筆費用'" />
+      <button>搜尋</button>
+    </div>
+  </div>
+</div>
+
+<!-- URGENT ALERT -->
+<section>
+  <div class="section-inner" style="max-width:900px">
+    <div class="urgent-bar">
+      <span class="urgent-icon">🚨</span>
+      <div class="urgent-text">
+        <h4>懷疑您的帳戶有欺詐活動？</h4>
+        <p>立即撥打我們的專用欺詐熱線：<a href="tel:18005554277">1-800-555-HARR</a>（全天候提供服務）。您也可以在 Harrison 應用程式中立即凍結您的卡片。</p>
+      </div>
+    </div>
+
+    <!-- CHANNELS -->
+    <div class="section-label">聯絡我們</div>
+    <h2 class="section-title">以您喜歡的方式聯絡我們</h2>
+    <p class="section-sub">每個支援渠道均由 Harrison Financial 的員工提供服務——不是外包代理，也不是聊天機器人（除非您需要快速答案）。</p>
+    <div class="channels-grid">
+      <div class="channel-card">
+        <div class="channel-icon">💬</div>
+        <h3>應用程式內即時聊天</h3>
+        <p>最快的聯絡方式。打開 Harrison 應用程式，點擊支援，並開始與專家進行即時聊天。</p>
+        <div class="channel-avail">⚡ 平均等待時間：&lt;2 分鐘</div>
+        <a href="#" class="btn btn-channel" style="margin-top:14px;display:inline-flex">打開應用程式</a>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📞</div>
+        <h3>電話支援</h3>
+        <p>直接與 Harrison Financial 專家交談。沒有電話樹——您的帳戶背景會自動顯示。</p>
+        <div class="channel-avail">📅 週一至週五：上午 8 點至晚上 10 點 ET · 週六至週日：上午 9 點至下午 6 點 ET</div>
+        <a href="tel:18005554277" class="btn btn-channel" style="margin-top:14px;display:inline-flex">1-800-555-HARR</a>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📧</div>
+        <h3>電子郵件支援</h3>
+        <p>發送詳細訊息並獲得詳盡回覆。最適合需要文件的非緊急問題。</p>
+        <div class="channel-avail">⏱ 回覆時間為 4 個工作小時內</div>
+        <a href="mailto:support@harrisonfinancial.com" class="btn btn-channel" style="margin-top:14px;display:inline-flex">發送電子郵件</a>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🤖</div>
+        <h3>AI 聊天助手</h3>
+        <p>獲得常見問題的即時答案——帳戶餘額、操作指南和政策資訊——全天候提供服務。</p>
+        <div class="channel-avail">🕐 全天候提供服務 · 如有需要可升級至真人</div>
+        <a href="#" class="btn btn-channel" style="margin-top:14px;display:inline-flex">開始聊天</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HELP TOPICS -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">幫助主題</div>
+      <h2 class="section-title">按主題瀏覽</h2>
+      <p class="section-sub">透過瀏覽下方最常見的支援主題快速找到答案。</p>
+    </div>
+    <div class="topics-grid">
+      <div class="topic-item"><span class="topic-icon">💳</span><span class="topic-name">卡片問題</span></div>
+      <div class="topic-item"><span class="topic-icon">🔐</span><span class="topic-name">帳戶安全</span></div>
+      <div class="topic-item"><span class="topic-icon">💸</span><span class="topic-name">轉帳與付款</span></div>
+      <div class="topic-item"><span class="topic-icon">📈</span><span class="topic-name">儲蓄與利息</span></div>
+      <div class="topic-item"><span class="topic-icon">🏦</span><span class="topic-name">開設帳戶</span></div>
+      <div class="topic-item"><span class="topic-icon">🚨</span><span class="topic-name">爭議一筆費用</span></div>
+      <div class="topic-item"><span class="topic-icon">📊</span><span class="topic-name">對帳單與文件</span></div>
+      <div class="topic-item"><span class="topic-icon">🔑</span><span class="topic-name">密碼 / 登入</span></div>
+      <div class="topic-item"><span class="topic-icon">📱</span><span class="topic-name">移動應用程式幫助</span></div>
+      <div class="topic-item"><span class="topic-icon">📋</span><span class="topic-name">貸款與信用</span></div>
+      <div class="topic-item"><span class="topic-icon">🏧</span><span class="topic-name">ATM 問題</span></div>
+      <div class="topic-item"><span class="topic-icon">📬</span><span class="topic-name">卡片寄送</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section class="form-section">
+  <div class="section-inner">
+    <div class="form-wrap">
+      <div>
+        <div class="section-label">發送訊息</div>
+        <h2 class="section-title">聯絡支援</h2>
+        <p class="section-sub">找不到答案？填寫表格，我們的團隊成員將在 4 個工作小時內回覆。</p>
+        <div style="margin-top:32px">
+          <div class="info-block">
+            <h4>📞 欺詐熱線（全天候）</h4>
+            <p><a href="tel:18005554277">1-800-555-HARR</a></p>
+          </div>
+          <div class="info-block">
+            <h4>📞 一般支援</h4>
+            <p><a href="tel:18005554278">1-800-555-4278</a><br>週一至週五 上午 8 點至晚上 10 點 ET · 週六至週日 上午 9 點至下午 6 點 ET</p>
+          </div>
+          <div class="info-block">
+            <h4>📧 電子郵件</h4>
+            <p><a href="mailto:support@harrisonfinancial.com">support@harrisonfinancial.com</a></p>
+          </div>
+          <div class="info-block">
+            <h4>🏢 郵寄地址</h4>
+            <p>Harrison Financial, Inc.<br>350 Fifth Avenue, Suite 4800<br>New York, NY 10118</p>
+          </div>
+          <div class="info-block">
+            <h4>📰 媒體查詢</h4>
+            <p><a href="mailto:press@harrisonfinancial.com">press@harrisonfinancial.com</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:24px">發送訊息給我們</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>名字</label>
+            <input type="text" placeholder="Jane" />
+          </div>
+          <div class="form-field">
+            <label>姓氏</label>
+            <input type="text" placeholder="Smith" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>電子郵件地址</label>
+          <input type="email" placeholder="jane@example.com" />
+        </div>
+        <div class="form-field">
+          <label>主題</label>
+          <select>
+            <option>選擇一個主題…</option>
+            <option>卡片問題</option>
+            <option>爭議一筆費用</option>
+            <option>轉帳問題</option>
+            <option>帳戶存取</option>
+            <option>貸款問題</option>
+            <option>安全問題</option>
+            <option>其他</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>訊息</label>
+          <textarea placeholder="請詳細描述您的問題…"></textarea>
+        </div>
+        <button class="form-submit">發送訊息</button>
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:12px;line-height:1.6">提交此表格即表示您同意我們的<a href="#" style="color:var(--blue)">隱私政策</a>。我們通常在 4 個工作小時內回覆。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="section-inner" style="max-width:760px">
+    <div class="section-label">常見問題</div>
+    <h2 class="section-title">常見問題解答</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">如何爭議一筆交易？ <span>+</span></div>
+        <div class="faq-a">打開 Harrison 應用程式，導航至相關交易，並點擊“爭議此費用”。系統會提示您選擇原因並提供詳細資訊。大多數爭議在 5–7 個工作日內解決，並在我們調查期間通常在 24 小時內發放臨時信用。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">我的卡片遺失或被盜。我該怎麼辦？ <span>+</span></div>
+        <div class="faq-a">打開 Harrison 應用程式並點擊卡片 → 立即凍結卡片。這將停止所有新交易。然後前往卡片 → 報告遺失/被盜以取消卡片並訂購替換卡。新卡將在 5–7 個工作日內到達，並提供加急送達服務。在此期間，您的虛擬卡仍然有效。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">我無法登入我的帳戶。我該怎麼辦？ <span>+</span></div>
+        <div class="faq-a">在登入畫面上點擊“忘記密碼”，並按照提示透過電子郵件或簡訊重置您的憑證。如果由於嘗試失敗而被鎖定，您的帳戶將在 30 分鐘後解鎖，或者您可以直接聯絡我們的支援團隊。切勿與任何人分享您的密碼或 OTP 代碼，包括 Harrison Financial 的員工。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">轉帳需要多長時間？ <span>+</span></div>
+        <div class="faq-a">Harrison 成員之間的 P2P 轉帳是即時的。ACH 轉帳至外部銀行需要 1–3 個工作日（標準）或同一工作日（加急，$2.99 費用）。國內電匯在下午 3 點 ET 前提交的情況下同一工作日處理。Zelle® 轉帳通常在幾分鐘內完成。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">如何關閉我的帳戶？ <span>+</span></div>
+        <div class="faq-a">很遺憾看到您離開！要關閉您的帳戶，請透過電話或聊天聯絡我們的支援團隊。我們將驗證您的身份，確保您的餘額已轉出，並在 3–5 個工作日內關閉帳戶。請務必事先更新任何自動付款或直接存款。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;padding:28px 24px 0">
+    <div class="logo" style="margin-bottom:10px"><div class="logo-icon">HF</div><span style="color:white;font-size:1.1rem">Harrison Financial</span></div>
+    <p style="color:#8aadda;font-size:0.85rem;max-width:500px;line-height:1.6;margin-bottom:24px">如遇欺詐緊急情況，請隨時撥打 1-800-555-HARR。銀行服務由 Meridian Bank, N.A. 提供，FDIC 成員。</p>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc.</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap"><a href="#">隱私</a><a href="#">條款</a><a href="security.html">安全性</a></div>
+    <span>FDIC 成員 · 平等住房貸款機構</span>
+  </div>
+</footer>
+
+</body>
+</html>

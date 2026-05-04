@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>安全与欺诈保护 – Harrison Financial</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d; --blue: #1a4fad; --accent: #2db4a0; --light-bg: #f4f7fb;
+      --white: #ffffff; --text: #1e2a3b; --muted: #5a6a7e; --border: #d5dce8;
+      --radius: 12px; --shadow: 0 4px 24px rgba(13,30,61,0.10);
+      --red: #d63031; --green: #00b894;
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,30,61,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; font-weight: 700; }
+    .btn-accent:hover { background: #229988; }
+
+    .page-hero { background: linear-gradient(135deg, #0a1628 0%, #0d1e3d 60%, #153060 100%); color: white; padding: 72px 24px 64px; }
+    .page-hero-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .page-label { display: inline-block; background: rgba(45,180,160,0.2); border: 1px solid rgba(45,180,160,0.4); border-radius: 20px; padding: 5px 16px; font-size: 0.8rem; font-weight: 600; color: #5bd4c4; letter-spacing: 0.5px; margin-bottom: 20px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+    .page-hero p { font-size: 1.1rem; color: #b8ccec; line-height: 1.7; max-width: 600px; margin: 0 auto; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .light-bg { background: var(--light-bg); }
+    .dark-bg { background: var(--navy); }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* TRUST BADGES */
+    .trust-bar { background: var(--accent); padding: 16px 24px; }
+    .trust-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; align-items: center; }
+    .trust-item { display: flex; align-items: center; gap: 8px; color: white; font-size: 0.88rem; font-weight: 600; }
+    .trust-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.3); }
+
+    /* LAYERS GRID */
+    .layers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 48px; }
+    .layer-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 28px 24px; box-shadow: var(--shadow); }
+    .layer-icon { font-size: 2rem; margin-bottom: 14px; }
+    .layer-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .layer-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+    .layer-tag { display: inline-block; margin-top: 12px; background: var(--light-bg); border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: 600; color: var(--blue); }
+
+    /* FRAUD DETECTION */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .risk-dashboard { background: #0d1e3d; border-radius: 20px; padding: 28px; }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .dash-title { font-size: 0.82rem; font-weight: 700; color: #a8c8ff; letter-spacing: 1px; text-transform: uppercase; }
+    .dash-status { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: #5bd4c4; font-weight: 600; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .risk-score-row { display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .rs-icon { font-size: 1.2rem; width: 36px; flex-shrink: 0; text-align: center; }
+    .rs-info { flex: 1; }
+    .rs-merchant { font-size: 0.83rem; font-weight: 600; color: white; }
+    .rs-meta { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
+    .rs-badge { font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; flex-shrink: 0; }
+    .badge-ok { background: rgba(0,184,148,0.2); color: #5bd4c4; }
+    .badge-warn { background: rgba(255,190,0,0.2); color: #ffd060; }
+    .badge-block { background: rgba(214,48,49,0.2); color: #ff8080; }
+    .dash-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+    .metric-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; text-align: center; }
+    .metric-val { font-size: 1.3rem; font-weight: 800; color: white; }
+    .metric-label { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+    .feature-list { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .feature-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: var(--text); line-height: 1.55; }
+    .bullet { width: 24px; height: 24px; background: #e8f7f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* MFA */
+    .mfa-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 48px; }
+    .mfa-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; text-align: center; box-shadow: var(--shadow); }
+    .mfa-icon { font-size: 2.2rem; margin-bottom: 12px; }
+    .mfa-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .mfa-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
+
+    /* COMPLIANCE */
+    .compliance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 48px; }
+    .compliance-card { background: white; border-radius: var(--radius); border-left: 4px solid var(--blue); padding: 28px 24px; box-shadow: var(--shadow); }
+    .compliance-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .compliance-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+    .compliance-tag { margin-top: 12px; font-size: 0.75rem; font-weight: 700; color: var(--blue); letter-spacing: 0.5px; }
+
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+
+    @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .nav-links { display: none; } .trust-sep { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">HF</div>Harrison Financial</a>
+    <div class="nav-links">
+      <a href="banking.html">银行业务</a>
+      <a href="cards.html">卡片</a>
+      <a href="lending.html">贷款</a>
+      <a href="security.html" class="active">安全</a>
+      <a href="about.html">关于我们</a>
+      <a href="support.html">支持</a>
+    </div>
+    <div class="nav-actions">
+      <a href="support.html" class="btn btn-outline">登录</a>
+      <a href="banking.html" class="btn btn-primary">开户</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../security.html">English</option>
+            <option value="../zh-hans/security.html" selected>简体中文</option>
+            <option value="../zh-hant/security.html">繁體中文</option>
+            <option value="../es/security.html">Español</option>
+            <option value="../fr/security.html">Français</option>
+            <option value="../ja/security.html">日本語</option>
+            <option value="../ko/security.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-label">🛡️ 安全与欺诈保护</div>
+    <h1>您的资金是安全的。我们确保了这一点。</h1>
+    <p>Harrison Financial 运营着一个多层次的安全系统——实时欺诈检测、行为AI、多因素认证（MFA）和全面的KYC/AML合规——因为在大规模运营中，安全从来不是可选项。</p>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <span class="trust-item">🏛️ FDIC 保险</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item">🔐 256位AES加密</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item">✅ SOC 2 Type II 认证</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item">📋 KYC &amp; AML 合规</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item">🌐 PCI-DSS 一级</span>
+    <span class="trust-sep"></span>
+    <span class="trust-item">⚖️ FinCEN 注册</span>
+  </div>
+</div>
+
+<!-- SECURITY LAYERS -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">深度防御</div>
+      <h2 class="section-title">七层保护</h2>
+      <p class="section-sub">我们不依赖单一的安全措施。每笔交易、登录和账户操作都通过多个独立的安全系统。</p>
+    </div>
+    <div class="layers-grid">
+      <div class="layer-card">
+        <div class="layer-icon">🤖</div>
+        <h3>AI 欺诈检测</h3>
+        <p>机器学习模型实时评分每笔交易，在付款清算前标记异常。基于数十亿数据点训练。</p>
+        <span class="layer-tag">实时 · &lt;50ms 延迟</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">📊</div>
+        <h3>行为分析</h3>
+        <p>我们建模您通常如何使用账户。异常登录位置、设备更换或消费模式会触发即时审核。</p>
+        <span class="layer-tag">被动 · 始终活跃</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">📱</div>
+        <h3>设备指纹识别</h3>
+        <p>您使用的每个设备都会被指纹识别和注册。新设备或未识别设备需要额外验证才能访问。</p>
+        <span class="layer-tag">每设备授权</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">🔑</div>
+        <h3>多因素认证 (MFA)</h3>
+        <p>生物识别、TOTP 验证器和短信/电子邮件代码叠加在密码之上——用户可配置用于高风险操作。</p>
+        <span class="layer-tag">敏感操作必需</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">🆔</div>
+        <h3>身份验证 (KYC)</h3>
+        <p>每位新会员在开户时都要进行文件验证、活体检查和OFAC/观察名单筛查。</p>
+        <span class="layer-tag">由 Alloy &amp; Jumio 提供支持</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">🔒</div>
+        <h3>端到端加密</h3>
+        <p>所有传输中的数据都由TLS 1.3保护。静态数据使用AES-256加密。卡片数据按照PCI-DSS一级标准处理。</p>
+        <span class="layer-tag">TLS 1.3 · AES-256</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">🚨</div>
+        <h3>24/7 欺诈响应团队</h3>
+        <p>人工欺诈分析师全天候审查标记的案件。当自动系统不足时，真人进行调查。</p>
+        <span class="layer-tag">全天候覆盖</span>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon">📋</div>
+        <h3>AML 交易监控</h3>
+        <p>自动监控交易模式中的洗钱红旗。可疑活动根据BSA要求报告给FinCEN。</p>
+        <span class="layer-tag">BSA / FinCEN 合规</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FRAUD DETECTION DETAIL -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="two-col">
+      <div>
+        <div class="section-label">欺诈检测引擎</div>
+        <h2 class="section-title">大规模实时交易评分</h2>
+        <p class="section-sub">每次刷卡、在线支付和转账都在50毫秒内由我们的欺诈引擎评估——在商家看到批准之前。</p>
+        <ul class="feature-list">
+          <li><span class="bullet">✓</span><span><strong>商家风险分析：</strong>已知的欺诈商家根据网络数据自动阻止。</span></li>
+          <li><span class="bullet">✓</span><span><strong>地理位置分析：</strong>来自物理上不可能位置的交易（如在纽约和洛杉矶几分钟内同时出现）会触发暂停。</span></li>
+          <li><span class="bullet">✓</span><span><strong>速度检查：</strong>交易频率或金额的突然激增会被标记审核。</span></li>
+          <li><span class="bullet">✓</span><span><strong>无卡保护：</strong>在线交易的增强验证，包括3D Secure 2.0。</span></li>
+          <li><span class="bullet">✓</span><span><strong>网络联盟：</strong>我们与合作机构共享匿名欺诈信号，以防止跨网络攻击。</span></li>
+        </ul>
+      </div>
+      <div class="risk-dashboard">
+        <div class="dash-header">
+          <span class="dash-title">欺诈监控</span>
+          <span class="dash-status"><span class="status-dot"></span>实时</span>
+        </div>
+        <div class="risk-score-row">
+          <span class="rs-icon">🛒</span>
+          <div class="rs-info">
+            <div class="rs-merchant">Target – $47.82</div>
+            <div class="rs-meta">纽约, NY · 芯片 &amp; PIN</div>
+          </div>
+          <span class="rs-badge badge-ok">批准</span>
+        </div>
+        <div class="risk-score-row">
+          <span class="rs-icon">⛽</span>
+          <div class="rs-info">
+            <div class="rs-merchant">Shell Gas – $89.00</div>
+            <div class="rs-meta">迈阿密, FL · 磁条</div>
+          </div>
+          <span class="rs-badge badge-warn">审核</span>
+        </div>
+        <div class="risk-score-row">
+          <span class="rs-icon">🌐</span>
+          <div class="rs-info">
+            <div class="rs-merchant">未知商家 – $1,240.00</div>
+            <div class="rs-meta">拉各斯, NG · 无卡</div>
+          </div>
+          <span class="rs-badge badge-block">阻止</span>
+        </div>
+        <div class="risk-score-row">
+          <span class="rs-icon">☕</span>
+          <div class="rs-info">
+            <div class="rs-merchant">Starbucks – $6.75</div>
+            <div class="rs-meta">纽约, NY · 轻触支付</div>
+          </div>
+          <span class="rs-badge badge-ok">批准</span>
+        </div>
+        <div class="dash-metrics">
+          <div class="metric-box">
+            <div class="metric-val">48ms</div>
+            <div class="metric-label">平均决策时间</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">99.97%</div>
+            <div class="metric-label">准确率</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">2.4M</div>
+            <div class="metric-label">今日评分交易</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">$0</div>
+            <div class="metric-label">客户损失（年初至今）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MFA -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">账户安全</div>
+      <h2 class="section-title">多种方式验证您的身份</h2>
+      <p class="section-sub">Harrison Financial 支持多种身份验证方法。可在应用中配置，并要求高价值操作时进行更强的身份验证。</p>
+    </div>
+    <div class="mfa-grid">
+      <div class="mfa-card">
+        <div class="mfa-icon">👤</div>
+        <h4>面容 ID / 指纹 ID</h4>
+        <p>使用设备的安全硬件进行生物识别认证。日常登录最快且最安全的选项。</p>
+      </div>
+      <div class="mfa-card">
+        <div class="mfa-icon">🔐</div>
+        <h4>认证器应用 (TOTP)</h4>
+        <p>使用 Google Authenticator、Authy 或任何兼容 TOTP 的应用获取基于时间的一次性代码。高度抗钓鱼。</p>
+      </div>
+      <div class="mfa-card">
+        <div class="mfa-icon">📲</div>
+        <h4>短信 / 邮件 OTP</h4>
+        <p>通过短信或电子邮件发送的一次性代码，适用于没有认证器应用的用户。新设备登录时必需。</p>
+      </div>
+      <div class="mfa-card">
+        <div class="mfa-icon">🔑</div>
+        <h4>硬件安全密钥</h4>
+        <p>FIDO2/WebAuthn 硬件密钥（如 YubiKey 等）提供最高级别的抗钓鱼认证。</p>
+      </div>
+      <div class="mfa-card">
+        <div class="mfa-icon">📞</div>
+        <h4>语音电话验证</h4>
+        <p>自动电话验证可用于账户恢复和高价值电汇。</p>
+      </div>
+      <div class="mfa-card">
+        <div class="mfa-icon">🏦</div>
+        <h4>基于知识的认证</h4>
+        <p>安全问题和个人财务数据挑战作为账户恢复的最后手段。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KYC / AML COMPLIANCE -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">合规监管</div>
+      <h2 class="section-title">KYC &amp; AML：不可协商的标准</h2>
+      <p class="section-sub">金融犯罪合规不是可选项——它是基础。Harrison Financial 维持严格的KYC和AML计划，超越监管要求。</p>
+    </div>
+    <div class="compliance-grid">
+      <div class="compliance-card">
+        <h3>🆔 了解您的客户 (KYC)</h3>
+        <p>每位账户申请人在开户前都要进行文件验证（政府签发的身份证）、活体检查和身份数据库筛查。我们使用 Jumio 和 Alloy 进行实时验证。</p>
+        <div class="compliance-tag">BSA § 326 · CIP 规则 · OFAC 筛查</div>
+      </div>
+      <div class="compliance-card">
+        <h3>🔍 交易监控 (AML)</h3>
+        <p>我们的AML引擎根据类型学红旗监控交易模式：结构化、分拆、整数交易和跨境流动。可疑活动报告（SARs）根据要求提交给FinCEN。</p>
+        <div class="compliance-tag">BSA / FinCEN · SAR 提交 · FinCEN 314(a)</div>
+      </div>
+      <div class="compliance-card">
+        <h3>📋 增强尽职调查 (EDD)</h3>
+        <p>高风险客户——包括政治敏感人物（PEPs）、高交易量商业账户和高风险地区用户——接受增强监控和定期重新验证。</p>
+        <div class="compliance-tag">FATF 建议 · PEP 筛查</div>
+      </div>
+      <div class="compliance-card">
+        <h3>⚖️ 监管报告</h3>
+        <p>对于超过 $10,000 的现金交易，自动提交货币交易报告（CTRs）。我们的合规团队直接与联邦监管机构合作，并在规定时间内响应314(a)请求。</p>
+        <div class="compliance-tag">CTR 提交 · 314(a) / 314(b) · FinCEN</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;padding:28px 24px 0">
+    <div class="logo" style="margin-bottom:10px"><div class="logo-icon">HF</div><span style="color:white;font-size:1.1rem">Harrison Financial</span></div>
+    <p style="color:#8aadda;font-size:0.85rem;max-width:600px;line-height:1.6;margin-bottom:24px">Harrison Financial 非常重视您财务信息的安全和隐私。如果您认为您的账户已被泄露，请立即联系我们的欺诈团队，电话：1-800-555-HARR。</p>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc.</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap"><a href="#">隐私政策</a><a href="#">安全中心</a><a href="support.html">报告欺诈</a></div>
+    <span>SOC 2 Type II · PCI-DSS 一级 · FDIC</span>
+  </div>
+</footer>
+
+</body>
+</html>

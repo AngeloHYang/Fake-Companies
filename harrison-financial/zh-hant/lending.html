@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>貸款與信用 – Harrison Financial</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d; --blue: #1a4fad; --accent: #2db4a0; --light-bg: #f4f7fb;
+      --white: #ffffff; --text: #1e2a3b; --muted: #5a6a7e; --border: #d5dce8;
+      --radius: 12px; --shadow: 0 4px 24px rgba(13,30,61,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,30,61,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; font-weight: 700; }
+    .btn-accent:hover { background: #229988; }
+
+    .page-hero { background: linear-gradient(135deg, #1a3570 0%, #2d5fa5 100%); color: white; padding: 72px 24px 64px; }
+    .page-hero-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .page-label { display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 5px 16px; font-size: 0.8rem; font-weight: 600; color: #a8c8ff; letter-spacing: 0.5px; margin-bottom: 20px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+    .page-hero p { font-size: 1.1rem; color: #b8ccec; line-height: 1.7; max-width: 600px; margin: 0 auto 32px; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .light-bg { background: var(--light-bg); }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* PRODUCT TABS */
+    .product-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+    .prod-tab { background: white; border-radius: var(--radius); border: 2px solid var(--border); padding: 32px 28px; box-shadow: var(--shadow); transition: border-color .2s, transform .2s; }
+    .prod-tab:hover { border-color: var(--blue); transform: translateY(-3px); }
+    .prod-tab.highlight { border-color: var(--accent); box-shadow: 0 8px 32px rgba(45,180,160,0.18); }
+    .prod-icon { font-size: 2.2rem; margin-bottom: 16px; }
+    .prod-tab h3 { font-size: 1.15rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .prod-tab p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+    .prod-rate { display: flex; align-items: baseline; gap: 4px; margin-bottom: 16px; }
+    .rate-num { font-size: 2rem; font-weight: 800; color: var(--blue); }
+    .rate-label { font-size: 0.85rem; color: var(--muted); }
+    .prod-perks { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+    .prod-perks li { font-size: 0.87rem; color: var(--text); display: flex; gap: 8px; }
+    .prod-perks li::before { content: "✓"; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+    .btn-full { width: 100%; text-align: center; justify-content: center; }
+    .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--navy); }
+    .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* LOAN CALC */
+    .calc-section { background: var(--navy); color: white; }
+    .calc-inner { max-width: 900px; margin: 0 auto; }
+    .calc-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: white; margin-bottom: 10px; }
+    .calc-sub { color: #8aadda; font-size: 1rem; line-height: 1.65; margin-bottom: 40px; }
+    .calc-box { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .calc-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .calc-field label { font-size: 0.85rem; font-weight: 600; color: #a8c8ff; }
+    .calc-field input, .calc-field select {
+      background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18);
+      color: white; border-radius: 8px; padding: 12px 16px; font-size: 1rem; outline: none;
+      transition: border-color .2s;
+    }
+    .calc-field input:focus, .calc-field select:focus { border-color: var(--accent); }
+    .calc-field select option { background: var(--navy); }
+    .calc-result { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px; }
+    .result-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .result-row:last-child { border-bottom: none; padding-top: 16px; }
+    .result-label { font-size: 0.88rem; color: #8aadda; }
+    .result-value { font-size: 1rem; font-weight: 700; color: white; }
+    .result-value.big { font-size: 1.6rem; color: var(--accent); }
+
+    /* PROCESS */
+    .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-top: 48px; }
+    .process-step { text-align: center; }
+    .step-circle { width: 56px; height: 56px; background: var(--light-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.3rem; }
+    .process-step h4 { font-size: 0.97rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .process-step p { font-size: 0.87rem; color: var(--muted); line-height: 1.6; }
+    .process-arrow { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--border); padding-top: 20px; }
+
+    /* DISCLAIMER */
+    .disclaimer { background: var(--light-bg); border-top: 1px solid var(--border); padding: 24px; }
+    .disclaimer p { max-width: 900px; margin: 0 auto; font-size: 0.78rem; color: var(--muted); line-height: 1.65; text-align: center; }
+
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+
+    @media (max-width: 860px) {
+      .product-tabs { grid-template-columns: 1fr; }
+      .calc-box { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) { .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">HF</div>Harrison Financial</a>
+    <div class="nav-links">
+      <a href="banking.html">銀行業務</a>
+      <a href="cards.html">信用卡</a>
+      <a href="lending.html" class="active">貸款</a>
+      <a href="security.html">安全性</a>
+      <a href="about.html">關於我們</a>
+      <a href="support.html">支援</a>
+    </div>
+    <div class="nav-actions">
+      <a href="support.html" class="btn btn-outline">登入</a>
+      <a href="#products" class="btn btn-primary">立即申請</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../lending.html">English</option>
+            <option value="../zh-hans/lending.html">简体中文</option>
+            <option value="../zh-hant/lending.html" selected>繁體中文</option>
+            <option value="../es/lending.html">Español</option>
+            <option value="../fr/lending.html">Français</option>
+            <option value="../ja/lending.html">日本語</option>
+            <option value="../ko/lending.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-label">📈 貸款與信用</div>
+    <h1>更聰明地借貸。更快地建立信用。</h1>
+    <p>具競爭力的利率、透明的條款和簡化的申請流程——設計的貸款產品旨在幫助您前進，而不是拖累您。</p>
+    <a href="#products" class="btn btn-accent">查看您的利率</a>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="section-inner">
+    <div class="section-label">信用產品</div>
+    <h2 class="section-title">三種方式獲取信用</h2>
+    <p class="section-sub">無論您現在需要現金、想要提高您的信用評分，還是想要在錢包中擁有一張獎勵卡——我們都有適合您的產品。</p>
+    <div class="product-tabs">
+      <div class="prod-tab">
+        <div class="prod-icon">💵</div>
+        <h3>個人貸款</h3>
+        <p>固定利率個人貸款，用於債務合併、家庭裝修、醫療費用或任何重大支出。無需抵押品。</p>
+        <div class="prod-rate"><span class="rate-num">7.99%</span><span class="rate-label">APR 起始</span></div>
+        <ul class="prod-perks">
+          <li>貸款金額：$1,000 – $50,000</li>
+          <li>期限：12 – 60 個月</li>
+          <li>固定每月付款</li>
+          <li>無開辦費</li>
+          <li>無提前還款罰金</li>
+          <li>最快 24 小時內獲得資金</li>
+        </ul>
+        <a href="#" class="btn btn-ghost btn-full">查看您的利率</a>
+      </div>
+      <div class="prod-tab highlight">
+        <div class="prod-icon">🏗️</div>
+        <h3>信用建立貸款</h3>
+        <p>通過專為此目的設計的結構化貸款來建立或修復您的信用評分。申請無需信用歷史。</p>
+        <div class="prod-rate"><span class="rate-num">12.99%</span><span class="rate-label">APR 固定</span></div>
+        <ul class="prod-perks">
+          <li>貸款金額：$300 – $2,500</li>
+          <li>12 或 24 個月期限</li>
+          <li>向所有 3 家信用局報告</li>
+          <li>資金存放於安全的儲蓄賬戶中</li>
+          <li>貸款結束時可獲取資金</li>
+          <li>申請無硬性信用查詢</li>
+        </ul>
+        <a href="#" class="btn btn-primary btn-full">開始建立信用</a>
+      </div>
+      <div class="prod-tab">
+        <div class="prod-icon">💳</div>
+        <h3>Harrison 信用卡</h3>
+        <p>使用直接集成到 Harrison 應用中的卡，每次購買都能賺取獎勵。我們的核心卡無年費。</p>
+        <div class="prod-rate"><span class="rate-num">19.99%</span><span class="rate-label">可變 APR</span></div>
+        <ul class="prod-perks">
+          <li>所有購物返現 1.5%</li>
+          <li>雜貨和汽油返現 3%</li>
+          <li>無年費（核心卡）</li>
+          <li>信用額度：$500 – $20,000</li>
+          <li>實時消費提醒</li>
+          <li>與 Harrison 預算集成</li>
+        </ul>
+        <a href="#" class="btn btn-ghost btn-full">申請信用卡</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOAN CALCULATOR -->
+<section class="calc-section">
+  <div class="calc-inner section-inner">
+    <div class="section-label" style="color:var(--accent)">貸款計算器</div>
+    <h2 class="calc-title">估算您的每月付款</h2>
+    <p class="calc-sub">使用我們的計算器來了解您的貸款可能會是什麼樣子。您的實際利率基於您的信用資料，可能會有所不同。</p>
+    <div class="calc-box">
+      <div>
+        <div class="calc-field">
+          <label>貸款金額</label>
+          <input type="number" value="10000" min="1000" max="50000" step="500" />
+        </div>
+        <div class="calc-field">
+          <label>貸款期限</label>
+          <select>
+            <option>12 個月</option>
+            <option>24 個月</option>
+            <option selected>36 個月</option>
+            <option>48 個月</option>
+            <option>60 個月</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>預估 APR</label>
+          <select>
+            <option>7.99%</option>
+            <option>9.99%</option>
+            <option selected>12.99%</option>
+            <option>15.99%</option>
+            <option>19.99%</option>
+          </select>
+        </div>
+        <p style="font-size:0.78rem;color:rgba(255,255,255,0.4);line-height:1.6;margin-top:8px">顯示的利率為代表性示例。您的實際利率將在申請審核後確定。</p>
+      </div>
+      <div class="calc-result">
+        <div style="font-size:0.82rem;font-weight:700;color:#a8c8ff;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px">預估摘要</div>
+        <div class="result-row">
+          <span class="result-label">貸款金額</span>
+          <span class="result-value">$10,000</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">期限</span>
+          <span class="result-value">36 個月</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">APR</span>
+          <span class="result-value">12.99%</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">總利息</span>
+          <span class="result-value">$2,148</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">每月付款</span>
+          <span class="result-value big">$336.28</span>
+        </div>
+        <a href="#" class="btn btn-accent" style="width:100%;justify-content:center;margin-top:20px;display:flex">立即申請 – 查看您的利率</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">申請流程</div>
+      <h2 class="section-title">從申請到資金到位僅需 24 小時</h2>
+      <p class="section-sub">我們消除了傳統貸款申請的複雜性。整個過程都在 Harrison 應用中進行。</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-step">
+        <div class="step-circle">📝</div>
+        <h4>幾分鐘內申請</h4>
+        <p>在 Harrison 應用中填寫簡短的申請。我們進行軟性信用查詢以顯示您的利率——不影響您的評分。</p>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">⚡</div>
+        <h4>即時決策</h4>
+        <p>我們的風險模型審核您的申請，並在幾秒鐘內為大多數申請人返回決策。</p>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">✍️</div>
+        <h4>簽署您的協議</h4>
+        <p>直接在應用中查看您的條款並電子簽署您的貸款協議——無需打印、掃描或郵寄。</p>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">💰</div>
+        <h4>資金存入</h4>
+        <p>批准的資金直接存入您的 Harrison 支票賬戶——通常在一個工作日內。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CREDIT BUREAUS -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">信用報告</div>
+      <h2 class="section-title">我們向所有三家信用局報告</h2>
+      <p class="section-sub">您在 Harrison 貸款或信用卡上的每次按時付款都會報告給 Experian、Equifax 和 TransUnion——幫助您建立信用歷史。</p>
+    </div>
+    <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:48px">
+      <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:28px 40px;text-align:center;box-shadow:var(--shadow);min-width:180px">
+        <div style="font-size:1.8rem;font-weight:800;color:var(--blue);margin-bottom:6px">Experian</div>
+        <div style="font-size:0.82rem;color:var(--muted)">信用局</div>
+      </div>
+      <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:28px 40px;text-align:center;box-shadow:var(--shadow);min-width:180px">
+        <div style="font-size:1.8rem;font-weight:800;color:var(--navy);margin-bottom:6px">Equifax</div>
+        <div style="font-size:0.82rem;color:var(--muted)">信用局</div>
+      </div>
+      <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:28px 40px;text-align:center;box-shadow:var(--shadow);min-width:180px">
+        <div style="font-size:1.8rem;font-weight:800;color:#c0392b;margin-bottom:6px">TransUnion</div>
+        <div style="font-size:0.82rem;color:var(--muted)">信用局</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="disclaimer">
+  <p>所有貸款均需信用批准。APR 範圍代表根據信用評分可用的 APR 範圍；您的利率可能會有所不同。Harrison Financial 個人貸款由 Meridian Bank, N.A. 提供。“軟查詢”意味著初始利率檢查不影響您的信用評分；最終批准可能需要進行硬性查詢。並非在所有州均可用。</p>
+</div>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;padding:28px 24px 0">
+    <div class="logo" style="margin-bottom:10px"><div class="logo-icon">HF</div><span style="color:white;font-size:1.1rem">Harrison Financial</span></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc.</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap"><a href="#">隱私政策</a><a href="#">條款</a><a href="#">貸款披露</a></div>
+    <span>平等住房貸款人 · NMLS #1234567</span>
+  </div>
+</footer>
+
+</body>
+</html>

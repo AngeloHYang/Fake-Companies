@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureStar — 实时欺诈检测基础设施</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --slate:   #1e2d4a;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav {
+      background: var(--navy);
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 68px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 900; font-size: 1rem; letter-spacing: -1px;
+    }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-cyan { background: var(--cyan); color: var(--navy); font-weight: 700; }
+    .btn-cyan:hover { background: #0891b2; color: white; }
+    .btn-lg { font-size: 1rem; padding: 14px 32px; border-radius: 10px; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #0f2044 55%, #1a3070 100%);
+      color: white; padding: 100px 24px 90px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(6,182,212,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.3);
+      border-radius: 20px; padding: 5px 14px 5px 10px;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.4px;
+      color: var(--cyan); margin-bottom: 24px;
+    }
+    .hero-badge-dot { width: 7px; height: 7px; background: var(--cyan); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .hero h1 { font-size: clamp(2rem, 4.5vw, 3.4rem); font-weight: 800; line-height: 1.15; margin-bottom: 22px; }
+    .hero h1 span { color: var(--cyan); }
+    .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.7); max-width: 520px; line-height: 1.75; margin-bottom: 36px; }
+    .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px; overflow: hidden; margin-top: 56px;
+    }
+    .hero-stat { background: rgba(255,255,255,0.03); padding: 24px 20px; }
+    .hero-stat .value { font-size: 1.8rem; font-weight: 800; color: white; }
+    .hero-stat .value span { color: var(--cyan); }
+    .hero-stat .label { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+    /* TERMINAL WIDGET */
+    .terminal {
+      background: #0d1b2a; border: 1px solid rgba(6,182,212,0.25);
+      border-radius: 14px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .terminal-bar {
+      background: #162032; padding: 12px 16px;
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f56; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #27c93f; }
+    .terminal-title { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-left: auto; font-family: monospace; }
+    .terminal-body { padding: 20px; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.8; }
+    .t-comment { color: #4b5e72; }
+    .t-key { color: #7dd3fc; }
+    .t-str { color: #86efac; }
+    .t-num { color: #fbbf24; }
+    .t-kw { color: #c084fc; }
+    .t-label { color: var(--cyan); font-weight: 700; }
+    .t-green { color: #34d399; }
+    .t-red { color: #f87171; }
+    .t-badge { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; border-radius: 4px; padding: 0 6px; font-size: 0.75rem; }
+
+    /* SECTION COMMON */
+    section { padding: 80px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1.05rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* FEATURES */
+    .features-bg { background: var(--light-bg); }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 52px; }
+    .feature-card {
+      background: white; border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 32px 28px; box-shadow: var(--shadow);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(10,22,40,0.14); }
+    .feature-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 18px;
+    }
+    .icon-blue { background: #eff6ff; }
+    .icon-cyan { background: #ecfeff; }
+    .icon-green { background: #ecfdf5; }
+    .icon-purple { background: #f5f3ff; }
+    .icon-orange { background: #fff7ed; }
+    .icon-red { background: #fff1f2; }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+    .feature-card p { font-size: 0.93rem; color: var(--muted); line-height: 1.65; }
+    .feature-tag {
+      display: inline-block; margin-top: 14px;
+      background: #ecfeff; color: #0891b2; border: 1px solid #a5f3fc;
+      border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: 600;
+    }
+    .feature-tag.green { background: #ecfdf5; color: #059669; border-color: #6ee7b7; }
+    .feature-tag.purple { background: #f5f3ff; color: #7c3aed; border-color: #c4b5fd; }
+
+    /* HOW IT WORKS */
+    .flow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0; margin-top: 52px; position: relative; }
+    .flow-step {
+      text-align: center; padding: 36px 24px;
+      border: 1px solid var(--border); background: white;
+      border-radius: var(--radius); position: relative;
+    }
+    .flow-step + .flow-step { margin-left: -1px; }
+    .flow-num {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: white; font-weight: 800; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .flow-step h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .flow-step p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+    .flow-arrow { display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--border); }
+
+    /* INTEGRATIONS */
+    .integrations-bg { background: var(--navy); color: white; }
+    .integrations-bg .section-title { color: white; }
+    .integrations-bg .section-sub { color: rgba(255,255,255,0.55); }
+    .integration-chips { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 36px; justify-content: center; }
+    .integration-chip {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50px; padding: 10px 20px;
+      color: rgba(255,255,255,0.85); font-weight: 600; font-size: 0.9rem;
+      transition: all .2s;
+    }
+    .integration-chip:hover { background: rgba(6,182,212,0.12); border-color: var(--cyan); color: var(--cyan); }
+    .chip-icon { font-size: 1.2rem; }
+
+    /* COMPLIANCE */
+    .compliance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-top: 52px; }
+    .compliance-list { list-style: none; margin-top: 24px; }
+    .compliance-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      font-size: 0.95rem; color: var(--text);
+    }
+    .compliance-list li:last-child { border-bottom: none; }
+    .check { color: var(--green); font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .compliance-visual {
+      background: var(--navy); border-radius: 16px; padding: 36px;
+      color: white;
+    }
+    .audit-row {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+    }
+    .audit-icon { font-size: 1.2rem; }
+    .audit-info { flex: 1; }
+    .audit-title { font-size: 0.85rem; font-weight: 600; color: white; }
+    .audit-sub { font-size: 0.75rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+    .audit-badge {
+      font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    }
+    .badge-green { background: rgba(16,185,129,0.2); color: #34d399; }
+    .badge-blue { background: rgba(37,99,235,0.25); color: #93c5fd; }
+    .badge-yellow { background: rgba(251,191,36,0.2); color: #fbbf24; }
+
+    /* SOCIAL PROOF */
+    .quotes-bg { background: var(--light-bg); }
+    .quotes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 52px; }
+    .quote-card {
+      background: white; border-radius: var(--radius);
+      border: 1px solid var(--border); padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .quote-stars { color: #f59e0b; font-size: 1rem; margin-bottom: 14px; }
+    .quote-text { font-size: 0.95rem; color: var(--text); line-height: 1.7; font-style: italic; margin-bottom: 18px; }
+    .quote-author { display: flex; align-items: center; gap: 12px; }
+    .author-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .author-name { font-size: 0.88rem; font-weight: 700; color: var(--navy); }
+    .author-role { font-size: 0.78rem; color: var(--muted); }
+
+    /* CTA BAND */
+    .cta-band {
+      background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%);
+      color: white; padding: 80px 24px; text-align: center;
+    }
+    .cta-band h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; margin-bottom: 16px; }
+    .cta-band p { font-size: 1.05rem; color: rgba(255,255,255,0.75); max-width: 500px; margin: 0 auto 36px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; }
+    .btn-white:hover { background: #e0e7ff; }
+    .btn-outline-white { border: 2px solid rgba(255,255,255,0.5); color: white; background: transparent; font-weight: 600; }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,0.6);
+      padding: 60px 24px 30px;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .footer-brand p { font-size: 0.88rem; line-height: 1.7; max-width: 280px; margin-top: 12px; color: rgba(255,255,255,0.45); }
+    .footer-col h5 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.8); margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { font-size: 0.88rem; color: rgba(255,255,255,0.5); transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--cyan); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 24px; font-size: 0.82rem; color: rgba(255,255,255,0.3); }
+
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .terminal { display: none; }
+      .hero-stats { grid-template-columns: 1fr; }
+      .compliance-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-icon">SS</div>
+      <span>SecureStar</span>
+    </div>
+    <div class="nav-links">
+      <a href="platform.html">平台</a>
+      <a href="solutions.html">解决方案</a>
+      <a href="developers.html">开发者</a>
+      <a href="company.html">公司</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">文档</a>
+      <a href="#contact" class="btn btn-primary">请求演示</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../index.html">English</option>
+            <option value="../zh-hans/index.html" selected>简体中文</option>
+            <option value="../zh-hant/index.html">繁體中文</option>
+            <option value="../es/index.html">Español</option>
+            <option value="../fr/index.html">Français</option>
+            <option value="../ja/index.html">日本語</option>
+            <option value="../ko/index.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        AI驱动的风险基础设施
+      </div>
+      <h1>为关键<span>毫秒</span>打造的欺诈检测</h1>
+      <p>SecureStar 提供低于80毫秒的实时交易评分、可解释的决策和审计就绪的合规性——专为高吞吐量金融平台而设计。</p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-cyan btn-lg">请求演示</a>
+        <a href="developers.html" class="btn btn-ghost btn-lg">查看API文档 →</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="value">&lt;<span>80</span>ms</div>
+          <div class="label">p99 API延迟</div>
+        </div>
+        <div class="hero-stat">
+          <div class="value"><span>99.97</span>%</div>
+          <div class="label">平台正常运行时间SLA</div>
+        </div>
+        <div class="hero-stat">
+          <div class="value"><span>94</span>%+</div>
+          <div class="label">实时数据精度</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TERMINAL DEMO -->
+    <div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <div class="terminal-title">securestar-api · response</div>
+        </div>
+        <div class="terminal-body">
+          <div class="t-comment">// POST /v2/score</div>
+          <br>
+          <div><span class="t-kw">const</span> <span class="t-key">result</span> = <span class="t-kw">await</span> securestar.score({</div>
+          <div>&nbsp;&nbsp;<span class="t-key">transaction_id</span>: <span class="t-str">"txn_9x2q8a"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">amount</span>: <span class="t-num">4820.00</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">currency</span>: <span class="t-str">"USD"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">account_id</span>: <span class="t-str">"acct_h82jk"</span>,</div>
+          <div>});</div>
+          <br>
+          <div class="t-comment">// ✓ Response in 43ms</div>
+          <br>
+          <div>{</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"risk_score"</span>: <span class="t-num">0.08</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"decision"</span>: <span class="t-str">"approve"</span> <span class="t-badge">APPROVED</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"confidence"</span>: <span class="t-num">0.97</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"latency_ms"</span>: <span class="t-num">43</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"explanation"</span>: {</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">"top_factors"</span>: [<span class="t-str">"known_merchant"</span>, <span class="t-str">"consistent_geo"</span>],</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">"rule_hits"</span>: [],</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">"model_version"</span>: <span class="t-str">"v3.2.1"</span></div>
+          <div>&nbsp;&nbsp;},</div>
+          <div>&nbsp;&nbsp;<span class="t-key">"audit_id"</span>: <span class="t-str">"aud_7gk2p1"</span></div>
+          <div>}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CORE CAPABILITIES -->
+<section class="features-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">核心平台</div>
+      <h2 class="section-title">您的风险团队需要的一切，不需要的没有</h2>
+      <p class="section-sub">为需要速度、可解释性和合规性的金融基础设施团队设计的单一平台。</p>
+    </div>
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon icon-blue">⚡</div>
+        <h3>超低延迟评分</h3>
+        <p>优化的推理管道和边缘部署选项提供低于80毫秒的p99响应时间——即使在高峰吞吐量时。您的支付流程永不等待。</p>
+        <span class="feature-tag">&lt;80ms p99 保证</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-cyan">🔍</div>
+        <h3>可解释的AI决策</h3>
+        <p>每个评分都附带特征归因、人类可读的规则解释和完整的审计跟踪。满足AML和KYC审计员的要求，无需编写自定义报告。</p>
+        <span class="feature-tag green">AML / KYC 就绪</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-purple">🧬</div>
+        <h3>混合决策引擎</h3>
+        <p>结合ML模式检测和确定性规则层。合规团队控制规则；模型处理异常。没有黑箱惊喜。</p>
+        <span class="feature-tag purple">ML + 基于规则</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-green">🛠️</div>
+        <h3>自定义模型调优</h3>
+        <p>在您自己的交易历史上进行训练，设置精度/召回阈值，并推送动态规则更新——无需重新部署或等待我们的团队。</p>
+        <span class="feature-tag green">您的数据，您的模型</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-blue">🔗</div>
+        <h3>原生堆栈集成</h3>
+        <p>为Kafka事件流、AWS环境和Python SDK提供预构建连接器。无需繁重工作即可融入现有基础设施。</p>
+        <span class="feature-tag">Kafka · AWS · Python</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon icon-orange">📊</div>
+        <h3>实时仪表板</h3>
+        <p>实时热图、评分分布、规则命中分解和模型漂移警报——全部在一个操作控制台中。在您的客户之前了解发生了什么。</p>
+        <span class="feature-tag">实时监控</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">工作原理</div>
+      <h2 class="section-title">从交易到决策不到80毫秒</h2>
+      <p class="section-sub">流式优先架构意味着每个事件在进入您的系统时都会被评分。</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;margin-top:52px;">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <h4>交易事件</h4>
+        <p>您的平台通过REST API或Kafka主题向SecureStar发出交易事件。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <h4>特征提取</h4>
+        <p>流式管道实时丰富事件，添加历史信号、速度检查和地理数据。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <h4>混合评分</h4>
+        <p>ML模型和规则引擎并行运行。决策层将输出整合为单一风险评分。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <h4>评分响应</h4>
+        <p>您将收到风险评分、决策建议、解释因素和审计ID——通常在&lt;50毫秒内。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">5</div>
+        <h4>审计日志记录</h4>
+        <p>每个决策都被持久化到不可变的审计日志中，可供监管机构、合规团队或您自己的运营查询。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section class="integrations-bg">
+  <div class="section-inner text-center">
+    <div class="section-label" style="color:var(--cyan)">集成</div>
+    <h2 class="section-title">为现代金融堆栈而建</h2>
+    <p class="section-sub">无需拆除和替换。SecureStar 插入您已经运行的工具。</p>
+    <div class="integration-chips">
+      <div class="integration-chip"><span class="chip-icon">⚙️</span> Apache Kafka</div>
+      <div class="integration-chip"><span class="chip-icon">☁️</span> AWS (Lambda · SQS · RDS)</div>
+      <div class="integration-chip"><span class="chip-icon">🐍</span> Python SDK</div>
+      <div class="integration-chip"><span class="chip-icon">🔌</span> REST API</div>
+      <div class="integration-chip"><span class="chip-icon">🪝</span> Webhooks</div>
+      <div class="integration-chip"><span class="chip-icon">🗄️</span> PostgreSQL · Snowflake</div>
+      <div class="integration-chip"><span class="chip-icon">📦</span> Docker · Kubernetes</div>
+      <div class="integration-chip"><span class="chip-icon">🛡️</span> Splunk · Datadog</div>
+    </div>
+    <p style="color:rgba(255,255,255,0.3);font-size:0.85rem;margin-top:28px;">
+      完整集成文档 → <a href="developers.html" style="color:var(--cyan)">developers.securestar.io</a>
+    </p>
+  </div>
+</section>
+
+<!-- COMPLIANCE -->
+<section>
+  <div class="section-inner">
+    <div class="compliance-grid">
+      <div>
+        <div class="section-label">合规性与可解释性</div>
+        <h2 class="section-title">从第一天起就准备好审计</h2>
+        <p class="section-sub">与黑箱ML供应商不同，每个SecureStar决策都可以被解释、追踪和导出。</p>
+        <ul class="compliance-list">
+          <li><span class="check">✓</span><span><strong>特征归因</strong> — 精确了解哪些信号驱动了每个风险评分。</span></li>
+          <li><span class="check">✓</span><span><strong>人类可读规则</strong> — 合规团队用简单语言编写和阅读规则。</span></li>
+          <li><span class="check">✓</span><span><strong>不可变审计日志</strong> — 每个决策都被时间戳记并加密签名。</span></li>
+          <li><span class="check">✓</span><span><strong>AML &amp; KYC 报告</strong> — 一键式监管导出，支持FinCEN、FATF和EBA格式。</span></li>
+          <li><span class="check">✓</span><span><strong>SOC 2 Type II</strong> 认证，PCI-DSS 合规基础设施。</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="compliance-visual">
+          <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:16px;">审计事件流</div>
+          <div class="audit-row">
+            <div class="audit-icon">🟢</div>
+            <div class="audit-info">
+              <div class="audit-title">txn_9x2q8a — APPROVED</div>
+              <div class="audit-sub">risk_score: 0.08 · 43ms · model v3.2.1</div>
+            </div>
+            <div class="audit-badge badge-green">通过</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-icon">🟡</div>
+            <div class="audit-info">
+              <div class="audit-title">txn_4h1k9b — FLAGGED</div>
+              <div class="audit-sub">risk_score: 0.71 · 38ms · rule: vel_1h_exceeded</div>
+            </div>
+            <div class="audit-badge badge-yellow">审查</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-icon">🔴</div>
+            <div class="audit-info">
+              <div class="audit-title">txn_8m3r2c — DECLINED</div>
+              <div class="audit-sub">risk_score: 0.96 · 51ms · rule: aml_threshold</div>
+            </div>
+            <div class="audit-badge badge-blue">记录</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-icon">🟢</div>
+            <div class="audit-info">
+              <div class="audit-title">txn_2z7p4d — APPROVED</div>
+              <div class="audit-sub">risk_score: 0.12 · 29ms · model v3.2.1</div>
+            </div>
+            <div class="audit-badge badge-green">通过</div>
+          </div>
+          <div style="margin-top:14px;font-size:0.78rem;color:rgba(255,255,255,0.3);text-align:center;">
+            所有事件导出到合规仪表板 · KYC/AML 就绪
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTES -->
+<section class="quotes-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">客户故事</div>
+      <h2 class="section-title">被大规模风险团队信任</h2>
+    </div>
+    <div class="quotes-grid">
+      <div class="quote-card">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"我们评估了六家欺诈供应商。SecureStar 是唯一一家满足我们&lt;100ms SLA并且能够向我们的合规官解释为什么交易被标记的供应商。这种组合很少见。"</p>
+        <div class="quote-author">
+          <div class="author-avatar"><img src="../images/customer-marcus-r.png" alt="Marcus R." /></div>
+          <div>
+            <div class="author-name">Marcus R.</div>
+            <div class="author-role">风险工程主管, Nexo Payments</div>
+          </div>
+        </div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"Kafka 原生集成为我们节省了数周的构建时间。我们在10天内上线生产。混合规则 + ML 引擎正是受监管环境的正确设计。"</p>
+        <div class="quote-author">
+          <div class="author-avatar"><img src="../images/customer-sophia-l.png" alt="Sophia L." /></div>
+          <div>
+            <div class="author-name">Sophia L.</div>
+            <div class="author-role">工程副总裁, ClearRoute Financial</div>
+          </div>
+        </div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"在我们自己的数据上进行的自定义阈值调优在第一个月内将误报减少了31%。我们的合规团队终于停止拒绝供应商的建议——因为现在他们可以阅读这些建议了。"</p>
+        <div class="quote-author">
+          <div class="author-avatar"><img src="../images/customer-david-p.png" alt="David P." /></div>
+          <div>
+            <div class="author-name">David P.</div>
+            <div class="author-role">首席风险官, Stratum Bank</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-band" id="contact">
+  <h2>准备好亲眼见证SecureStar的表现了吗？</h2>
+  <p>预约30分钟的技术演示。我们将演示我们的API，展示实时延迟基准，并讨论如何在您的数据上调优模型。</p>
+  <div class="cta-actions">
+    <a href="#" class="btn btn-white btn-lg">预约演示</a>
+    <a href="developers.html" class="btn btn-outline-white btn-lg">阅读文档</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-icon">SS</div>
+          <span>SecureStar</span>
+        </div>
+        <p>为高吞吐量金融系统提供AI风险基础设施。由了解欺诈模型与欺诈平台区别的工程师打造。</p>
+      </div>
+      <div class="footer-col">
+        <h5>平台</h5>
+        <ul>
+          <li><a href="platform.html">风险评分API</a></li>
+          <li><a href="platform.html">可解释的AI</a></li>
+          <li><a href="platform.html">混合引擎</a></li>
+          <li><a href="platform.html">模型调优</a></li>
+          <li><a href="platform.html">审计日志</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>解决方案</h5>
+        <ul>
+          <li><a href="solutions.html">数字银行</a></li>
+          <li><a href="solutions.html">支付</a></li>
+          <li><a href="solutions.html">贷款</a></li>
+          <li><a href="solutions.html">AML / KYC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>公司</h5>
+        <ul>
+          <li><a href="company.html">关于我们</a></li>
+          <li><a href="company.html">团队</a></li>
+          <li><a href="developers.html">开发者</a></li>
+          <li><a href="#">博客</a></li>
+          <li><a href="#">招聘</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 SecureStar Labs, Inc. 保留所有权利。</span>
+      <div style="display:flex;gap:20px;">
+        <a href="#">隐私</a>
+        <a href="#">条款</a>
+        <a href="#">安全</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

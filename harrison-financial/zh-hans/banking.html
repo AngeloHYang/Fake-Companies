@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>银行服务 – Harrison Financial</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d; --blue: #1a4fad; --accent: #2db4a0; --light-bg: #f4f7fb;
+      --white: #ffffff; --text: #1e2a3b; --muted: #5a6a7e; --border: #d5dce8;
+      --radius: 12px; --shadow: 0 4px 24px rgba(13,30,61,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,30,61,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+
+    /* PAGE HERO */
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #1a3570 100%); color: white; padding: 72px 24px 64px; }
+    .page-hero-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .page-label { display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 5px 16px; font-size: 0.8rem; font-weight: 600; color: #a8c8ff; letter-spacing: 0.5px; margin-bottom: 20px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: #b8ccec; line-height: 1.7; max-width: 600px; margin: 0 auto 32px; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; font-weight: 700; }
+    .btn-accent:hover { background: #229988; }
+
+    /* SECTIONS */
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .light-bg { background: var(--light-bg); }
+
+    /* TWO-COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .two-col.reverse { direction: rtl; }
+    .two-col.reverse > * { direction: ltr; }
+    .feature-list { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 14px; }
+    .feature-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: var(--text); line-height: 1.55; }
+    .feature-list li .bullet { width: 24px; height: 24px; background: #e8f7f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* ACCOUNT CARDS */
+    .account-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 48px; }
+    .acct-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 32px 28px; box-shadow: var(--shadow); }
+    .acct-card.featured { border-color: var(--accent); box-shadow: 0 4px 30px rgba(45,180,160,0.18); position: relative; overflow: hidden; }
+    .acct-card.featured::before { content: "MOST POPULAR"; position: absolute; top: 16px; right: -22px; background: var(--accent); color: white; font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; padding: 4px 32px; transform: rotate(45deg); }
+    .acct-icon { font-size: 2rem; margin-bottom: 14px; }
+    .acct-card h3 { font-size: 1.15rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .acct-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 20px; line-height: 1.55; }
+    .acct-rate { font-size: 2rem; font-weight: 800; color: var(--blue); }
+    .acct-rate span { font-size: 0.9rem; font-weight: 500; color: var(--muted); }
+    .acct-perks { list-style: none; margin: 16px 0 24px; display: flex; flex-direction: column; gap: 9px; }
+    .acct-perks li { font-size: 0.88rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .acct-perks li::before { content: "✓"; color: var(--accent); font-weight: 700; }
+    .btn-full { width: 100%; text-align: center; justify-content: center; }
+    .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--navy); }
+    .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* RATES TABLE */
+    .rates-table { width: 100%; border-collapse: collapse; margin-top: 36px; font-size: 0.93rem; }
+    .rates-table th { background: var(--navy); color: white; padding: 14px 18px; text-align: left; font-weight: 600; font-size: 0.85rem; }
+    .rates-table th:first-child { border-radius: 8px 0 0 0; }
+    .rates-table th:last-child { border-radius: 0 8px 0 0; }
+    .rates-table td { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+    .rates-table tr:last-child td { border-bottom: none; }
+    .rates-table tr:nth-child(even) td { background: var(--light-bg); }
+    .rate-highlight { color: var(--blue); font-weight: 700; }
+    .badge-free { background: #e6f7f5; color: var(--accent); font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+    .badge-warn { background: #fff3cd; color: #856404; font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+
+    /* FAQ */
+    .faq-list { margin-top: 40px; display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { padding: 20px 24px; font-weight: 600; font-size: 0.97rem; color: var(--navy); cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: white; }
+    .faq-q:hover { background: var(--light-bg); }
+    .faq-a { padding: 0 24px 20px; font-size: 0.92rem; color: var(--muted); line-height: 1.7; background: white; }
+
+    /* FOOTER */
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+    .footer-bottom a:hover { color: white; }
+    .footer-full { max-width: 1200px; margin: 0 auto; padding: 48px 24px 32px; display: grid; grid-template-columns: 2fr repeat(4,1fr); gap: 36px; }
+    .footer-col h5 { color: white; font-size: 0.83rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 14px; text-transform: uppercase; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer-col ul li a { color: #8aadda; transition: color .2s; }
+    .footer-col ul li a:hover { color: white; }
+
+    @media (max-width: 860px) {
+      .two-col { grid-template-columns: 1fr; }
+      .two-col.reverse { direction: ltr; }
+      .footer-full { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .footer-full { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">HF</div>Harrison Financial</a>
+    <div class="nav-links">
+      <a href="banking.html" class="active">银行</a>
+      <a href="cards.html">卡片</a>
+      <a href="lending.html">贷款</a>
+      <a href="security.html">安全</a>
+      <a href="about.html">关于</a>
+      <a href="support.html">支持</a>
+    </div>
+    <div class="nav-actions">
+      <a href="support.html" class="btn btn-outline">登录</a>
+      <a href="#accounts" class="btn btn-primary">开设账户</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../banking.html">English</option>
+            <option value="../zh-hans/banking.html" selected>简体中文</option>
+            <option value="../zh-hant/banking.html">繁體中文</option>
+            <option value="../es/banking.html">Español</option>
+            <option value="../fr/banking.html">Français</option>
+            <option value="../ja/banking.html">日本語</option>
+            <option value="../ko/banking.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-label">🏦 核心银行业务</div>
+    <h1>为您实际生活方式设计的账户</h1>
+    <p>无费用。无最低要求。无繁琐。支票、储蓄和联名账户为现代生活而建——收益和工具相匹配。</p>
+    <a href="#accounts" class="btn btn-accent">比较账户</a>
+  </div>
+</div>
+
+<!-- ACCOUNTS -->
+<section id="accounts">
+  <div class="section-inner">
+    <div class="section-label">选择您的账户</div>
+    <h2 class="section-title">适合每个目标的正确账户</h2>
+    <p class="section-sub">无论您是日常消费、为雨天储蓄，还是共同管理资金，我们都有适合的账户。</p>
+    <div class="account-cards">
+      <div class="acct-card">
+        <div class="acct-icon">💳</div>
+        <h3>Harrison 支票账户</h3>
+        <p class="acct-desc">您的日常账户。消费、接收和转移资金，无费用，无最低要求。</p>
+        <div class="acct-rate">$0 <span>/ 月</span></div>
+        <ul class="acct-perks">
+          <li>无月度维护费</li>
+          <li>无最低余额要求</li>
+          <li>免费Visa借记卡</li>
+          <li>全国55,000+免手续费ATM</li>
+          <li>实时消费通知</li>
+          <li>提前直接存款（最多提前2天）</li>
+        </ul>
+        <a href="#" class="btn btn-ghost btn-full">开设支票账户</a>
+      </div>
+      <div class="acct-card featured">
+        <div class="acct-icon">📈</div>
+        <h3>Harrison 高收益储蓄账户</h3>
+        <p class="acct-desc">每一美元都赚得更多。我们的储蓄账户支付全国平均水平的10倍——无任何条件。</p>
+        <div class="acct-rate">4.85% <span>APY</span></div>
+        <ul class="acct-perks">
+          <li>4.85% APY——无等级，无噱头</li>
+          <li>FDIC保险最高$250,000</li>
+          <li>自动储蓄规则</li>
+          <li>储蓄目标跟踪</li>
+          <li>无取款罚款</li>
+          <li>利息每日复利，每月支付</li>
+        </ul>
+        <a href="#" class="btn btn-primary btn-full">开设储蓄账户</a>
+      </div>
+      <div class="acct-card">
+        <div class="acct-icon">🤝</div>
+        <h3>Harrison 联名账户</h3>
+        <p class="acct-desc">为两人而建。共享财务变得简单——理想的选择是情侣、室友或家庭成员。</p>
+        <div class="acct-rate">$0 <span>/ 月</span></div>
+        <ul class="acct-perks">
+          <li>独立登录，共享可见性</li>
+          <li>每位所有者的个人消费限额</li>
+          <li>两张免费借记卡</li>
+          <li>合并或分开通知</li>
+          <li>可用的链接储蓄账户</li>
+          <li>轻松分摊费用跟踪</li>
+        </ul>
+        <a href="#" class="btn btn-ghost btn-full">开设联名账户</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSFERS -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="two-col">
+      <div>
+        <div class="section-label">资金流动</div>
+        <h2 class="section-title">以您想要的方式转移资金</h2>
+        <p class="section-sub">从日常P2P支付到电汇和直接存款——Harrison Financial处理您需要的每种资金流动。</p>
+        <ul class="feature-list">
+          <li><span class="bullet">✓</span><span><strong>ACH 转账：</strong>免费银行间转账。标准1-3个工作日或同日小额费用。</span></li>
+          <li><span class="bullet">✓</span><span><strong>电汇：</strong>国内和国际电汇安全发送，同日处理。</span></li>
+          <li><span class="bullet">✓</span><span><strong>P2P 转账：</strong>全天候即时向任何Harrison会员发送资金，无费用。</span></li>
+          <li><span class="bullet">✓</span><span><strong>直接存款：</strong>提前最多2天接收您的工资、零工支付或政府存款。</span></li>
+          <li><span class="bullet">✓</span><span><strong>定期转账：</strong>安排自动转账到储蓄或账户之间。</span></li>
+          <li><span class="bullet">✓</span><span><strong>Zelle® 集成：</strong>通过Zelle网络向朋友和家人发送和接收资金。</span></li>
+        </ul>
+      </div>
+      <div style="background:var(--white);border-radius:20px;padding:32px;border:1px solid var(--border);box-shadow:var(--shadow)">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:20px">转账费用表</h3>
+        <table class="rates-table" style="margin-top:0">
+          <thead>
+            <tr>
+              <th>转账类型</th>
+              <th>时间框架</th>
+              <th>费用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ACH 标准</td>
+              <td>1-3个工作日</td>
+              <td><span class="badge-free">免费</span></td>
+            </tr>
+            <tr>
+              <td>ACH 同日</td>
+              <td>同一工作日</td>
+              <td class="rate-highlight">$2.99</td>
+            </tr>
+            <tr>
+              <td>P2P（会员间）</td>
+              <td>即时</td>
+              <td><span class="badge-free">免费</span></td>
+            </tr>
+            <tr>
+              <td>国内电汇</td>
+              <td>同一工作日</td>
+              <td class="rate-highlight">$12.00</td>
+            </tr>
+            <tr>
+              <td>国际电汇</td>
+              <td>1-3个工作日</td>
+              <td class="rate-highlight">$25.00</td>
+            </tr>
+            <tr>
+              <td>Zelle®</td>
+              <td>分钟</td>
+              <td><span class="badge-free">免费</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECT DEPOSIT -->
+<section>
+  <div class="section-inner">
+    <div class="two-col reverse">
+      <div>
+        <div class="section-label">直接存款</div>
+        <h2 class="section-title">提前最多2天获得工资</h2>
+        <p class="section-sub">几分钟内设置直接存款，开始在官方发薪日前最多提前48小时接收您的工资——无费用，无等待。</p>
+        <ul class="feature-list">
+          <li><span class="bullet">✓</span><span>提前获取工资、政府福利（SSI、VA）和零工平台支付</span></li>
+          <li><span class="bullet">✓</span><span>自动分配您的存款——一部分直接存入储蓄</span></li>
+          <li><span class="bullet">✓</span><span>在收到存款的那一刻收到通知</span></li>
+          <li><span class="bullet">✓</span><span>从应用程序中秒下载您的直接存款表格</span></li>
+        </ul>
+      </div>
+      <div style="background:var(--light-bg);border-radius:20px;padding:36px;text-align:center">
+        <div style="font-size:3.5rem;margin-bottom:16px">⚡</div>
+        <div style="font-size:1.8rem;font-weight:800;color:var(--navy);margin-bottom:8px">提前2天</div>
+        <div style="font-size:0.95rem;color:var(--muted);line-height:1.65;margin-bottom:24px">大多数设置直接存款的会员在周三或周四看到他们的资金可用，而不是周五。</div>
+        <div style="background:white;border-radius:12px;padding:20px;border:1px solid var(--border)">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">适用于</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">ADP</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">Gusto</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">Workday</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">社会保障</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">DoorDash</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">Uber</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">Lyft</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">+ 500 更多</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="light-bg">
+  <div class="section-inner" style="max-width:760px">
+    <div class="section-label">有问题吗？</div>
+    <h2 class="section-title">银行常见问题</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Harrison Financial 是一家真正的银行吗？ <span>+</span></div>
+        <div class="faq-a">Harrison Financial 是一家金融科技公司，而不是一家特许银行。银行服务由我们的合作银行 Meridian Bank, N.A. 提供，FDIC 成员。您的存款最高可享受 $250,000 的 FDIC 保险。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">我需要了解哪些费用？ <span>+</span></div>
+        <div class="faq-a">我们不收取月费、透支费和最低余额费。一些可选服务（同日 ACH、外发电汇、加急卡递送）收取小额费用，这些费用在您确认之前总是会披露。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">我可以多快开设账户？ <span>+</span></div>
+        <div class="faq-a">大多数账户在 5 分钟内开设。您需要政府颁发的带照片身份证、您的社会安全号码和资金来源。我们将使用我们的 KYC 流程实时验证您的身份。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">我可以免费使用多少台 ATM？ <span>+</span></div>
+        <div class="faq-a">Harrison Financial 会员可以在全国 55,000 多台网络内 ATM 上免费使用。网络外 ATM 费用为每笔交易 $2.50。我们为有直接存款的会员每月退款最多 $10 的网络外 ATM 费用。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">我可以存现金吗？ <span>+</span></div>
+        <div class="faq-a">可以。现金存款可在包括 CVS、Walgreens、Dollar General 和 Walmart 在内的 90,000 多个零售地点通过我们的 Green Dot® 和 MoneyPass® 合作伙伴进行。零售合作伙伴可能会收取费用（通常为 $4.95）。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-full">
+    <div class="footer-col" style="grid-column:span 5">
+      <div class="logo" style="margin-bottom:10px"><div class="logo-icon">HF</div><span style="color:white;font-size:1.1rem">Harrison Financial</span></div>
+      <p style="color:#8aadda;font-size:0.88rem;max-width:360px;line-height:1.6">银行服务由 Meridian Bank, N.A. 提供，FDIC 成员。存款最高可享受 $250,000 的保险。</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc.</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap"><a href="#">隐私</a><a href="#">条款</a><a href="#">无障碍</a></div>
+    <span>FDIC 保险 · 平等住房贷款机构</span>
+  </div>
+</footer>
+
+</body>
+</html>

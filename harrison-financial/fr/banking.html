@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services Bancaires – Harrison Financial</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d; --blue: #1a4fad; --accent: #2db4a0; --light-bg: #f4f7fb;
+      --white: #ffffff; --text: #1e2a3b; --muted: #5a6a7e; --border: #d5dce8;
+      --radius: 12px; --shadow: 0 4px 24px rgba(13,30,61,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,30,61,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+
+    /* PAGE HERO */
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #1a3570 100%); color: white; padding: 72px 24px 64px; }
+    .page-hero-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .page-label { display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 5px 16px; font-size: 0.8rem; font-weight: 600; color: #a8c8ff; letter-spacing: 0.5px; margin-bottom: 20px; }
+    .page-hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: #b8ccec; line-height: 1.7; max-width: 600px; margin: 0 auto 32px; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; font-weight: 700; }
+    .btn-accent:hover { background: #229988; }
+
+    /* SECTIONS */
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.7; }
+    .light-bg { background: var(--light-bg); }
+
+    /* TWO-COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .two-col.reverse { direction: rtl; }
+    .two-col.reverse > * { direction: ltr; }
+    .feature-list { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 14px; }
+    .feature-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: var(--text); line-height: 1.55; }
+    .feature-list li .bullet { width: 24px; height: 24px; background: #e8f7f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* ACCOUNT CARDS */
+    .account-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 48px; }
+    .acct-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 32px 28px; box-shadow: var(--shadow); }
+    .acct-card.featured { border-color: var(--accent); box-shadow: 0 4px 30px rgba(45,180,160,0.18); position: relative; overflow: hidden; }
+    .acct-card.featured::before { content: "MOST POPULAR"; position: absolute; top: 16px; right: -22px; background: var(--accent); color: white; font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; padding: 4px 32px; transform: rotate(45deg); }
+    .acct-icon { font-size: 2rem; margin-bottom: 14px; }
+    .acct-card h3 { font-size: 1.15rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .acct-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 20px; line-height: 1.55; }
+    .acct-rate { font-size: 2rem; font-weight: 800; color: var(--blue); }
+    .acct-rate span { font-size: 0.9rem; font-weight: 500; color: var(--muted); }
+    .acct-perks { list-style: none; margin: 16px 0 24px; display: flex; flex-direction: column; gap: 9px; }
+    .acct-perks li { font-size: 0.88rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .acct-perks li::before { content: "✓"; color: var(--accent); font-weight: 700; }
+    .btn-full { width: 100%; text-align: center; justify-content: center; }
+    .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--navy); }
+    .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* RATES TABLE */
+    .rates-table { width: 100%; border-collapse: collapse; margin-top: 36px; font-size: 0.93rem; }
+    .rates-table th { background: var(--navy); color: white; padding: 14px 18px; text-align: left; font-weight: 600; font-size: 0.85rem; }
+    .rates-table th:first-child { border-radius: 8px 0 0 0; }
+    .rates-table th:last-child { border-radius: 0 8px 0 0; }
+    .rates-table td { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+    .rates-table tr:last-child td { border-bottom: none; }
+    .rates-table tr:nth-child(even) td { background: var(--light-bg); }
+    .rate-highlight { color: var(--blue); font-weight: 700; }
+    .badge-free { background: #e6f7f5; color: var(--accent); font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+    .badge-warn { background: #fff3cd; color: #856404; font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+
+    /* FAQ */
+    .faq-list { margin-top: 40px; display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { padding: 20px 24px; font-weight: 600; font-size: 0.97rem; color: var(--navy); cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: white; }
+    .faq-q:hover { background: var(--light-bg); }
+    .faq-a { padding: 0 24px 20px; font-size: 0.92rem; color: var(--muted); line-height: 1.7; background: white; }
+
+    /* FOOTER */
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+    .footer-bottom a:hover { color: white; }
+    .footer-full { max-width: 1200px; margin: 0 auto; padding: 48px 24px 32px; display: grid; grid-template-columns: 2fr repeat(4,1fr); gap: 36px; }
+    .footer-col h5 { color: white; font-size: 0.83rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 14px; text-transform: uppercase; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer-col ul li a { color: #8aadda; transition: color .2s; }
+    .footer-col ul li a:hover { color: white; }
+
+    @media (max-width: 860px) {
+      .two-col { grid-template-columns: 1fr; }
+      .two-col.reverse { direction: ltr; }
+      .footer-full { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .footer-full { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">HF</div>Harrison Financial</a>
+    <div class="nav-links">
+      <a href="banking.html" class="active">Banque</a>
+      <a href="cards.html">Cartes</a>
+      <a href="lending.html">Prêts</a>
+      <a href="security.html">Sécurité</a>
+      <a href="about.html">À propos</a>
+      <a href="support.html">Support</a>
+    </div>
+    <div class="nav-actions">
+      <a href="support.html" class="btn btn-outline">Connexion</a>
+      <a href="#accounts" class="btn btn-primary">Ouvrir un compte</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../banking.html">English</option>
+            <option value="../zh-hans/banking.html">简体中文</option>
+            <option value="../zh-hant/banking.html">繁體中文</option>
+            <option value="../es/banking.html">Español</option>
+            <option value="../fr/banking.html" selected>Français</option>
+            <option value="../ja/banking.html">日本語</option>
+            <option value="../ko/banking.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-label">🏦 Banque de Base</div>
+    <h1>Des Comptes Conçus pour Votre Vie Quotidienne</h1>
+    <p>Pas de frais. Pas de minimums. Pas de complications. Comptes chèques, épargne et joints conçus pour la vie moderne — avec le rendement et les outils adaptés.</p>
+    <a href="#accounts" class="btn btn-accent">Comparer les Comptes</a>
+  </div>
+</div>
+
+<!-- ACCOUNTS -->
+<section id="accounts">
+  <div class="section-inner">
+    <div class="section-label">Choisissez Votre Compte</div>
+    <h2 class="section-title">Le Compte Adapté à Chaque Objectif</h2>
+    <p class="section-sub">Que vous dépensiez quotidiennement, économisiez pour les imprévus, ou gériez de l'argent à plusieurs, nous avons un compte conçu pour cela.</p>
+    <div class="account-cards">
+      <div class="acct-card">
+        <div class="acct-icon">💳</div>
+        <h3>Compte Chèques Harrison</h3>
+        <p class="acct-desc">Votre compte quotidien. Dépensez, recevez et transférez de l'argent sans frais et sans minimums.</p>
+        <div class="acct-rate">$0 <span>/ mois</span></div>
+        <ul class="acct-perks">
+          <li>Pas de frais de maintenance mensuels</li>
+          <li>Pas de solde minimum requis</li>
+          <li>Carte de débit Visa gratuite</li>
+          <li>55 000+ distributeurs automatiques sans frais à l'échelle nationale</li>
+          <li>Notifications de dépenses en temps réel</li>
+          <li>Dépôt direct anticipé (jusqu'à 2 jours à l'avance)</li>
+        </ul>
+        <a href="#" class="btn btn-ghost btn-full">Ouvrir un Compte Chèques</a>
+      </div>
+      <div class="acct-card featured">
+        <div class="acct-icon">📈</div>
+        <h3>Compte Épargne à Haut Rendement Harrison</h3>
+        <p class="acct-desc">Gagnez plus sur chaque dollar. Notre compte épargne offre un rendement 10× supérieur à la moyenne nationale — sans pièges.</p>
+        <div class="acct-rate">4.85% <span>APY</span></div>
+        <ul class="acct-perks">
+          <li>4.85% APY — pas de paliers, pas de gimmicks</li>
+          <li>Assuré par la FDIC jusqu'à $250,000</li>
+          <li>Règles d'épargne automatiques</li>
+          <li>Suivi des objectifs d'épargne</li>
+          <li>Pas de pénalités de retrait</li>
+          <li>Intérêts composés quotidiennement, versés mensuellement</li>
+        </ul>
+        <a href="#" class="btn btn-primary btn-full">Ouvrir un Compte Épargne</a>
+      </div>
+      <div class="acct-card">
+        <div class="acct-icon">🤝</div>
+        <h3>Compte Joint Harrison</h3>
+        <p class="acct-desc">Conçu pour deux. Finances partagées simplifiées — idéal pour les couples, colocataires ou membres de la famille.</p>
+        <div class="acct-rate">$0 <span>/ mois</span></div>
+        <ul class="acct-perks">
+          <li>Connexions séparées, visibilité partagée</li>
+          <li>Limites de dépenses individuelles par propriétaire</li>
+          <li>Deux cartes de débit gratuites</li>
+          <li>Notifications combinées ou séparées</li>
+          <li>Compte épargne lié disponible</li>
+          <li>Suivi facile des dépenses partagées</li>
+        </ul>
+        <a href="#" class="btn btn-ghost btn-full">Ouvrir un Compte Joint</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSFERS -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="two-col">
+      <div>
+        <div class="section-label">Mouvement d'Argent</div>
+        <h2 class="section-title">Déplacez Votre Argent Comme Vous le Souhaitez</h2>
+        <p class="section-sub">Des paiements P2P quotidiens aux virements et dépôts directs — Harrison Financial gère tous les types de mouvements d'argent dont vous avez besoin.</p>
+        <ul class="feature-list">
+          <li><span class="bullet">✓</span><span><strong>Virements ACH :</strong> Envoyez de l'argent de banque à banque gratuitement. Standard 1–3 jours ouvrables ou le jour même pour un petit frais.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Virements Bancaires :</strong> Virements domestiques et internationaux envoyés en toute sécurité avec traitement le jour même.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Transferts P2P :</strong> Envoyez de l'argent à tout membre Harrison instantanément — jour ou nuit, sans frais.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Dépôt Direct :</strong> Recevez votre salaire, paiements de missions ou dépôts gouvernementaux jusqu'à 2 jours à l'avance.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Transferts Récurrents :</strong> Programmez des transferts automatiques vers l'épargne ou entre comptes.</span></li>
+          <li><span class="bullet">✓</span><span><strong>Intégration Zelle® :</strong> Envoyez et recevez de l'argent via le réseau Zelle avec vos amis et votre famille.</span></li>
+        </ul>
+      </div>
+      <div style="background:var(--white);border-radius:20px;padding:32px;border:1px solid var(--border);box-shadow:var(--shadow)">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:20px">Barème des Frais de Transfert</h3>
+        <table class="rates-table" style="margin-top:0">
+          <thead>
+            <tr>
+              <th>Type de Transfert</th>
+              <th>Délai</th>
+              <th>Frais</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ACH Standard</td>
+              <td>1–3 jours ouvrables</td>
+              <td><span class="badge-free">GRATUIT</span></td>
+            </tr>
+            <tr>
+              <td>ACH le Jour Même</td>
+              <td>Le même jour ouvrable</td>
+              <td class="rate-highlight">$2.99</td>
+            </tr>
+            <tr>
+              <td>P2P (Membre à Membre)</td>
+              <td>Instantané</td>
+              <td><span class="badge-free">GRATUIT</span></td>
+            </tr>
+            <tr>
+              <td>Virement Domestique</td>
+              <td>Le même jour ouvrable</td>
+              <td class="rate-highlight">$12.00</td>
+            </tr>
+            <tr>
+              <td>Virement International</td>
+              <td>1–3 jours ouvrables</td>
+              <td class="rate-highlight">$25.00</td>
+            </tr>
+            <tr>
+              <td>Zelle®</td>
+              <td>Minutes</td>
+              <td><span class="badge-free">GRATUIT</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECT DEPOSIT -->
+<section>
+  <div class="section-inner">
+    <div class="two-col reverse">
+      <div>
+        <div class="section-label">Dépôt Direct</div>
+        <h2 class="section-title">Soyez Payé Jusqu'à 2 Jours à l'Avance</h2>
+        <p class="section-sub">Configurez le dépôt direct en quelques minutes et commencez à recevoir votre salaire jusqu'à 48 heures avant votre jour de paie officiel — sans frais, sans attente.</p>
+        <ul class="feature-list">
+          <li><span class="bullet">✓</span><span>Accès anticipé à la paie, aux prestations gouvernementales (SSI, VA) et aux paiements des plateformes de missions</span></li>
+          <li><span class="bullet">✓</span><span>Divisez automatiquement votre dépôt — un pourcentage directement vers l'épargne</span></li>
+          <li><span class="bullet">✓</span><span>Recevez une notification dès que votre dépôt est reçu</span></li>
+          <li><span class="bullet">✓</span><span>Téléchargez votre formulaire de dépôt direct depuis l'application en quelques secondes</span></li>
+        </ul>
+      </div>
+      <div style="background:var(--light-bg);border-radius:20px;padding:36px;text-align:center">
+        <div style="font-size:3.5rem;margin-bottom:16px">⚡</div>
+        <div style="font-size:1.8rem;font-weight:800;color:var(--navy);margin-bottom:8px">2 Jours à l'Avance</div>
+        <div style="font-size:0.95rem;color:var(--muted);line-height:1.65;margin-bottom:24px">La plupart des membres qui configurent le dépôt direct voient leurs fonds disponibles le mercredi ou le jeudi au lieu du vendredi.</div>
+        <div style="background:white;border-radius:12px;padding:20px;border:1px solid var(--border)">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Fonctionne avec</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">ADP</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">Gusto</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">Workday</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">Sécurité Sociale</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">DoorDash</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">Uber</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">Lyft</span>
+            <span style="background:var(--light-bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.82rem;font-weight:600;color:var(--navy)">+ 500 de plus</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="light-bg">
+  <div class="section-inner" style="max-width:760px">
+    <div class="section-label">Des Questions ?</div>
+    <h2 class="section-title">FAQ Bancaires</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Harrison Financial est-elle une vraie banque ? <span>+</span></div>
+        <div class="faq-a">Harrison Financial est une entreprise de technologie financière, pas une banque agréée. Les services bancaires sont fournis par notre banque partenaire, Meridian Bank, N.A., Membre FDIC. Vos dépôts sont assurés par la FDIC jusqu'à $250,000.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Y a-t-il des frais dont je devrais être informé ? <span>+</span></div>
+        <div class="faq-a">Nous ne facturons aucun frais mensuel, aucun frais de découvert, et aucun frais de solde minimum. Certains services optionnels (ACH le jour même, virements sortants, livraison de carte accélérée) comportent de petits frais, toujours divulgués avant confirmation.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">À quelle vitesse puis-je ouvrir un compte ? <span>+</span></div>
+        <div class="faq-a">La plupart des comptes sont ouverts en moins de 5 minutes. Vous aurez besoin d'une pièce d'identité avec photo délivrée par le gouvernement, de votre numéro de sécurité sociale et d'une source de financement. Nous vérifierons votre identité en temps réel grâce à notre processus KYC.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Combien de distributeurs automatiques puis-je utiliser gratuitement ? <span>+</span></div>
+        <div class="faq-a">Les membres de Harrison Financial ont accès à plus de 55 000 distributeurs automatiques du réseau à l'échelle nationale sans frais. Les frais de distributeurs automatiques hors réseau sont de $2.50 par transaction. Nous remboursons jusqu'à $10/mois en frais de distributeurs automatiques hors réseau pour les membres avec dépôt direct.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Puis-je déposer de l'argent liquide ? <span>+</span></div>
+        <div class="faq-a">Oui. Les dépôts en espèces sont disponibles dans plus de 90 000 points de vente, y compris CVS, Walgreens, Dollar General et Walmart grâce à nos partenariats avec Green Dot® et MoneyPass®. Des frais fixés par le partenaire de vente au détail peuvent s'appliquer (généralement $4.95).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-full">
+    <div class="footer-col" style="grid-column:span 5">
+      <div class="logo" style="margin-bottom:10px"><div class="logo-icon">HF</div><span style="color:white;font-size:1.1rem">Harrison Financial</span></div>
+      <p style="color:#8aadda;font-size:0.88rem;max-width:360px;line-height:1.6">Les services bancaires sont fournis par Meridian Bank, N.A., Membre FDIC. Les dépôts sont assurés jusqu'à $250,000.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc.</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap"><a href="#">Confidentialité</a><a href="#">Conditions</a><a href="#">Accessibilité</a></div>
+    <span>Assuré par la FDIC · Prêteur Égalité de Logement</span>
+  </div>
+</footer>
+
+</body>
+</html>

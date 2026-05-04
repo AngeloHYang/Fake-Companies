@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>关于我们 – Harrison Financial</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1e3d; --blue: #1a4fad; --accent: #2db4a0; --light-bg: #f4f7fb;
+      --white: #ffffff; --text: #1e2a3b; --muted: #5a6a7e; --border: #d5dce8;
+      --radius: 12px; --shadow: 0 4px 24px rgba(13,30,61,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(13,30,61,0.06); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--navy); }
+    .logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--blue); color: var(--blue); }
+    .btn-outline:hover { background: var(--blue); color: white; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #153d8a; }
+    .btn-accent { background: var(--accent); color: white; font-size: 1rem; padding: 14px 32px; border-radius: 10px; font-weight: 700; }
+    .btn-accent:hover { background: #229988; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #1a3570 100%); color: white; padding: 80px 24px 72px; text-align: center; }
+    .page-label { display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 5px 16px; font-size: 0.8rem; font-weight: 600; color: #a8c8ff; letter-spacing: 0.5px; margin-bottom: 20px; }
+    .page-hero h1 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; margin-bottom: 16px; max-width: 700px; margin-left: auto; margin-right: auto; }
+    .page-hero p { font-size: 1.1rem; color: #b8ccec; line-height: 1.7; max-width: 600px; margin: 0 auto; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 12px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 620px; line-height: 1.75; }
+    .light-bg { background: var(--light-bg); }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* MISSION STATS */
+    .stats-row { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; margin-top: 48px; }
+    .stat-box { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 28px 36px; text-align: center; box-shadow: var(--shadow); min-width: 160px; }
+    .stat-val { font-size: 2.2rem; font-weight: 800; color: var(--blue); margin-bottom: 4px; }
+    .stat-label { font-size: 0.85rem; color: var(--muted); }
+
+    /* MISSION */
+    .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .mission-copy p { font-size: 1rem; color: var(--muted); line-height: 1.8; margin-bottom: 18px; }
+    .mission-visual { background: var(--navy); border-radius: 20px; overflow: hidden; }
+    .mission-lifestyle { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .mission-visual-text { padding: 28px 36px; }
+    .mission-visual .quote { font-size: 1.05rem; color: white; line-height: 1.75; font-style: italic; margin-bottom: 16px; }
+    .mission-visual .attr { font-size: 0.88rem; color: #8aadda; font-weight: 600; }
+
+    /* VALUES */
+    .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 48px; }
+    .value-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 28px 24px; box-shadow: var(--shadow); }
+    .value-icon { font-size: 2rem; margin-bottom: 14px; }
+    .value-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .value-card p { font-size: 0.87rem; color: var(--muted); line-height: 1.6; }
+
+    /* LEADERSHIP */
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 48px; }
+    .team-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
+    .team-photo { width: 100%; height: 180px; object-fit: cover; object-position: top; display: block; }
+    .team-info { padding: 18px 20px; }
+    .team-name { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .team-title { font-size: 0.83rem; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+    .team-bio { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+
+    /* OFFICE PHOTO */
+    .office-banner { width: 100%; max-height: 420px; object-fit: cover; display: block; }
+
+    /* TIMELINE */
+    .timeline { position: relative; margin-top: 48px; padding-left: 32px; border-left: 2px solid var(--border); display: flex; flex-direction: column; gap: 0; }
+    .tl-item { position: relative; padding: 0 0 36px 28px; }
+    .tl-item::before { content: ""; position: absolute; left: -7px; top: 6px; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 2px var(--accent); }
+    .tl-year { font-size: 0.8rem; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+    .tl-event { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .tl-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; max-width: 540px; }
+
+    /* INVESTORS */
+    .investors-grid { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+    .investor-badge { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 16px 28px; font-weight: 700; font-size: 1rem; color: var(--navy); box-shadow: var(--shadow); }
+
+    /* PRESS */
+    .press-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
+    .press-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; box-shadow: var(--shadow); }
+    .press-source { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .press-headline { font-size: 0.97rem; font-weight: 700; color: var(--navy); line-height: 1.45; margin-bottom: 12px; }
+    .press-date { font-size: 0.8rem; color: var(--muted); }
+    .press-link { font-size: 0.85rem; font-weight: 600; color: var(--blue); margin-top: 12px; display: inline-flex; align-items: center; gap: 4px; }
+
+    footer { background: var(--navy); color: #8aadda; font-size: 0.88rem; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: #8aadda; }
+
+    @media (max-width: 860px) { .mission-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">HF</div>Harrison Financial</a>
+    <div class="nav-links">
+      <a href="banking.html">银行业务</a>
+      <a href="cards.html">卡片</a>
+      <a href="lending.html">贷款</a>
+      <a href="security.html">安全</a>
+      <a href="about.html" class="active">关于</a>
+      <a href="support.html">支持</a>
+    </div>
+    <div class="nav-actions">
+      <a href="support.html" class="btn btn-outline">登录</a>
+      <a href="banking.html" class="btn btn-primary">开户</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../about.html">English</option>
+            <option value="../zh-hans/about.html" selected>简体中文</option>
+            <option value="../zh-hant/about.html">繁體中文</option>
+            <option value="../es/about.html">Español</option>
+            <option value="../fr/about.html">Français</option>
+            <option value="../ja/about.html">日本語</option>
+            <option value="../ko/about.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-label">🏦 关于 Harrison Financial</div>
+  <h1>为300万美国人重新定义银行业务</h1>
+  <p>我们创立 Harrison Financial 是因为我们相信银行业务可以变得更加透明、更加便捷，并真正站在客户一边。</p>
+</div>
+
+<!-- STATS -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">数字见证</div>
+      <h2 class="section-title">一个规模化的平台</h2>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-val">3M+</div><div class="stat-label">活跃会员</div></div>
+      <div class="stat-box"><div class="stat-val">2018</div><div class="stat-label">成立</div></div>
+      <div class="stat-box"><div class="stat-val">$2.4B</div><div class="stat-label">管理存款</div></div>
+      <div class="stat-box"><div class="stat-val">850+</div><div class="stat-label">员工</div></div>
+      <div class="stat-box"><div class="stat-val">50</div><div class="stat-label">服务的美国州</div></div>
+      <div class="stat-box"><div class="stat-val">99.99%</div><div class="stat-label">平台正常运行时间 (2024)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section>
+  <div class="section-inner">
+    <div class="mission-grid">
+      <div class="mission-copy">
+        <div class="section-label">我们的使命</div>
+        <h2 class="section-title">属于每个人的银行业务</h2>
+        <p>Harrison Financial 的创立基于一个简单的前提：4700万未充分享受银行服务的美国人值得比传统银行提供的更好的服务。太多人每年支付数百美元的维护费、透支费用和ATM罚款，而银行却赚取数十亿的利润。</p>
+        <p>我们建立了一个以数字为先的银行平台，完全消除了这些费用，结合了最佳的储蓄利率和强大的消费工具，并将其包裹在金融机构两倍于我们规模的安全基础设施中。</p>
+        <p>我们不仅仅是一个玩银行的科技初创公司。我们是一家受监管的金融服务公司，拥有真正的合作银行、FDIC保险，以及与华尔街最大公司相同标准的合规计划。</p>
+        <a href="careers.html" class="btn btn-primary" style="margin-top:20px;display:inline-flex">加入我们的团队</a>
+      </div>
+      <div class="mission-visual">
+        <img src="../images/app-lifestyle.png" alt="Harrison Financial 会员使用移动应用" class="mission-lifestyle" />
+        <div class="mission-visual-text">
+          <div class="quote">"我们衡量成功的标准不是从客户那里提取了多少收入，而是他们在与我们银行业务往来时积累了多少财富。这是长期唯一重要的指标。"</div>
+          <div class="attr">— Eleanor Harrison, 联合创始人 &amp; CEO</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="light-bg">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">我们的价值观</div>
+      <h2 class="section-title">我们的立场</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">🔍</div>
+        <h3>彻底透明</h3>
+        <p>没有隐藏费用。没有混淆条款。每一项费用、利率和政策都用简单的语言写成，并对任何人开放。</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🛡️</div>
+        <h3>安全至上</h3>
+        <p>每一个产品决策、架构选择和供应商合作都首先通过安全视角进行评估。</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">⚡</div>
+        <h3>可靠性至上</h3>
+        <p>金钱不眠。我们的基础设施也不眠。我们在正常运行时间、延迟和弹性方面投入不成比例的资源。</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🌍</div>
+        <h3>金融包容性</h3>
+        <p>我们设计的产品适用于那些被传统银行抛弃的人，而不仅仅是富裕人群。</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">📊</div>
+        <h3>数据驱动决策</h3>
+        <p>每一个功能、利率变化和业务决策都以严格的数据分析、A/B测试和用户研究为基础。</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <h3>会员优先文化</h3>
+        <p>我们的激励措施与会员一致。只有当会员的财务健康状况改善时，我们才会成功。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">领导团队</div>
+    <h2 class="section-title">Harrison Financial 背后的团队</h2>
+    <p class="section-sub">一个在银行、技术和合规领域有深厚根基的领导团队。</p>
+    <div class="team-grid">
+      <div class="team-card">
+        <img src="../images/eleanor-harrison.png" alt="Eleanor Harrison" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">Eleanor Harrison</div>
+          <div class="team-title">联合创始人 &amp; CEO</div>
+          <div class="team-bio">前摩根大通副总裁。沃顿商学院MBA。入选福布斯30岁以下30强金融榜（2020）。</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="../images/marcus-reid.png" alt="Marcus Reid" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">Marcus Reid</div>
+          <div class="team-title">联合创始人 &amp; CTO</div>
+          <div class="team-bio">前Stripe工程负责人。构建了处理每日4000万笔交易的支付基础设施。</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="../images/priya-nair.png" alt="Priya Nair" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">Priya Nair</div>
+          <div class="team-title">首席风险官</div>
+          <div class="team-bio">在金融犯罪合规领域有20多年经验。曾任花旗银行北美反洗钱负责人。</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="../images/james-okafor.png" alt="James Okafor" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">James Okafor</div>
+          <div class="team-title">首席产品官</div>
+          <div class="team-bio">曾任Chime和PayPal产品经理负责人。领导产品团队推出了12项主要的消费者银行功能。</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="../images/sarah-kwan.png" alt="Sarah Kwan" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">Sarah Kwan</div>
+          <div class="team-title">总法律顾问</div>
+          <div class="team-bio">前美联储银行律师。银行法、消费者金融法规和金融科技许可专家。</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <img src="../images/david-castellano.png" alt="David Castellano" class="team-photo" />
+        <div class="team-info">
+          <div class="team-name">David Castellano</div>
+          <div class="team-title">首席财务官</div>
+          <div class="team-bio">前SoFi首席财务官。领导了两轮成功的融资，总计$480M，并为公司上市做准备。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFICE PHOTO -->
+<img src="../images/hf-office.png" alt="Harrison Financial 总部" class="office-banner" />
+
+<!-- TIMELINE -->
+<section class="light-bg">
+  <div class="section-inner" style="max-width:700px">
+    <div class="section-label">我们的故事</div>
+    <h2 class="section-title">从构想到300万会员</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">2018</div>
+        <div class="tl-event">Harrison Financial 成立</div>
+        <div class="tl-desc">Eleanor Harrison 和 Marcus Reid 在特拉华州注册公司。获得来自 Sequoia 和 Andreessen Horowitz 的$4.2M种子资金。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2019</div>
+        <div class="tl-event">Beta 发布 &amp; A 轮融资</div>
+        <div class="tl-desc">私测向10,000名用户开放。与 Meridian Bank, N.A. 完成银行合作。A轮融资$28M。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2020</div>
+        <div class="tl-event">公开发布 &amp; 250K 会员</div>
+        <div class="tl-desc">在所有50个州公开发布。8个月内达到250,000名会员。推出1.5% APY的高收益储蓄。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2021</div>
+        <div class="tl-event">100万会员 &amp; B 轮融资</div>
+        <div class="tl-desc">会员突破100万。推出个人贷款。B轮融资：$120M，由 Tiger Global 领投。团队扩展至300名员工。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2022</div>
+        <div class="tl-event">贷款 &amp; 信用卡</div>
+        <div class="tl-desc">推出 Harrison 信用卡和信用建设贷款。管理存款达到$800M。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2023</div>
+        <div class="tl-event">C 轮融资 &amp; 200万会员</div>
+        <div class="tl-desc">C轮融资：$250M，估值$1.8B。会员突破200万。入选 Fast Company 最具创新力公司名单。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2024</div>
+        <div class="tl-event">300万会员 &amp; $2.4B 存款</div>
+        <div class="tl-desc">活跃会员达到300万，存款达到$2.4B。储蓄APY提高至4.85%。全球团队扩展至850+人。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2025</div>
+        <div class="tl-event">IPO 准备 &amp; 平台扩展</div>
+        <div class="tl-desc">积极探索IPO时间表。推出企业API计划并扩展至商业银行业务测试。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">媒体报道</div>
+    <h2 class="section-title">Harrison Financial 的新闻报道</h2>
+    <div class="press-grid">
+      <div class="press-card">
+        <div class="press-source">TechCrunch</div>
+        <div class="press-headline">"Harrison Financial 用户达到300万，证明新银行模式仍有增长空间"</div>
+        <div class="press-date">2025年3月</div>
+        <a href="#" class="press-link">阅读文章 →</a>
+      </div>
+      <div class="press-card">
+        <div class="press-source">Forbes</div>
+        <div class="press-headline">"2024年最具创新力的10家金融科技公司 — Harrison Financial 位列第3"</div>
+        <div class="press-date">2025年1月</div>
+        <a href="#" class="press-link">阅读文章 →</a>
+      </div>
+      <div class="press-card">
+        <div class="press-source">Wall Street Journal</div>
+        <div class="press-headline">"新银行正在蚕食传统银行的市场 — 而 Harrison Financial 可能是最具野心的"</div>
+        <div class="press-date">2024年10月</div>
+        <a href="#" class="press-link">阅读文章 →</a>
+      </div>
+    </div>
+    <div style="margin-top:32px;text-align:center">
+      <p style="font-size:0.9rem;color:var(--muted);margin-bottom:16px">媒体查询: <a href="mailto:press@harrisonfinancial.com" style="color:var(--blue);font-weight:600">press@harrisonfinancial.com</a></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="max-width:1200px;margin:0 auto;padding:28px 24px 0">
+    <div class="logo" style="margin-bottom:10px"><div class="logo-icon">HF</div><span style="color:white;font-size:1.1rem">Harrison Financial</span></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Harrison Financial, Inc. 保留所有权利。</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap"><a href="#">隐私</a><a href="#">条款</a><a href="careers.html">招聘</a></div>
+    <span>FDIC 成员 · 平等住房贷款机构</span>
+  </div>
+</footer>
+
+</body>
+</html>

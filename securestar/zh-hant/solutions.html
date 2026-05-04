@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>解決方案 — SecureStar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--navy); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2044 100%); color: white; padding: 80px 24px 70px; }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 18px; }
+    .breadcrumb a { color: var(--cyan); }
+    .page-hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 18px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.65); max-width: 600px; line-height: 1.75; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 600px; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* SOLUTION CARDS */
+    .sol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; margin-top: 52px; }
+    .sol-card {
+      border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .sol-card:hover { transform: translateY(-4px); box-shadow: 0 14px 44px rgba(10,22,40,0.13); }
+    .sol-card-header { padding: 32px 28px 24px; }
+    .sol-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .sol-card-header h3 { font-size: 1.2rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .sol-card-header p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+    .sol-card-body { padding: 0 28px 28px; background: white; }
+    .sol-list { list-style: none; border-top: 1px solid var(--border); padding-top: 18px; }
+    .sol-list li { display: flex; gap: 10px; font-size: 0.88rem; color: var(--text); margin-bottom: 10px; }
+    .sol-list li::before { content: '→'; color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+    .sol-card.highlight .sol-card-header { background: linear-gradient(135deg, var(--navy), #1a3070); }
+    .sol-card.highlight .sol-card-header h3 { color: white; }
+    .sol-card.highlight .sol-icon { filter: none; }
+    .sol-card.highlight .sol-card-header p { color: rgba(255,255,255,0.65); }
+
+    /* REQUIREMENTS MATCH TABLE */
+    .match-bg { background: var(--light-bg); }
+    .match-table-wrap { overflow-x: auto; margin-top: 40px; }
+    .match-table { width: 100%; border-collapse: collapse; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .match-table thead th { background: var(--navy); color: white; padding: 16px 20px; font-size: 0.85rem; font-weight: 700; text-align: left; }
+    .match-table tbody td { padding: 16px 20px; font-size: 0.92rem; border-bottom: 1px solid var(--border); background: white; }
+    .match-table tbody tr:last-child td { border-bottom: none; }
+    .match-table tbody tr:hover td { background: #f8faff; }
+    .check-icon { color: var(--green); font-weight: 800; font-size: 1.1rem; }
+    .dim { font-size: 0.78rem; color: var(--muted); display: block; margin-top: 2px; }
+    .match-score { font-weight: 800; color: var(--blue); font-size: 1rem; }
+
+    /* USE CASE DEEP DIVES */
+    .usecase { border: 1px solid var(--border); border-radius: 16px; padding: 36px; margin-bottom: 28px; background: white; box-shadow: var(--shadow); }
+    .usecase-header { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 20px; }
+    .usecase-icon { font-size: 2rem; width: 56px; height: 56px; background: var(--light-bg); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .usecase-header h3 { font-size: 1.15rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .usecase-header p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+    .usecase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .usecase-col h4 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cyan); margin-bottom: 10px; }
+    .usecase-col ul { list-style: none; }
+    .usecase-col ul li { font-size: 0.88rem; color: var(--text); margin-bottom: 8px; padding-left: 16px; position: relative; line-height: 1.6; }
+    .usecase-col ul li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    /* COMPLIANCE SECTION */
+    .compliance-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 40px; }
+    .comp-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+    .comp-badge { display: inline-block; background: #ecfdf5; color: #059669; border: 1px solid #6ee7b7; border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; font-weight: 700; margin-bottom: 14px; }
+    .comp-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .comp-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* CTA */
+    .cta-band { background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%); color: white; padding: 72px 24px; text-align: center; }
+    .cta-band h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-band p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; }
+    .btn-white:hover { background: #e0e7ff; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+    .footer-inner a { color: rgba(255,255,255,0.4); transition: color .2s; }
+    .footer-inner a:hover { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .usecase-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">SS</div><span>SecureStar</span></a>
+    <div class="nav-links">
+      <a href="platform.html">平台</a>
+      <a href="solutions.html" class="active">解決方案</a>
+      <a href="developers.html">開發者</a>
+      <a href="company.html">公司</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">文件</a>
+      <a href="index.html#contact" class="btn btn-primary">申請演示</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../solutions.html">English</option>
+            <option value="../zh-hans/solutions.html">简体中文</option>
+            <option value="../zh-hant/solutions.html" selected>繁體中文</option>
+            <option value="../es/solutions.html">Español</option>
+            <option value="../fr/solutions.html">Français</option>
+            <option value="../ja/solutions.html">日本語</option>
+            <option value="../ko/solutions.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">首頁</a> / 解決方案</div>
+    <h1>為無法承受錯誤的金融機構而建</h1>
+    <p>從數位銀行到高流量支付，SecureStar 能夠適應您的平台的精確風險概況、監管要求和技術限制。</p>
+  </div>
+</div>
+
+<!-- SOLUTION CARDS -->
+<section>
+  <div class="section-inner">
+    <div class="sol-grid">
+
+      <div class="sol-card highlight">
+        <div class="sol-card-header">
+          <div class="sol-icon">🏦</div>
+          <h3>數位銀行平台</h3>
+          <p>專為新興銀行和數位優先銀行設計，每一毫秒的欺詐延遲都會損害客戶信任和收入。</p>
+        </div>
+        <div class="sol-card-body">
+          <ul class="sol-list">
+            <li>即時 ACH 和卡片交易評分</li>
+            <li>帳戶接管檢測（新設備，地理異常）</li>
+            <li>客戶入職欺詐信號（KYC 增強）</li>
+            <li>從第一天起就準備好的合規審計日誌</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sol-card">
+        <div class="sol-card-header" style="background:var(--light-bg);">
+          <div class="sol-icon">💳</div>
+          <h3>支付處理器</h3>
+          <p>每秒處理數千筆交易而不犧牲檢測準確性或超出授權延遲預算。</p>
+        </div>
+        <div class="sol-card-body">
+          <ul class="sol-list">
+            <li>高峰吞吐量下的 80ms 以下評分</li>
+            <li>拒付預測和預防</li>
+            <li>商戶風險分析</li>
+            <li>3DS2 數據豐富掛鉤</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sol-card">
+        <div class="sol-card-header" style="background:var(--light-bg);">
+          <div class="sol-icon">📈</div>
+          <h3>貸款與信用</h3>
+          <p>在信用擴展之前，在申請階段檢測第一方和合成身份欺詐。</p>
+        </div>
+        <div class="sol-card-body">
+          <ul class="sol-list">
+            <li>申請欺詐評分</li>
+            <li>合成身份模式檢測</li>
+            <li>撥款後行為監控</li>
+            <li>不利行動原因代碼（符合 FCRA）</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sol-card">
+        <div class="sol-card-header" style="background:var(--light-bg);">
+          <div class="sol-icon">🛡️</div>
+          <h3>AML 與合規計劃</h3>
+          <p>用可解釋的、準備好審計的 AI 取代手動警報分類，讓您的合規官員能夠真正理解和辯護。</p>
+        </div>
+        <div class="sol-card-body">
+          <ul class="sol-list">
+            <li>結構化和分拆檢測</li>
+            <li>分層和整合模式識別</li>
+            <li>SAR 申報工作流程整合</li>
+            <li>符合監管要求的導出格式</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- REQUIREMENTS MATCH -->
+<section class="match-bg">
+  <div class="section-inner">
+    <div class="section-label">適配分析</div>
+    <h2 class="section-title">SecureStar 如何滿足您的需求</h2>
+    <p class="section-sub">透明地分析我們的平台如何解決金融工程團隊最常評估的四個維度。</p>
+    <div class="match-table-wrap">
+      <table class="match-table">
+        <thead>
+          <tr>
+            <th>需求維度</th>
+            <th>您的需求</th>
+            <th>SecureStar 的解決方案</th>
+            <th>適配度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>技術</strong><span class="dim">性能與規模</span></td>
+            <td>即時評分，&lt;100ms 延遲，Kafka 原生，可擴展至每日數百萬筆交易</td>
+            <td>p99 &lt;80ms 保證 · Kafka 消費者群組 · 水平自動擴展 · 邊緣部署選項</td>
+            <td class="match-score check-icon">✓ 強</td>
+          </tr>
+          <tr>
+            <td><strong>合規</strong><span class="dim">可解釋性與可審計性</span></td>
+            <td>AML / KYC 可解釋性，不可變審計日誌，監管導出</td>
+            <td>SHAP 特徵歸因 · 人類可讀規則 · 簽名審計日誌 · FinCEN SAR 導出</td>
+            <td class="match-score check-icon">✓ 強</td>
+          </tr>
+          <tr>
+            <td><strong>整合</strong><span class="dim">堆棧兼容性</span></td>
+            <td>與現有 Kafka、AWS、Python 基礎設施兼容，無需重大重構</td>
+            <td>原生 Kafka 連接器 · AWS Lambda &amp; SQS · Python SDK · REST API · 無需架構遷移</td>
+            <td class="match-score check-icon">✓ 原生</td>
+          </tr>
+          <tr>
+            <td><strong>業務</strong><span class="dim">精確度 / 召回率平衡</span></td>
+            <td>可調閾值，能夠在自己的數據上訓練，無黑盒模型</td>
+            <td>自定義閾值配置 · 在您的數據上進行微調 · 混合 ML + 規則引擎 · 完全模型透明度</td>
+            <td class="match-score check-icon">✓ 強</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASE DEEP DIVES -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">深入探討</div>
+    <h2 class="section-title">常見場景，已解決</h2>
+
+    <div class="usecase">
+      <div class="usecase-header">
+        <div class="usecase-icon">⚡</div>
+        <div>
+          <h3>高吞吐量即時交易授權</h3>
+          <p>您的支付流程每秒處理數千筆交易，您的授權 SLA 總計低於 200ms。SecureStar 的欺詐評分必須在該時間窗口內完成，無需妥協。</p>
+        </div>
+      </div>
+      <div class="usecase-grid">
+        <div class="usecase-col">
+          <h4>SecureStar 如何處理</h4>
+          <ul>
+            <li>專用推理集群，p99 &lt;80ms 合同保證</li>
+            <li>Kafka 原生消費者消除 HTTP 往返開銷</li>
+            <li>預計算特徵緩存減少每次請求計算</li>
+            <li>斷路器：超時時安全回退評分（可配置）</li>
+          </ul>
+        </div>
+        <div class="usecase-col">
+          <h4>結果</h4>
+          <ul>
+            <li>即使在高峰負載下也能保持總延遲預算</li>
+            <li>授權流程無需更改</li>
+            <li>在流量高峰期間自動擴展</li>
+            <li>企業合同中包含財務懲罰條款的 SLA</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="usecase">
+      <div class="usecase-header">
+        <div class="usecase-icon">🔍</div>
+        <div>
+          <h3>監管審查 — AML 計劃審計</h3>
+          <p>您的監管機構詢問為什麼一組交易未被標記。您需要重現每個決策，顯示考慮了哪些信號，並證明模型不是黑盒。</p>
+        </div>
+      </div>
+      <div class="usecase-grid">
+        <div class="usecase-col">
+          <h4>SecureStar 如何處理</h4>
+          <ul>
+            <li>每個決策都存儲完整的特徵歸因向量</li>
+            <li>不可變日誌可按交易 ID、日期範圍或規則命中查詢</li>
+            <li>一鍵 SAR 導出為 FinCEN、FATF 和 EBA 格式</li>
+            <li>每個標記事件附有人類可讀的解釋</li>
+          </ul>
+        </div>
+        <div class="usecase-col">
+          <h4>結果</h4>
+          <ul>
+            <li>合規團隊能在幾分鐘內回答審查員問題，而不是幾天</li>
+            <li>模型行為是可辯護和可解釋的</li>
+            <li>審計追蹤涵蓋從上線日期開始的決策</li>
+            <li>將對監管查詢的響應時間縮短約 70%</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="usecase">
+      <div class="usecase-header">
+        <div class="usecase-icon">🎯</div>
+        <div>
+          <h3>模型性能 — 減少誤報</h3>
+          <p>您的現成欺詐模型標記了太多合法交易，為優質客戶帶來摩擦並使您的審查隊列超載。</p>
+        </div>
+      </div>
+      <div class="usecase-grid">
+        <div class="usecase-col">
+          <h4>SecureStar 如何處理</h4>
+          <ul>
+            <li>通過 API 在您自己的標記交易歷史上進行微調</li>
+            <li>獨立調整批准/標記/拒絕閾值</li>
+            <li>影子模式：在切換之前在實時流量上測試新閾值</li>
+            <li>實時精確度/召回率儀表板跟踪變更影響</li>
+          </ul>
+        </div>
+        <div class="usecase-col">
+          <h4>結果</h4>
+          <ul>
+            <li>首次調整周期後，誤報通常減少 20–35%</li>
+            <li>無需等待供應商工程團隊進行閾值更改</li>
+            <li>模型從您的特定客戶行為模式中學習</li>
+            <li>審查隊列縮小，分析師容量釋放以處理高風險案件</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COMPLIANCE CERTIFICATIONS -->
+<section style="background:var(--light-bg);padding:72px 24px;">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">合規與認證</div>
+      <h2 class="section-title">為受監管環境而建</h2>
+      <p class="section-sub">SecureStar 保持美國、歐盟和英國金融監管機構要求的認證和控制。</p>
+    </div>
+    <div class="compliance-cards">
+      <div class="comp-card">
+        <div class="comp-badge">✓ 認證</div>
+        <h4>SOC 2 Type II</h4>
+        <p>年度第三方審計安全性、可用性和機密性控制。報告可在 NDA 下提供。</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-badge">✓ 合規</div>
+        <h4>PCI-DSS Level 1</h4>
+        <p>最高級別的支付卡數據安全合規性。所有持卡人數據均在認證環境中處理。</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-badge">✓ 支持</div>
+        <h4>AML Directive 6 (6AMLD)</h4>
+        <p>可解釋性和審計追蹤功能滿足歐盟第六反洗錢指令要求。</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-badge">✓ 支持</div>
+        <h4>FinCEN / BSA</h4>
+        <p>SAR 申報支持和交易監控能力符合銀行保密法義務。</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-badge">✓ 合規</div>
+        <h4>GDPR / CCPA</h4>
+        <p>數據駐留控制（歐盟/美國）、刪除權工作流程和數據處理協議可用。</p>
+      </div>
+      <div class="comp-card">
+        <div class="comp-badge">✓ 對齊</div>
+        <h4>ISO 27001</h4>
+        <p>信息安全管理系統符合 ISO 27001。認證審計進行中。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2>討論您的具體需求</h2>
+  <p>每個金融平台都不同。與解決方案工程師討論您的技術堆棧、延遲預算和合規要求。</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn btn-white btn-lg">聯繫銷售</a>
+    <a href="platform.html" class="btn btn-ghost btn-lg" style="color:white;border-color:rgba(255,255,255,0.4);">平台詳情</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo"><div class="logo-icon">SS</div><span style="color:white">SecureStar</span></div>
+    <span>© 2025 SecureStar Labs, Inc.</span>
+    <div style="display:flex;gap:20px;"><a href="#">隱私</a><a href="#">條款</a><a href="#">安全</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

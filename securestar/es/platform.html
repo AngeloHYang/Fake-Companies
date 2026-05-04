@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plataforma — SecureStar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --slate:   #1e2d4a;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--navy); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2044 100%); color: white; padding: 80px 24px 70px; }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 18px; }
+    .breadcrumb a { color: var(--cyan); }
+    .page-hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 18px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.65); max-width: 580px; line-height: 1.75; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 600px; }
+
+    .feature-bg { background: var(--light-bg); }
+
+    /* TWO-COL FEATURE ROWS */
+    .feat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-bottom: 80px; }
+    .feat-row:last-child { margin-bottom: 0; }
+    .feat-row.reverse { direction: rtl; }
+    .feat-row.reverse > * { direction: ltr; }
+    .feat-visual {
+      background: var(--navy); border-radius: 16px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .feat-visual-bar {
+      background: rgba(255,255,255,0.05); padding: 12px 16px;
+      display: flex; gap: 7px; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dr { background: #ff5f56; } .dy { background: #ffbd2e; } .dg { background: #27c93f; }
+    .feat-visual-body { padding: 24px; font-family: 'Courier New', monospace; font-size: 0.8rem; line-height: 1.85; color: rgba(255,255,255,0.7); }
+    .hl { color: var(--cyan); }
+    .hg { color: #86efac; }
+    .hy { color: #fbbf24; }
+    .hp { color: #c084fc; }
+
+    .feat-list { list-style: none; margin-top: 20px; }
+    .feat-list li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; font-size: 0.95rem; color: var(--text); line-height: 1.6; }
+    .feat-list li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* PERF TABLE */
+    .perf-table { width: 100%; border-collapse: collapse; margin-top: 32px; }
+    .perf-table th { background: var(--navy); color: rgba(255,255,255,0.7); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 14px 18px; text-align: left; }
+    .perf-table td { padding: 14px 18px; font-size: 0.92rem; border-bottom: 1px solid var(--border); }
+    .perf-table tr:last-child td { border-bottom: none; }
+    .perf-table tr:nth-child(even) td { background: var(--light-bg); }
+    .perf-val { font-weight: 700; color: var(--blue); }
+    .badge { display: inline-block; border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 700; }
+    .badge-green { background: #ecfdf5; color: #059669; }
+    .badge-blue { background: #eff6ff; color: #2563eb; }
+
+    /* SCORE PANEL */
+    .score-panel {
+      background: var(--navy); border-radius: 14px; padding: 28px;
+      color: white; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.9;
+    }
+
+    /* TABS */
+    .tab-row { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 28px; }
+    .tab { padding: 12px 22px; font-size: 0.9rem; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
+    .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* CTA BAND */
+    .cta-band { background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%); color: white; padding: 72px 24px; text-align: center; }
+    .cta-band h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-band p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; }
+    .btn-white:hover { background: #e0e7ff; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+    .footer-inner a { color: rgba(255,255,255,0.4); transition: color .2s; }
+    .footer-inner a:hover { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .feat-row { grid-template-columns: 1fr; }
+      .feat-row.reverse { direction: ltr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">SS</div><span>SecureStar</span></a>
+    <div class="nav-links">
+      <a href="platform.html" class="active">Plataforma</a>
+      <a href="solutions.html">Soluciones</a>
+      <a href="developers.html">Desarrolladores</a>
+      <a href="company.html">Empresa</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">Documentación</a>
+      <a href="index.html#contact" class="btn btn-primary">Solicitar Demo</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../platform.html">English</option>
+            <option value="../zh-hans/platform.html">简体中文</option>
+            <option value="../zh-hant/platform.html">繁體中文</option>
+            <option value="../es/platform.html" selected>Español</option>
+            <option value="../fr/platform.html">Français</option>
+            <option value="../ja/platform.html">日本語</option>
+            <option value="../ko/platform.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Plataforma</div>
+    <h1>La Plataforma SecureStar</h1>
+    <p>Un análisis profundo de los cinco pilares que hacen de SecureStar la infraestructura de detección de fraude preferida para los sistemas financieros modernos.</p>
+  </div>
+</div>
+
+<!-- PILLAR 1: LATENCY -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">Pilar 1</div>
+        <h2 class="section-title">Inferencia de Ultra-Baja Latencia</h2>
+        <p class="section-sub">El fraude no se detiene. Tampoco debería hacerlo tu capa de detección. La canalización de inferencia de SecureStar está diseñada en torno a una restricción: mantenerse por debajo de 80ms en el percentil 99, incluso durante picos de tráfico.</p>
+        <ul class="feat-list">
+          <li>Tiempo de ejecución de inferencia ONNX optimizado — modelos servidos sin sobrecarga de serialización</li>
+          <li>Opción de implementación en el borde acerca la lógica de puntuación a tu fuente de datos</li>
+          <li>Diseño orientado a streaming con grupos de consumidores Kafka para recogida de eventos en menos de 10ms</li>
+          <li>Autoescalado horizontal mantiene SLA durante aumentos de tráfico de 10x</li>
+          <li>Infraestructura dedicada por inquilino empresarial — sin efectos de vecino ruidoso</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// Distribución de latencia (última 1h)</div>
+            <br>
+            <div>p50 &nbsp;&nbsp;&nbsp; <span class="hg">21ms</span> &nbsp;██████████░░░░░░░░░░</div>
+            <div>p75 &nbsp;&nbsp;&nbsp; <span class="hg">34ms</span> &nbsp;████████████████░░░░</div>
+            <div>p90 &nbsp;&nbsp;&nbsp; <span class="hg">51ms</span> &nbsp;██████████████████░░</div>
+            <div>p95 &nbsp;&nbsp;&nbsp; <span class="hy">62ms</span> &nbsp;███████████████████░</div>
+            <div>p99 &nbsp;&nbsp;&nbsp; <span class="hy">74ms</span> &nbsp;████████████████████</div>
+            <div>p999 &nbsp;&nbsp; <span class="hy">79ms</span> &nbsp;████████████████████</div>
+            <br>
+            <div class="hl">// Objetivo SLA: &lt;80ms p99 ✓</div>
+            <div>rendimiento: <span class="hg">14,830 req/s</span></div>
+            <div>tasa de error: <span class="hg">0.003%</span></div>
+          </div>
+        </div>
+        <table class="perf-table" style="margin-top:16px;">
+          <thead><tr><th>Escenario</th><th>Latencia</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>Llamada REST estándar</td><td class="perf-val">&lt;50ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>Consumidor de flujo Kafka</td><td class="perf-val">&lt;30ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>Implementación en el borde</td><td class="perf-val">&lt;15ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>Garantía p99</td><td class="perf-val">&lt;80ms</td><td><span class="badge badge-blue">Contractual</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 2: EXPLAINABLE AI -->
+<section class="feature-bg">
+  <div class="section-inner">
+    <div class="feat-row reverse">
+      <div>
+        <div class="section-label">Pilar 2</div>
+        <h2 class="section-title">IA Explicable — Cada Decisión, Cada Vez</h2>
+        <p class="section-sub">La mayoría de los proveedores de ML para fraude te dan una puntuación. SecureStar te da una razón. Cada evaluación de riesgo incluye atribución de características, atribución de reglas y una explicación legible por humanos que tu equipo de cumplimiento realmente puede usar.</p>
+        <ul class="feat-list">
+          <li>Atribución de características basada en SHAP identifica los principales factores que impulsan cada puntuación</li>
+          <li>Decisiones del motor de reglas mostradas en lenguaje claro, no en código</li>
+          <li>Explicabilidad completa del modelo satisface los requisitos de auditoría de la Directiva AML 6 y FinCEN</li>
+          <li>La carga de explicación se incluye en cada respuesta de API sin prima de latencia</li>
+          <li>Historial de explicaciones buscable para análisis forense post-incidente</li>
+        </ul>
+      </div>
+      <div>
+        <div class="score-panel">
+          <div class="hl">// Objeto de explicación (txn_4h1k9b)</div>
+          <br>
+          <div><span class="hp">"explicación"</span>: {</div>
+          <div>&nbsp;&nbsp;<span class="hl">"decisión"</span>: <span class="hg">"marcar"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="hl">"puntuación_de_riesgo"</span>: <span class="hy">0.71</span>,</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"atribución_de_características"</span>: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"característica"</span>: <span class="hg">"velocidad_1h"</span>, <span class="hl">"peso"</span>: <span class="hy">+0.38</span> },</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"característica"</span>: <span class="hg">"nuevo_dispositivo"</span>, <span class="hl">"peso"</span>: <span class="hy">+0.21</span> },</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"característica"</span>: <span class="hg">"riesgo_comerciante"</span>, <span class="hl">"peso"</span>: <span class="hy">+0.12</span> }</div>
+          <div>&nbsp;&nbsp;],</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"impacto_de_reglas"</span>: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"vel_1h_superado: 4 transacciones en 38 min"</span>,</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"nuevo_dispositivo_monto_alto: $1,200+"</span></div>
+          <div>&nbsp;&nbsp;],</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"resumen_humano"</span>: <span class="hg">"Alta transacción</span></div>
+          <div>&nbsp;&nbsp;&nbsp;<span class="hg">velocidad desde nuevo dispositivo en ventana de 1h"</span>,</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"id_de_auditoría"</span>: <span class="hg">"aud_7gk2p1"</span></div>
+          <div>}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 3: HYBRID ENGINE -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">Pilar 3</div>
+        <h2 class="section-title">Motor de Decisión Híbrido</h2>
+        <p class="section-sub">El ML puro es demasiado opaco para el cumplimiento. Las reglas puras son demasiado frágiles para el fraude. SecureStar ejecuta ambos en paralelo y los reconcilia en una sola decisión, dándote control e inteligencia al mismo tiempo.</p>
+        <ul class="feat-list">
+          <li>Capa de motor de reglas: los equipos de cumplimiento definen reglas estrictas en una interfaz sin código</li>
+          <li>Capa de modelo ML: conjunto de gradiente potenciado captura patrones emergentes que las reglas no detectan</li>
+          <li>Reconciliación de decisiones: ponderación configurable entre resultado de regla y puntuación del modelo</li>
+          <li>Reemplazo de reglas: el cumplimiento puede forzar la aprobación/rechazo independientemente de la puntuación ML</li>
+          <li>Transparencia total: las salidas de ambas capas se incluyen en cada respuesta de API</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// Canalización de decisión</div>
+            <br>
+            <div>Evento de Transacción</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>┌─────────────────────────────┐</div>
+            <div>│ &nbsp;<span class="hp">Motor de Reglas</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">Modelo ML</span> &nbsp;&nbsp;│</div>
+            <div>│ &nbsp;Reglas AML &nbsp;&nbsp;&nbsp;&nbsp; XGBoost v3 │</div>
+            <div>│ &nbsp;Límites de velocidad &nbsp;Explicador SHAP│</div>
+            <div>│ &nbsp;Verificaciones KYC &nbsp;&nbsp;&nbsp; Monitor de deriva│</div>
+            <div>└──────────┬──────────┬──────────┘</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">Reconciliador de Decisiones</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>&nbsp;&nbsp;puntaje + decisión + explicación</div>
+            <br>
+            <div class="hg">Reemplazo de regla: RECHAZO_DURO → final</div>
+            <div class="hy">De lo contrario: ponderado(regla, ml)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 4: CUSTOM TUNING -->
+<section class="feature-bg">
+  <div class="section-inner">
+    <div class="feat-row reverse">
+      <div>
+        <div class="section-label">Pilar 4</div>
+        <h2 class="section-title">Ajuste Personalizado del Modelo</h2>
+        <p class="section-sub">Los modelos de fraude de talla única no funcionan. SecureStar te permite entrenar con tus propios datos de transacciones, ajustar los umbrales de precisión/recuperación a tu apetito de riesgo y enviar actualizaciones de reglas dinámicas, sin esperar a nuestro equipo de ingeniería.</p>
+        <ul class="feat-list">
+          <li>Ajuste fino en tus propios datos históricos de transacciones etiquetados a través de API o UI</li>
+          <li>Umbrales de decisión ajustables: equilibrio entre falsos positivos y falsos negativos</li>
+          <li>Actualizaciones de reglas dinámicas enviadas a producción en menos de 60 segundos</li>
+          <li>Modo sombra A/B: prueba cambios de modelo en tráfico en vivo antes de cambiar</li>
+          <li>Panel de rendimiento del modelo muestra deriva, precisión, recuperación y F1 en tiempo real</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl"># SDK de python — ajuste de umbral</div>
+            <br>
+            <div><span class="hp">from</span> securestar <span class="hp">import</span> ModelConfig</div>
+            <br>
+            <div>config = ModelConfig(</div>
+            <div>&nbsp;&nbsp;base_model=<span class="hg">"ss-fintech-v3"</span>,</div>
+            <div>&nbsp;&nbsp;training_data=<span class="hg">"s3://your-bucket/txns/"</span>,</div>
+            <div>&nbsp;&nbsp;label_column=<span class="hg">"is_fraud"</span>,</div>
+            <div>&nbsp;&nbsp;thresholds={</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"aprobar"</span>: <span class="hy">0.30</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"marcar"</span>: &nbsp;&nbsp;<span class="hy">0.65</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"rechazar"</span>: <span class="hy">0.88</span>,</div>
+            <div>&nbsp;&nbsp;}</div>
+            <div>)</div>
+            <br>
+            <div>job = config.train() &nbsp;<span class="hl"># async</span></div>
+            <div>job.wait()</div>
+            <div><span class="hg">print</span>(job.metrics)</div>
+            <div><span class="hl"># precisión: 0.943 &nbsp;recuperación: 0.917</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 5: COMPLIANCE -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">Pilar 5</div>
+        <h2 class="section-title">Arquitectura Orientada al Cumplimiento</h2>
+        <p class="section-sub">SecureStar fue diseñado en estrecha colaboración con equipos de cumplimiento y legales en instituciones financieras reguladas. El cumplimiento no es un complemento, está integrado en el modelo de datos.</p>
+        <ul class="feat-list">
+          <li>Registros de auditoría inmutables y firmados criptográficamente almacenados por 7 años por defecto</li>
+          <li>Certificado SOC 2 Tipo II; infraestructura conforme a PCI-DSS Nivel 1</li>
+          <li>Exportación regulatoria con un clic en formatos FinCEN SAR, FATF, EBA</li>
+          <li>Biblioteca de reglas AML: reglas preconstruidas para estructuración, smurfing, patrones de estratificación</li>
+          <li>Ganchos de integración KYC: conecta tu proveedor de verificación de identidad preferido</li>
+          <li>Controles de residencia de datos GDPR / CCPA: elige región de almacenamiento en la UE o EE.UU.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// Exportación de cumplimiento (FinCEN SAR)</div>
+            <br>
+            <div><span class="hp">POST</span> /v2/compliance/export</div>
+            <div>{</div>
+            <div>&nbsp;&nbsp;<span class="hl">"formato"</span>: <span class="hg">"fincen_sar"</span>,</div>
+            <div>&nbsp;&nbsp;<span class="hl">"rango_de_fechas"</span>: {</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"desde"</span>: <span class="hg">"2025-01-01"</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"hasta"</span>: &nbsp;<span class="hg">"2025-03-31"</span></div>
+            <div>&nbsp;&nbsp;},</div>
+            <div>&nbsp;&nbsp;<span class="hl">"filtro"</span>: <span class="hg">"rechazado_o_marcado"</span></div>
+            <div>}</div>
+            <br>
+            <div class="hg">// ✓ 147 eventos exportados</div>
+            <div class="hg">// ✓ Firmado: SHA-256</div>
+            <div class="hg">// ✓ Rastro de auditoría adjunto</div>
+            <div class="hy">// Listo para presentación FinCEN</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2>Vea la plataforma completa en 30 minutos</h2>
+  <p>Nuestro equipo demostrará en vivo los puntos de referencia de latencia, recorrerá un ejemplo de explicabilidad y mostrará cómo el motor híbrido equilibra tus objetivos de precisión y recuperación.</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn btn-white btn-lg">Reservar una Demo</a>
+    <a href="developers.html" class="btn btn-ghost btn-lg" style="color:white;border-color:rgba(255,255,255,0.4);">Leer la Documentación</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo"><div class="logo-icon">SS</div><span style="color:white">SecureStar</span></div>
+    <span>© 2025 SecureStar Labs, Inc.</span>
+    <div style="display:flex;gap:20px;"><a href="#">Privacidad</a><a href="#">Términos</a><a href="#">Seguridad</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>会社 — SecureStar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--navy); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-cyan { background: var(--cyan); color: var(--navy); font-weight: 700; }
+    .btn-cyan:hover { background: #0891b2; color: white; }
+
+    /* HERO */
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2044 100%); color: white; padding: 100px 24px 80px; text-align: center; }
+    .page-hero-inner { max-width: 860px; margin: 0 auto; }
+    .hero-eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 18px; }
+    .page-hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; margin-bottom: 22px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.65); max-width: 640px; margin: 0 auto; line-height: 1.8; }
+
+    section { padding: 80px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 640px; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* MISSION */
+    .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 40px; }
+    .mission-text p { font-size: 1rem; color: var(--muted); line-height: 1.8; margin-bottom: 18px; }
+    .mission-text strong { color: var(--text); }
+    .mission-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .mission-stat { background: var(--light-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .mission-stat .value { font-size: 1.8rem; font-weight: 800; color: var(--blue); }
+    .mission-stat .label { font-size: 0.85rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+    /* STORY / TIMELINE */
+    .story-bg { background: var(--light-bg); }
+    .timeline { margin-top: 40px; position: relative; }
+    .timeline::before { content: ''; position: absolute; left: 22px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--blue), var(--cyan)); }
+    .tl-item { display: flex; gap: 28px; margin-bottom: 36px; position: relative; }
+    .tl-dot { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--cyan)); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1rem; flex-shrink: 0; z-index: 1; }
+    .tl-content { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow); flex: 1; }
+    .tl-year { font-size: 0.78rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .tl-event { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .tl-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* TEAM */
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 48px; }
+    .team-card {
+      background: white; border: 1px solid var(--border); border-radius: 16px; padding: 28px;
+      box-shadow: var(--shadow); text-align: center;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .team-card:hover { transform: translateY(-4px); box-shadow: 0 14px 44px rgba(10,22,40,0.12); }
+    .team-photo {
+      width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 16px;
+      object-fit: cover; border: 3px solid var(--border);
+      display: block;
+    }
+    .team-name { font-size: 1rem; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .team-role { font-size: 0.85rem; color: var(--blue); font-weight: 600; margin-bottom: 8px; }
+    .team-bio { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+    .team-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+    .tag { background: var(--light-bg); color: var(--muted); border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 600; }
+
+    /* OFFICE PHOTO */
+    .office-section { padding: 0; }
+    .office-photo { width: 100%; height: 400px; object-fit: cover; display: block; }
+
+    /* VALUES */
+    .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 48px; }
+    .value-card { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius); background: white; box-shadow: var(--shadow); }
+    .value-icon { font-size: 1.8rem; margin-bottom: 14px; }
+    .value-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .value-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* PRESS LOGOS */
+    .press-bg { background: var(--navy); color: white; padding: 60px 24px; text-align: center; }
+    .press-inner { max-width: 1000px; margin: 0 auto; }
+    .press-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 28px; }
+    .press-logos { display: flex; gap: 36px; justify-content: center; flex-wrap: wrap; align-items: center; }
+    .press-name { font-size: 0.9rem; font-weight: 800; color: rgba(255,255,255,0.3); letter-spacing: 0.5px; transition: color .2s; }
+    .press-name:hover { color: var(--cyan); }
+
+    /* CTA */
+    .cta-band { background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%); color: white; padding: 80px 24px; text-align: center; }
+    .cta-band h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-band p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; padding: 14px 32px; font-size: 1rem; }
+    .btn-white:hover { background: #e0e7ff; }
+    .btn-outline-white { border: 2px solid rgba(255,255,255,0.5); color: white; background: transparent; font-weight: 600; padding: 14px 32px; font-size: 1rem; }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+    .footer-inner a { color: rgba(255,255,255,0.4); transition: color .2s; }
+    .footer-inner a:hover { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .mission-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">SS</div><span>SecureStar</span></a>
+    <div class="nav-links">
+      <a href="platform.html">プラットフォーム</a>
+      <a href="solutions.html">ソリューション</a>
+      <a href="developers.html">開発者</a>
+      <a href="company.html" class="active">会社</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">ドキュメント</a>
+      <a href="index.html#contact" class="btn btn-primary">デモをリクエスト</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../company.html">English</option>
+            <option value="../zh-hans/company.html">简体中文</option>
+            <option value="../zh-hant/company.html">繁體中文</option>
+            <option value="../es/company.html">Español</option>
+            <option value="../fr/company.html">Français</option>
+            <option value="../ja/company.html" selected>日本語</option>
+            <option value="../ko/company.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-eyebrow">SecureStarについて</div>
+    <h1>銀行が実際に説明できる不正インフラを構築します</h1>
+    <p>SecureStarは、フィンテックとMLプラットフォームの内部で何年も過ごしたエンジニアによって設立されました。彼らは、実際の不正リスクを抱える企業と、実際のソリューションを持つベンダーが互いに見つけられない、または見つけた後に信頼できないという同じ問題を繰り返し見てきました。</p>
+  </div>
+</div>
+
+<!-- MISSION -->
+<section>
+  <div class="section-inner">
+    <div class="mission-grid">
+      <div class="mission-text">
+        <div class="section-label">私たちの使命</div>
+        <h2 class="section-title">迅速で正直で監査可能な不正検出</h2>
+        <p>ほとんどの不正プラットフォームは、モデルのパフォーマンス指標を考えるデータサイエンティストによって構築されています。SecureStarは、規制当局の前に座ってなぜ取引が拒否されたのかを説明しなければならなかったエンジニアによって構築されました。</p>
+        <p>その経験は、私たちが行ったすべての製品決定に影響を与えました。<strong>スピードは重要です。</strong>認証に200msを追加する不正チェックは、ユーザーが感じる不正チェックです。<strong>説明可能性は重要です。</strong>コンプライアンス担当者に決定を正当化できないモデルは、資産ではなく負債です。<strong>コントロールは重要です。</strong>一律の不正モデルは誰にも合いません。</p>
+        <p>私たちは、テーブルの反対側にいたときに存在してほしかったプラットフォームとしてSecureStarを構築しました。</p>
+      </div>
+      <div>
+        <div class="mission-stat-grid">
+          <div class="mission-stat">
+            <div class="value">~50</div>
+            <div class="label">エンジニアリング、リサーチ、カスタマーサクセスのチームメンバー</div>
+          </div>
+          <div class="mission-stat">
+            <div class="value">2020</div>
+            <div class="label">フィンテックとMLのベテランによってカリフォルニア州サンフランシスコで設立</div>
+          </div>
+          <div class="mission-stat">
+            <div class="value">3B+</div>
+            <div class="label">ローンチ以来、すべての顧客でスコアリングされた取引</div>
+          </div>
+          <div class="mission-stat">
+            <div class="value">$42M</div>
+            <div class="label">インフラとコンプライアンスツールの加速のためにシリーズBを調達</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story-bg">
+  <div class="section-inner">
+    <div class="section-label">私たちのストーリー</div>
+    <h2 class="section-title">問題点からプラットフォームへ</h2>
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot">💡</div>
+        <div class="tl-content">
+          <div class="tl-year">2019 — 問題</div>
+          <div class="tl-event">気づき</div>
+          <div class="tl-desc">共同創設者のPriya NairとJames Kowalskiは、別々のフィンテック企業で働いています。両者は同じフラストレーションを経験します：印象的なプレゼンテーションを持つ不正ベンダーが、コンプライアンス審査官に決定を説明する時や、100ms未満のレイテンシー予算を満たす時に崩壊します。</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🛠️</div>
+        <div class="tl-content">
+          <div class="tl-year">2020 — 設立</div>
+          <div class="tl-event">SecureStar Labs設立</div>
+          <div class="tl-desc">PriyaとJamesは、サンフランシスコでSecureStar Labsを設立します。Emergence Capitalが主導する$4.8Mのシードラウンド。Stripe、Palantir、Two Sigmaから最初の8人のエンジニアを採用。コアミッション：エンジニアとコンプライアンスチームを同時に満足させる不正プラットフォームを構築する。</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🚀</div>
+        <div class="tl-content">
+          <div class="tl-year">2021 — 製品</div>
+          <div class="tl-event">v1がハイブリッドエンジンと説明可能性でローンチ</div>
+          <div class="tl-desc">最初のプロダクションバージョンがハイブリッドML + ルールエンジンで出荷されます。初期顧客のNexo Paymentsは、既存のベンダーに対して並行テストを実施し、SecureStarは31%の偽陽性を削減し、Kafkaスタックでのp99レイテンシーを60ms未満にします。シリーズAは$18Mで終了。</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">📈</div>
+        <div class="tl-content">
+          <div class="tl-year">2022 — スケール</div>
+          <div class="tl-event">KafkaネイティブコネクタとPython SDKがリリース</div>
+          <div class="tl-desc">エンジニアリングチームは、KafkaコネクタとPython SDKを出荷し、通常の統合時間を3〜4週間から2週間未満に短縮します。顧客数は40に達します。完全な規制エクスポートパイプラインを備えた最初のエンタープライズAMLコンプライアンス展開。</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🔬</div>
+        <div class="tl-content">
+          <div class="tl-year">2023 — リサーチ</div>
+          <div class="tl-event">カスタムモデルチューニングAPIとエッジデプロイメントベータ</div>
+          <div class="tl-desc">顧客データでのカスタムモデルの微調整が開始され、一律の問題を解消します。エッジデプロイメントベータは、選択されたエンタープライズ顧客に対してp50で20ms未満を達成します。SOC 2 Type II認証が完了。</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🌍</div>
+        <div class="tl-content">
+          <div class="tl-year">2024–2025 — 拡張</div>
+          <div class="tl-event">シリーズBと国際展開</div>
+          <div class="tl-desc">シリーズBは$42Mで終了。GDPRコンプライアンスのためにEUデータレジデンシーを開始。チームは約50人に成長。プラットフォームは30億以上の取引を処理。新機能：動的ルール更新、A/Bシャドウモード、米国顧客向けのFinCEN SARエクスポート。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section>
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">リーダーシップ</div>
+      <h2 class="section-title">両側を経験した人々によって構築</h2>
+      <p class="section-sub">私たちの創業チームは、フィンテックエンジニアリング、MLリサーチ、金融コンプライアンスの経験を持ち、この製品を正しく構築するために必要な正確な組み合わせを提供します。</p>
+    </div>
+    <div class="team-grid">
+
+      <div class="team-card">
+        <img src="../images/priya-nair.png" alt="Priya Nair" class="team-photo" />
+        <div class="team-name">Priya Nair</div>
+        <div class="team-role">共同創設者 & CEO</div>
+        <div class="team-bio">Stripeのリスクエンジニアリング部門の元責任者。年間$80B以上を処理する不正システムを構築。スケールで何が壊れるか、なぜレイテンシー予算が交渉不可能であるかを正確に知っています。</div>
+        <div class="team-tags"><span class="tag">フィンテック</span><span class="tag">リスク</span><span class="tag">システム</span></div>
+      </div>
+
+      <div class="team-card">
+        <img src="../images/james-kowalski.png" alt="James Kowalski" class="team-photo" />
+        <div class="team-name">James Kowalski</div>
+        <div class="team-role">共同創設者 & CTO</div>
+        <div class="team-bio">Two Sigmaの元MLリサーチリード。低レイテンシーML推論と説明可能性手法を専門としています。金融異常検出に関する4つの特許を保有。MITで応用MLの博士号を取得。</div>
+        <div class="team-tags"><span class="tag">MLリサーチ</span><span class="tag">推論</span><span class="tag">XAI</span></div>
+      </div>
+
+      <div class="team-card">
+        <img src="../images/amara-reeves.png" alt="Amara Reeves" class="team-photo" />
+        <div class="team-name">Amara Reeves</div>
+        <div class="team-role">エンジニアリングVP</div>
+        <div class="team-bio">Palantirの金融犯罪ユニットの元スタッフエンジニア。ストリーミングデータパイプラインと大規模なKafkaの専門家。SecureStarのコア推論インフラのアーキテクチャを主導。</div>
+        <div class="team-tags"><span class="tag">Kafka</span><span class="tag">AWS</span><span class="tag">インフラ</span></div>
+      </div>
+
+      <div class="team-card">
+        <img src="../images/david-marchetti.png" alt="David Marchetti" class="team-photo" />
+        <div class="team-name">David Marchetti</div>
+        <div class="team-role">チーフコンプライアンスオフィサー</div>
+        <div class="team-bio">JPMorgan Chaseの元BSA/AMLオフィサー。12年間、FinCENおよびOCCの審査官と直接協力。SecureStarの監査ログと規制エクスポートアーキテクチャを設計。</div>
+        <div class="team-tags"><span class="tag">AML</span><span class="tag">KYC</span><span class="tag">FinCEN</span></div>
+      </div>
+
+      <div class="team-card">
+        <img src="../images/sophia-liu.png" alt="Sophia Liu" class="team-photo" />
+        <div class="team-name">Sophia Liu</div>
+        <div class="team-role">MLリサーチ責任者</div>
+        <div class="team-bio">スタンフォード大学で統計学の博士号を取得。以前はDeepMindおよびCapital Oneの不正リサーチラボに所属。SecureStarの説明可能性レイヤーとSHAPベースの帰属方法の開発を主導。</div>
+        <div class="team-tags"><span class="tag">SHAP</span><span class="tag">XGBoost</span><span class="tag">リサーチ</span></div>
+      </div>
+
+      <div class="team-card">
+        <img src="../images/marcus-torres.png" alt="Marcus Torres" class="team-photo" />
+        <div class="team-name">Marcus Torres</div>
+        <div class="team-role">カスタマーエンジニアリングVP</div>
+        <div class="team-bio">Confluent (Kafka) の元ソリューションアーキテクト。デジタルバンキングおよびペイメントスタック全体でSecureStarを25以上のプロダクション環境に統合した経験を持つ。</div>
+        <div class="team-tags"><span class="tag">統合</span><span class="tag">カスタマーサクセス</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- OFFICE PHOTO -->
+<div class="office-section">
+  <img src="../images/sf-office.png" alt="SecureStar本社 — サンフランシスコ" class="office-photo" />
+</div>
+
+<!-- VALUES -->
+<section style="background:var(--light-bg);padding:80px 24px;">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-label">価値観</div>
+      <h2 class="section-title">私たちの信念</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">⚡</div>
+        <h3>スピードは機能です</h3>
+        <p>レイテンシーは技術的な脚注ではありません。支払い認証では、ミリ秒ごとにUXの決定が行われます。私たちはレイテンシーSLAを製品の約束として扱い、目標ではありません。</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🔍</div>
+        <h3>不透明性は負債です</h3>
+        <p>自分自身を説明できないAIシステムは信頼できません — それは規制上のリスクです。私たちは、すべての自動化された金融決定が影響を受けた人に説明可能であるべきだと信じています。</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🎛️</div>
+        <h3>コントロールは顧客に属します</h3>
+        <p>あなたは私たちよりも顧客をよく知っています。あなたのコンプライアンスチームはルールを所有するべきです。あなたのデータサイエンティストはモデルを調整するべきです。私たちはインフラを提供しますが、決定はあなたが行います。</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <h3>統合は退屈であるべきです</h3>
+        <p>最高のベンダー統合は、数日で完了し、数ヶ月を要せず、移行プロジェクトを必要としないものです。私たちはSDKの使いやすさ、コネクタのシンプルさ、ゼロリワークのデプロイメントにこだわります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESS -->
+<div class="press-bg">
+  <div class="press-inner">
+    <div class="press-label">掲載実績</div>
+    <div class="press-logos">
+      <span class="press-name">TechCrunch</span>
+      <span class="press-name">The Information</span>
+      <span class="press-name">Finextra</span>
+      <span class="press-name">American Banker</span>
+      <span class="press-name">Forbes Fintech 50</span>
+      <span class="press-name">MIT Technology Review</span>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2>私たちと一緒に働く、または参加する</h2>
+  <p>エンジニア、MLリサーチャー、コンプライアンススペシャリストを募集しています。また、不正インフラを評価している金融プラットフォームの場合は、ぜひお話ししましょう。</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn btn-white">デモを予約</a>
+    <a href="#" class="btn btn-outline-white">オープンポジションを見る</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo"><div class="logo-icon">SS</div><span style="color:white">SecureStar</span></div>
+    <span>© 2025 SecureStar Labs, Inc.</span>
+    <div style="display:flex;gap:20px;"><a href="#">プライバシー</a><a href="#">利用規約</a><a href="#">セキュリティ</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

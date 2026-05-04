@@ -123,6 +123,19 @@
       <a href="support.html" class="btn btn-outline">Log In</a>
       <a href="banking.html" class="btn btn-primary">Open Account</a>
     </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="" selected>English</option>
+            <option value="zh-hans/cards.html">简体中文</option>
+            <option value="zh-hant/cards.html">繁體中文</option>
+            <option value="es/cards.html">Español</option>
+            <option value="fr/cards.html">Français</option>
+            <option value="ja/cards.html">日本語</option>
+            <option value="ko/cards.html">한국어</option>
+      </select>
+    </div>
   </div>
 </nav>
 

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>平台 — SecureStar</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a1628;
+      --slate:   #1e2d4a;
+      --blue:    #2563eb;
+      --cyan:    #06b6d4;
+      --green:   #10b981;
+      --purple:  #7c3aed;
+      --white:   #ffffff;
+      --light-bg:#f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(10,22,40,0.10);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--navy); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue), var(--cyan)); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1rem; }
+    .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; }
+    .nav-links a { color: rgba(255,255,255,0.65); font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all .2s; border: none; padding: 10px 20px; }
+    .btn-ghost { background: transparent; border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #0f2044 100%); color: white; padding: 80px 24px 70px; }
+    .page-hero-inner { max-width: 1100px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 18px; }
+    .breadcrumb a { color: var(--cyan); }
+    .page-hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 18px; line-height: 1.2; }
+    .page-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.65); max-width: 580px; line-height: 1.75; }
+
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+    .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 600px; }
+
+    .feature-bg { background: var(--light-bg); }
+
+    /* TWO-COL FEATURE ROWS */
+    .feat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-bottom: 80px; }
+    .feat-row:last-child { margin-bottom: 0; }
+    .feat-row.reverse { direction: rtl; }
+    .feat-row.reverse > * { direction: ltr; }
+    .feat-visual {
+      background: var(--navy); border-radius: 16px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .feat-visual-bar {
+      background: rgba(255,255,255,0.05); padding: 12px 16px;
+      display: flex; gap: 7px; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dr { background: #ff5f56; } .dy { background: #ffbd2e; } .dg { background: #27c93f; }
+    .feat-visual-body { padding: 24px; font-family: 'Courier New', monospace; font-size: 0.8rem; line-height: 1.85; color: rgba(255,255,255,0.7); }
+    .hl { color: var(--cyan); }
+    .hg { color: #86efac; }
+    .hy { color: #fbbf24; }
+    .hp { color: #c084fc; }
+
+    .feat-list { list-style: none; margin-top: 20px; }
+    .feat-list li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; font-size: 0.95rem; color: var(--text); line-height: 1.6; }
+    .feat-list li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* PERF TABLE */
+    .perf-table { width: 100%; border-collapse: collapse; margin-top: 32px; }
+    .perf-table th { background: var(--navy); color: rgba(255,255,255,0.7); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 14px 18px; text-align: left; }
+    .perf-table td { padding: 14px 18px; font-size: 0.92rem; border-bottom: 1px solid var(--border); }
+    .perf-table tr:last-child td { border-bottom: none; }
+    .perf-table tr:nth-child(even) td { background: var(--light-bg); }
+    .perf-val { font-weight: 700; color: var(--blue); }
+    .badge { display: inline-block; border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 700; }
+    .badge-green { background: #ecfdf5; color: #059669; }
+    .badge-blue { background: #eff6ff; color: #2563eb; }
+
+    /* SCORE PANEL */
+    .score-panel {
+      background: var(--navy); border-radius: 14px; padding: 28px;
+      color: white; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.9;
+    }
+
+    /* TABS */
+    .tab-row { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 28px; }
+    .tab { padding: 12px 22px; font-size: 0.9rem; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
+    .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* CTA BAND */
+    .cta-band { background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 40%, #1e40af 100%); color: white; padding: 72px 24px; text-align: center; }
+    .cta-band h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-band p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--blue); font-weight: 700; }
+    .btn-white:hover { background: #e0e7ff; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.45); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+    .footer-inner a { color: rgba(255,255,255,0.4); transition: color .2s; }
+    .footer-inner a:hover { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .feat-row { grid-template-columns: 1fr; }
+      .feat-row.reverse { direction: ltr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">SS</div><span>SecureStar</span></a>
+    <div class="nav-links">
+      <a href="platform.html" class="active">平台</a>
+      <a href="solutions.html">解决方案</a>
+      <a href="developers.html">开发者</a>
+      <a href="company.html">公司</a>
+    </div>
+    <div class="nav-actions">
+      <a href="developers.html" class="btn btn-ghost">文档</a>
+      <a href="index.html#contact" class="btn btn-primary">请求演示</a>
+    </div>
+  
+    <div class="lang-switcher" style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+      <span style="font-size:1rem;line-height:1;">🌐</span>
+      <select onchange="window.location.href=this.value" style="border:1.5px solid rgba(128,128,128,0.3);border-radius:6px;padding:4px 8px;font-size:0.82rem;background:transparent;color:inherit;cursor:pointer;outline:none;">
+            <option value="../platform.html">English</option>
+            <option value="../zh-hans/platform.html" selected>简体中文</option>
+            <option value="../zh-hant/platform.html">繁體中文</option>
+            <option value="../es/platform.html">Español</option>
+            <option value="../fr/platform.html">Français</option>
+            <option value="../ja/platform.html">日本語</option>
+            <option value="../ko/platform.html">한국어</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">首页</a> / 平台</div>
+    <h1>SecureStar 平台</h1>
+    <p>深入探讨使 SecureStar 成为现代金融系统首选的欺诈检测基础设施的五大支柱。</p>
+  </div>
+</div>
+
+<!-- PILLAR 1: LATENCY -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">支柱 1</div>
+        <h2 class="section-title">超低延迟推断</h2>
+        <p class="section-sub">欺诈不会暂停，您的检测层也不应暂停。SecureStar 的推断管道围绕一个约束构建：即使在流量高峰期间，也要保持在 99% 的情况下低于 80ms。</p>
+        <ul class="feat-list">
+          <li>优化的 ONNX 推断运行时——模型服务无序列化开销</li>
+          <li>边缘部署选项将评分逻辑更接近您的数据源</li>
+          <li>以流为先的设计，使用 Kafka 消费者组实现低于 10ms 的事件拾取</li>
+          <li>水平自动扩展在 10 倍流量激增时保持 SLA</li>
+          <li>每个企业租户专用基础设施——无邻居干扰效应</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// 延迟分布（过去 1 小时）</div>
+            <br>
+            <div>p50 &nbsp;&nbsp;&nbsp; <span class="hg">21ms</span> &nbsp;██████████░░░░░░░░░░</div>
+            <div>p75 &nbsp;&nbsp;&nbsp; <span class="hg">34ms</span> &nbsp;████████████████░░░░</div>
+            <div>p90 &nbsp;&nbsp;&nbsp; <span class="hg">51ms</span> &nbsp;██████████████████░░</div>
+            <div>p95 &nbsp;&nbsp;&nbsp; <span class="hy">62ms</span> &nbsp;███████████████████░</div>
+            <div>p99 &nbsp;&nbsp;&nbsp; <span class="hy">74ms</span> &nbsp;████████████████████</div>
+            <div>p999 &nbsp;&nbsp; <span class="hy">79ms</span> &nbsp;████████████████████</div>
+            <br>
+            <div class="hl">// SLA 目标：&lt;80ms p99 ✓</div>
+            <div>吞吐量：<span class="hg">14,830 req/s</span></div>
+            <div>错误率：<span class="hg">0.003%</span></div>
+          </div>
+        </div>
+        <table class="perf-table" style="margin-top:16px;">
+          <thead><tr><th>场景</th><th>延迟</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr><td>标准 REST 调用</td><td class="perf-val">&lt;50ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>Kafka 流消费者</td><td class="perf-val">&lt;30ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>边缘部署</td><td class="perf-val">&lt;15ms p50</td><td><span class="badge badge-green">✓ SLA</span></td></tr>
+            <tr><td>p99 保证</td><td class="perf-val">&lt;80ms</td><td><span class="badge badge-blue">合同</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 2: EXPLAINABLE AI -->
+<section class="feature-bg">
+  <div class="section-inner">
+    <div class="feat-row reverse">
+      <div>
+        <div class="section-label">支柱 2</div>
+        <h2 class="section-title">可解释的 AI — 每次决策</h2>
+        <p class="section-sub">大多数 ML 欺诈供应商给您一个分数。SecureStar 给您一个理由。每次风险评估都包括特征归因、规则归因和您的合规团队实际可以使用的人类可读解释。</p>
+        <ul class="feat-list">
+          <li>基于 SHAP 的特征归因识别驱动每个分数的主要因素</li>
+          <li>规则引擎决策以简单语言显示，而不是代码</li>
+          <li>完整的模型可解释性满足 AML 指令 6 和 FinCEN 审计要求</li>
+          <li>解释负载包含在每个 API 响应中，无延迟溢价</li>
+          <li>可搜索的解释历史用于事后取证分析</li>
+        </ul>
+      </div>
+      <div>
+        <div class="score-panel">
+          <div class="hl">// 解释对象 (txn_4h1k9b)</div>
+          <br>
+          <div><span class="hp">"解释"</span>: {</div>
+          <div>&nbsp;&nbsp;<span class="hl">"决策"</span>: <span class="hg">"标记"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="hl">"风险分数"</span>: <span class="hy">0.71</span>,</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"特征归因"</span>: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"特征"</span>: <span class="hg">"velocity_1h"</span>, <span class="hl">"权重"</span>: <span class="hy">+0.38</span> },</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"特征"</span>: <span class="hg">"new_device"</span>, <span class="hl">"权重"</span>: <span class="hy">+0.21</span> },</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="hl">"特征"</span>: <span class="hg">"merchant_risk"</span>, <span class="hl">"权重"</span>: <span class="hy">+0.12</span> }</div>
+          <div>&nbsp;&nbsp;],</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"规则命中"</span>: [</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"vel_1h_exceeded: 4 笔交易在 38 分钟内"</span>,</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"new_device_high_amount: $1,200+"</span></div>
+          <div>&nbsp;&nbsp;],</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"人类总结"</span>: <span class="hg">"高交易</span></div>
+          <div>&nbsp;&nbsp;&nbsp;<span class="hg">来自新设备的 1 小时窗口内的速度"</span>,</div>
+          <br>
+          <div>&nbsp;&nbsp;<span class="hl">"审计 ID"</span>: <span class="hg">"aud_7gk2p1"</span></div>
+          <div>}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 3: HYBRID ENGINE -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">支柱 3</div>
+        <h2 class="section-title">混合决策引擎</h2>
+        <p class="section-sub">纯 ML 对合规来说过于不透明。纯规则对欺诈来说过于脆弱。SecureStar 同时运行两者并将其整合为一个决策——同时为您提供控制和智能。</p>
+        <ul class="feat-list">
+          <li>规则引擎层：合规团队在无代码界面中定义硬性规则</li>
+          <li>ML 模型层：梯度提升集成捕捉规则遗漏的新兴模式</li>
+          <li>决策整合：规则结果和模型分数之间的可配置加权</li>
+          <li>规则覆盖：合规可以强制批准/拒绝，无论 ML 分数如何</li>
+          <li>完全透明：两个层的输出都包含在每个 API 响应中</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// 决策管道</div>
+            <br>
+            <div>交易事件</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>┌─────────────────────────────┐</div>
+            <div>│ &nbsp;<span class="hp">规则引擎</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">ML 模型</span> &nbsp;&nbsp;│</div>
+            <div>│ &nbsp;AML 规则 &nbsp;&nbsp;&nbsp;&nbsp; XGBoost v3 │</div>
+            <div>│ &nbsp;速度上限 &nbsp;SHAP 解释器│</div>
+            <div>│ &nbsp;KYC 检查 &nbsp;&nbsp;&nbsp; 漂移监控│</div>
+            <div>└──────────┬──────────┬──────────┘</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">决策整合器</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+            <div>&nbsp;&nbsp;分数 + 决策 + 解释</div>
+            <br>
+            <div class="hg">规则覆盖：HARD_DECLINE → 最终</div>
+            <div class="hy">否则：加权(规则, ml)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 4: CUSTOM TUNING -->
+<section class="feature-bg">
+  <div class="section-inner">
+    <div class="feat-row reverse">
+      <div>
+        <div class="section-label">支柱 4</div>
+        <h2 class="section-title">自定义模型调优</h2>
+        <p class="section-sub">一刀切的欺诈模型行不通。SecureStar 允许您在自己的交易数据上进行训练，调整精确度/召回阈值以适应您的风险偏好，并推送动态规则更新——无需等待我们的工程团队。</p>
+        <ul class="feat-list">
+          <li>通过 API 或 UI 在您自己的标记历史交易数据上进行微调</li>
+          <li>可调节的决策阈值：权衡误报与漏报</li>
+          <li>动态规则更新在 60 秒内推送到生产环境</li>
+          <li>A/B 阴影模式：在切换之前测试模型更改的实时流量</li>
+          <li>模型性能仪表板实时显示漂移、精确度、召回率和 F1</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl"># python SDK — 阈值调优</div>
+            <br>
+            <div><span class="hp">from</span> securestar <span class="hp">import</span> ModelConfig</div>
+            <br>
+            <div>config = ModelConfig(</div>
+            <div>&nbsp;&nbsp;base_model=<span class="hg">"ss-fintech-v3"</span>,</div>
+            <div>&nbsp;&nbsp;training_data=<span class="hg">"s3://your-bucket/txns/"</span>,</div>
+            <div>&nbsp;&nbsp;label_column=<span class="hg">"is_fraud"</span>,</div>
+            <div>&nbsp;&nbsp;thresholds={</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"approve"</span>: <span class="hy">0.30</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"flag"</span>: &nbsp;&nbsp;<span class="hy">0.65</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hg">"decline"</span>: <span class="hy">0.88</span>,</div>
+            <div>&nbsp;&nbsp;}</div>
+            <div>)</div>
+            <br>
+            <div>job = config.train() &nbsp;<span class="hl"># 异步</span></div>
+            <div>job.wait()</div>
+            <div><span class="hg">print</span>(job.metrics)</div>
+            <div><span class="hl"># 精确度: 0.943 &nbsp;召回率: 0.917</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLAR 5: COMPLIANCE -->
+<section>
+  <div class="section-inner">
+    <div class="feat-row">
+      <div>
+        <div class="section-label">支柱 5</div>
+        <h2 class="section-title">合规优先架构</h2>
+        <p class="section-sub">SecureStar 是与受监管金融机构的合规和法律团队密切合作设计的。合规不是附加项——它被集成到数据模型中。</p>
+        <ul class="feat-list">
+          <li>不可变的、加密签名的审计日志默认存储 7 年</li>
+          <li>SOC 2 Type II 认证；PCI-DSS 一级合规基础设施</li>
+          <li>一键式监管导出为 FinCEN SAR、FATF、EBA 格式</li>
+          <li>AML 规则库：预构建的结构化、分拆、分层模式规则</li>
+          <li>KYC 集成挂钩：插入您选择的身份验证提供商</li>
+          <li>GDPR / CCPA 数据驻留控制：选择欧盟或美国存储区域</li>
+        </ul>
+      </div>
+      <div>
+        <div class="feat-visual">
+          <div class="feat-visual-bar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="feat-visual-body">
+            <div class="hl">// 合规导出 (FinCEN SAR)</div>
+            <br>
+            <div><span class="hp">POST</span> /v2/compliance/export</div>
+            <div>{</div>
+            <div>&nbsp;&nbsp;<span class="hl">"格式"</span>: <span class="hg">"fincen_sar"</span>,</div>
+            <div>&nbsp;&nbsp;<span class="hl">"日期范围"</span>: {</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"从"</span>: <span class="hg">"2025-01-01"</span>,</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">"到"</span>: &nbsp;<span class="hg">"2025-03-31"</span></div>
+            <div>&nbsp;&nbsp;},</div>
+            <div>&nbsp;&nbsp;<span class="hl">"过滤器"</span>: <span class="hg">"declined_or_flagged"</span></div>
+            <div>}</div>
+            <br>
+            <div class="hg">// ✓ 147 个事件已导出</div>
+            <div class="hg">// ✓ 签名: SHA-256</div>
+            <div class="hg">// ✓ 附加审计跟踪</div>
+            <div class="hy">// 准备提交 FinCEN</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2>在 30 分钟内查看完整平台</h2>
+  <p>我们的团队将演示实时延迟基准，演示一个可解释性示例，并展示混合引擎如何平衡您的精确度和召回目标。</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn btn-white btn-lg">预约演示</a>
+    <a href="developers.html" class="btn btn-ghost btn-lg" style="color:white;border-color:rgba(255,255,255,0.4);">阅读文档</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo"><div class="logo-icon">SS</div><span style="color:white">SecureStar</span></div>
+    <span>© 2025 SecureStar Labs, Inc.</span>
+    <div style="display:flex;gap:20px;"><a href="#">隐私</a><a href="#">条款</a><a href="#">安全</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
